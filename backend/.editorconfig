@@ -1,0 +1,172 @@
+; EditorConfig para soporte de formato consistente en soluciones .NET/C#
+; Usa el complemento EditorConfig VS para habilitar estas configuraciones
+; http://editorconfig.org/
+;
+; Referencias útiles:
+; https://kent-boogaart.com/blog/editorconfig-reference-for-c-developers
+; https://learn.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+;
+
+root = true
+
+# ====================================================================================
+# Configuraciones Globales
+# ====================================================================================
+[*]
+# Configuración general para todos los archivos.
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# ====================================================================================
+# Configuración para Archivos C#
+# ====================================================================================
+[*.cs]
+# Configuración específica para archivos C#
+indent_size = 4
+
+# Orden de directivas 'using'
+dotnet_sort_system_directives_first = true
+
+# Preferencia de tipo predefinido
+; Usa 'int' en lugar de 'Int32'
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+; Usa 'int.MaxValue' en lugar de 'Int32.MaxValue'
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# Preferencia para 'var'
+# Usar 'var' para tipos predefinidos (int, string, bool, etc.)
+csharp_style_var_for_built_in_types = true:error
+# Usar 'var' cuando el tipo es aparente por la asignación (ej. var customer = new Customer();)
+csharp_style_var_when_type_is_apparent = true:error
+# No usar 'var' cuando el tipo no es evidente (ej. var result = SomeMethod();)
+csharp_style_var_elsewhere = false:error
+
+# Configuración de llaves y nuevas líneas
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+
+# Espacio de nombres
+dotnet_style_namespace_declarations = file_scoped
+
+# Preferir uso de llaves para bloques de una línea
+csharp_prefer_braces = true
+
+# Evitar el uso de `this` innecesario
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# ====================================================================================
+# Mejoras para la Legibilidad y Principios SOLID
+# ====================================================================================
+
+## Convenciones de Nombres
+# Convenciones de nombres de miembros (campos privados)
+dotnet_naming_rule.private_field_naming_rule.severity = warning
+dotnet_naming_rule.private_field_naming_rule.symbols = private_fields
+dotnet_naming_rule.private_field_naming_rule.style = private_field_style
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_styles.private_field_style.capitalization = camel_case
+dotnet_naming_styles.private_field_style.required_prefix = _
+
+# Convenciones de nombres de variables locales
+dotnet_naming_rule.local_variable_naming_rule.severity = suggestion
+dotnet_naming_rule.local_variable_naming_rule.symbols = local_variables
+dotnet_naming_rule.local_variable_naming_rule.style = local_variable_style
+dotnet_naming_symbols.local_variables.applicable_kinds = local
+dotnet_naming_styles.local_variable_style.capitalization = camel_case
+
+# Convenciones de nombres de clases
+dotnet_naming_rule.class_naming_rule.severity = suggestion
+dotnet_naming_rule.class_naming_rule.symbols = class_symbols
+dotnet_naming_rule.class_naming_rule.style = class_style
+dotnet_naming_symbols.class_symbols.applicable_kinds = class
+dotnet_naming_styles.class_style.capitalization = pascal_case
+
+# Convenciones de nombres de métodos
+dotnet_naming_rule.method_naming_rule.severity = suggestion
+dotnet_naming_rule.method_naming_rule.symbols = method_symbols
+dotnet_naming_rule.method_naming_rule.style = method_style
+dotnet_naming_symbols.method_symbols.applicable_kinds = method
+dotnet_naming_styles.method_style.capitalization = pascal_case
+
+## Reglas de Severidad Comunes
+# Hacer miembros estáticos si no se accede a instancias
+dotnet_diagnostic.CA1822.severity = warning
+
+# Remover 'usings' innecesarios
+dotnet_diagnostic.IDE0005.severity = warning
+
+# Uso de llaves para rodear bloques de código
+dotnet_diagnostic.IDE0011.severity = warning
+
+# Corrección de formato
+dotnet_diagnostic.IDE0055.severity = suggestion
+
+# Remover parámetros no usados
+dotnet_diagnostic.IDE0060.severity = warning
+
+# Convertir a espacio de nombres con alcance de archivo
+dotnet_diagnostic.IDE0161.severity = warning
+
+# Usar expresiones switch en lugar de la estructura clásica si es posible
+csharp_style_prefer_switch_expression = true:suggestion
+
+# Preferir expresiones lambda simples para delegados sencillos
+csharp_style_prefer_simple_lambda_expressions = true:suggestion
+
+# Preferir pattern matching sobre verificación con `is` y conversión
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+
+## Principios SOLID y Buenas Prácticas
+# Requerir `readonly` para campos no modificables
+dotnet_diagnostic.CA1802.severity = warning
+
+# Evitar inicializaciones innecesarias
+dotnet_diagnostic.CA1805.severity = warning
+
+# Evitar el uso de `dynamic` cuando no sea necesario
+csharp_style_prefer_static_local_function = true:warning
+
+# Preferir interfaces sobre clases concretas para dependencias
+dotnet_code_quality.CA1016.api_surface = private, public
+dotnet_diagnostic.CA1016.severity = suggestion
+
+# Usar `nameof` en lugar de cadenas literales
+dotnet_diagnostic.CA1507.severity = warning
+
+# Limitar la complejidad ciclomática de los métodos
+dotnet_diagnostic.CA1502.severity = warning
+
+# Limitar el número de parámetros de los métodos
+dotnet_code_quality.CA1505.api_surface = public, private
+dotnet_diagnostic.CA1505.severity = warning
+
+# Limitar la longitud de las clases para promover SRP
+dotnet_code_quality.CA1501.api_surface = private, public
+dotnet_diagnostic.CA1501.severity = suggestion
+
+# Usar tuplas con nombres para mejorar la legibilidad
+dotnet_diagnostic.IDE0037.severity = suggestion
+
+# Usar el sufijo `Async` en métodos que retornan `Task`
+dotnet_diagnostic.CA1710.severity = warning
+
+# # Verificar argumentos nulos en métodos públicos
+# dotnet_diagnostic.CA1062.severity = warning
+
+# Requerir documentación XML para miembros públicos
+dotnet_diagnostic.CA1200.severity = warning
+dotnet_diagnostic.CA1200.api_surface = public
+
+# Usar `nameof` en lugar de cadenas literales en excepciones
+dotnet_diagnostic.CA2208.severity = warning

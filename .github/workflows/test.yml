@@ -1,0 +1,76 @@
+name: Testing
+
+on:
+  pull_request:
+    types: [ edited, reopened, ready_for_review, synchronize, opened ]
+
+env:
+  ORGANIZATION: proyectos-enee
+
+jobs:
+  testing-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Runing building test
+        run: |
+          cd frontend
+          pnpm install
+          pnpm run build
+
+  testing-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+          dotnet-root: ${{ github.workspace }}/.dotnet
+
+      - name: Agregar source de nuget
+        run: |
+          dotnet nuget remove source github || true
+          dotnet nuget add source https://nuget.pkg.github.com/${{ env.ORGANIZATION }}/index.json --name github --username ${{ github.actor }} --password ${{ vars.ACCESS_TOKEN }} --store-password-in-clear-text
+
+      - name: Runing building test
+        env:
+          DB__CONEXION: "Server=localhost;Database=utcd.cobro_prejuridico;User Id=postgres; Password=utcd.cobro_prejuridico;Enlist=true;"
+          DB__SCHEMA_EVENTS: utcd.cobro_prejuridico_events
+          DB__SCHEMA_DOCS: utcd.cobro_prejuridico_docs
+          DB__SCHEMA_TABLES: utcd.cobro_prejuridico
+          AUTH__SERVER: http://localhost:8080
+          AUTH__CORS_ORIGINS: http://localhost:5173
+          AUTH__CLIENT_ID: api
+          AUTH__CLIENT_SECRET: api
+          AUTH__AUDIENCE: api
+          SMTP__HOST: smtp.resend.com
+          SMTP__PORT: 587
+          SMTP__ENABLE_SSL: true
+          SMTP__FROM: onboarding@resend.dev
+          SMTP__USER: resend
+          SMTP__PASSWORD: re_8D4V4Fpr_LLcQggkH1QSosGP7T34YxeL7
+          SMTP__AUTHENTICATION: true
+          QUEUE__DISABLED: true
+          QUEUE__SERVER: amqp://localhost:5672
+          QUEUE__USER: rabbitmq
+          QUEUE__PASSWORD: Cambiar*001
+          SERVER__PARAMETROS: http://api-parametros.proyectos-enee.xyz
+          SERVER__PARAMETROS_APIKEY: 608021be-5e16-47ed-acdd-2aa34c84ed15
+          MONITORING__OTL_METRICS_ENDPOINT: http://localhost:4317
+          MONITORING__OTL_TRACES_ENDPOINT: http://localhost:4318
+        run: |
+          cd backend
+          cd utcd.cobro_prejuridico.Api
+          dotnet restore utcd.cobro_prejuridico.Api.csproj
+          dotnet run -- codegen write
+          dotnet build "utcd.cobro_prejuridico.Api.csproj" -c Release

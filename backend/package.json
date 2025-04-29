@@ -1,0 +1,14 @@
+{
+  "name": "utcd.cobro_prejuridico_backend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {},
+ "scripts": {
+    "preinstall": "dotnet tool restore",
+    "format": "dotnet csharpier .",
+    "style": "dotnet format style --no-restore",
+    "clean": "dotnet clean && dotnet clean --configuration Release",
+    "build": "dotnet publish -c Release"
+  }
+}

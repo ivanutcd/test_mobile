@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>annotations</Nullable>
+        <LangVersion>12</LangVersion>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Enee.Core.CQRS"/>
+      <PackageReference Include="Enee.Core.Domain"/>
+      <PackageReference Include="Enee.Core.Events"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Modules\" />
+      <Folder Include="Modules\Almacen\Features\" />
+    </ItemGroup>
+
+</Project>

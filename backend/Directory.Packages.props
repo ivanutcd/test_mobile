@@ -1,0 +1,61 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- API -->
+    <PackageVersion Include="Autofac" Version="8.1.1" />
+    <PackageVersion Include="Carter" Version="8.2.1" />
+    <PackageVersion Include="CsvHelper" Version="30.0.3" />
+    <PackageVersion Include="Dapper" Version="2.1.35" />
+    <PackageVersion Include="Enee.Core.Infraestructure" Version="1.0.44" />
+    <PackageVersion Include="Enee.Core.Migrations" Version="1.0.13" />
+    <PackageVersion Include="Enee.IoC.Architecture" Version="1.0.66" />
+    <PackageVersion Include="ExcelMapper" Version="5.2.590" />
+    <PackageVersion Include="FluentAssertions" Version="7.0.0-alpha.3" />
+    <PackageVersion Include="FluentMigrator.Runner" Version="6.2.0" />
+    <PackageVersion Include="Marten" Version="7.31.0" />
+    <PackageVersion Include="Marten.CommandLine" Version="7.31.0" />
+    <PackageVersion Include="MassTransit" Version="8.2.3" />
+    <PackageVersion Include="MassTransit.Abstractions" Version="8.2.3" />
+    <PackageVersion Include="MassTransit.EntityFrameworkCore" Version="8.2.3" />
+    <PackageVersion Include="MassTransit.RabbitMQ" Version="8.2.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageVersion Include="Npgsql" Version="8.0.5" />
+    <PackageVersion Include="OpenIddict.AspNetCore" Version="5.8.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion Include="DotNetEnv" Version="3.1.1" />
+    <!-- DATA -->
+    <PackageVersion Include="Ardalis.EFCore.Extensions" Version="6.0.0" />
+    <PackageVersion Include="Enee.Core.Data" Version="1.0.6" />
+    <PackageVersion Include="FluentMigrator" Version="6.2.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <!-- DOMAIN -->
+    <PackageVersion Include="Enee.Core.CQRS" Version="1.0.11" />
+    <PackageVersion Include="Enee.Core.Domain" Version="1.0.18" />
+    <PackageVersion Include="Enee.Core.Common" Version="1.0.9" />
+    <PackageVersion Include="Enee.Core.Events" Version="1.0.2" />
+    <!-- MIGRATION -->
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <!--    TESTING-->
+    <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageVersion Include="NUnit.Analyzers" Version="3.6.1" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <!--    MONITOREO-->
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.InMemory" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.9.0-beta.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Process" Version="1.0.0-alpha.6" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+  </PropertyGroup>
+</Project>

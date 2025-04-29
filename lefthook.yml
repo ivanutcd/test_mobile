@@ -1,0 +1,30 @@
+colors: false
+
+commit-msg:
+  commands:
+    lint-commit-msg:
+      run: npx commitlint --edit
+
+pre-commit:
+  parallel: false
+  piped: true
+  commands:
+    01_linter-frontend:
+      glob: '*.{js,ts,jsx,tsx,md,json}'      
+      run: npx prettier --write  {staged_files}
+    02_linter-backend:
+      glob: '*.{cs}'
+      run: dotnet csharpier {staged_files}
+    03_linter-add:
+      run: git add {staged_files}
+
+post-merge:
+  commands:    
+    install:
+      run: pnpm install && pnpm --dir frontend install && pnpm --dir backend install
+
+pre-push:
+  parallel: true
+  commands:
+    branch-name:
+      run: npx branch-name-lint

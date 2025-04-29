@@ -1,0 +1,117 @@
+//inicio de Sesion
+//Logo
+$widthLogo: 208px;
+$heightLogo: 43px;
+
+//Espacio del logo
+$widthLogoSpace: 650px;
+$heightLogoSpace: 329px;
+$paddingLogoSpace: 86px 60px 198px 60px;
+$gapLogoSpace: 10px;
+
+
+
+
+//hamburger header (desplegar menu)
+$widthhamburger: 18px;
+$heighthamburger: 18px;
+$borderRadiushamburger: 12px;
+$rightHamburger: 9px;
+
+//Search Header
+$widthSearch: 635px;
+$heightSearch: 40px;
+$marginTopSearch: 4px;
+$marginLeftSearch: 57px;
+$paddingLeftSearch: 6px;
+$paddingRightSearch: 14px;
+$borderRadiusSearch: 12px;
+$borderSearch: 1px solid rgba(238, 239, 248, 0.96);
+$backgroundSearch:'#f5f5f5';
+
+//Profile-section Chip Header
+$widthProfile: 78px;
+$heightProfile: 40px;
+$borderRadiusProfile: 28px;
+$top: 2px;
+
+//menu
+$topMenu: 85px;
+
+
+//Card
+$primaryBackgroundCard: #72b5d1;
+$secundaryBackgroundCard: #ffc682;
+$widthCard: 371px;
+$heightCard: 185px;
+
+
+
+//Corner radius disponibles en el sistema
+$borderRadius1: 20px;
+$borderRadius2: 18px;
+$borderRadius3: 12px;
+
+
+
+$w_full: 100%;
+$w_screen: 100vw;
+:export{
+
+  // ==============================|| LOGIN ||============================== //
+  //logo
+  widthLogo: $widthLogo;
+  heightLogo: $heightLogo;
+
+  //Espacio del logo
+  widthLogoSpace: $widthLogoSpace;
+  heightLogoSpace: $heightLogoSpace;
+  paddingLogoSpace: $paddingLogoSpace;
+  gapLogoSpace: $gapLogoSpace;
+
+
+
+  //notificacion header (desplegar menu)
+  widthhamburger: $widthhamburger;
+  heighthamburger: $heighthamburger;
+  borderRadiushamburger: $borderRadiushamburger;
+  rightHamburger: $rightHamburger;
+
+  //Search Header
+  widthSearch: $widthSearch;
+  heightSearch: $heightSearch;
+  marginTopSearch: $marginTopSearch;
+  marginLeftSearch: $marginLeftSearch;
+  paddingLeftSearch: $paddingLeftSearch;
+  paddingRightSearch: $paddingRightSearch;
+  borderRadiusSearch: $borderRadiusSearch;
+  borderSearch: $borderSearch;
+  //backgroundSearch: $backgroundSearch;
+
+  //Profile-section Chip
+  widthProfile: $widthProfile;
+  heightProfile: $heightProfile;
+  borderRadiusProfile: $borderRadiusProfile;
+  top: $top;
+
+  //menu
+  topMenu: $topMenu;
+
+  //Card
+  primaryBackgroundCard: $primaryBackgroundCard;
+  secundaryBackgroundCard: $secundaryBackgroundCard;
+  widthCard: $widthCard;
+  heightCard: $heightCard;
+
+
+
+  //Corners
+  borderRadius1: $borderRadius1;
+  borderRadius2: $borderRadius2;
+  borderRadius3: $borderRadius3;
+  w_full: $w_full;
+  w_screen: $w_screen;
+
+
+
+}
