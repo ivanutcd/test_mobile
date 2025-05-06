@@ -42,8 +42,4 @@
       <ProjectReference Include="..\utcd.cobro_prejuridico.Domain\utcd.cobro_prejuridico.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Modules\Almacen\Features\" />
-    </ItemGroup>
-
 </Project>
