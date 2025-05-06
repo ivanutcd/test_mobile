@@ -7,6 +7,7 @@ public class FormularioFilters:IPaginatedParams
     public string? NombreTecnico { get; set; }
     public string? MovilidadAsociada { get; set; }
     public string? Estado { get; set; }
+    public string? GeneralSearch { get; set; }
     public int? PageSize { get; set; }
     public int? Page { get; set; }
 }
