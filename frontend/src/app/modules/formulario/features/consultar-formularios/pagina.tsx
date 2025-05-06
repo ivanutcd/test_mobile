@@ -24,19 +24,19 @@ const Pagina = () => {
     const { data, loading, buscar, recargar } = usePaginadoFormularios();
 
     const actions: Array<ActionColumn> = [
-        {
-        icon: <DeleteIcon />,
-        onClick: () => {},
-        },
-        {
+      {
         icon: <EditIcon />,
         onClick: () => {},
-        },
-        {
+      },
+      {
+        icon: <DeleteIcon />,
+        onClick: () => {},
+      },
+      {
         label: traducciones.VISUALIZAR,
         icon: <VisibilityIcon />,
         onClick: () => {},
-        },
+      },
     ];
 
     const hasAnyActionAccess = actions.some(
