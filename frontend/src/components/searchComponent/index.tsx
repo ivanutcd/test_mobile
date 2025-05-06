@@ -6,7 +6,6 @@ import { SearchComponentProps } from './props';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ToolbarButton } from '@components/toolbar-button/toolbar-button.tsx';
-import { set } from 'react-hook-form';
 
 const SearchComponent = <T,>({
   ChildComponent,
