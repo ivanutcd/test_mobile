@@ -14,7 +14,7 @@ env:
 
 jobs:
   backend:
-    runs-on: ubuntu-latest
+    runs-on: utcd-dev-infra1
     permissions:
       contents: read
       packages: write
@@ -66,24 +66,15 @@ jobs:
             QUEUE__SERVER=amqp://localhost:5672
             QUEUE__USER=rabbitmq
             QUEUE__PASSWORD=Cambiar*001
-            SERVER__PARAMETROS=http://api-parametros.proyectos-enee.xyz
-            SERVER__PARAMETROS_APIKEY=608021be-5e16-47ed-acdd-2aa34c84ed15
             MONITORING__OTL_METRICS_ENDPOINT=http://localhost:4317
             MONITORING__OTL_TRACES_ENDPOINT=http://localhost:4318
-            SMTP__HOST=smtp.resend.com
-            SMTP__PORT=587
-            SMTP__ENABLE_SSL=true
-            SMTP__FROM=onboarding@resend.dev
-            SMTP__USER=resend
-            SMTP__PASSWORD=re_8D4V4Fpr_LLcQggkH1QSosGP7T34YxeL7
-            SMTP__AUTHENTICATION=true
           no-cache: true
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   frontend:
-    runs-on: ubuntu-latest
+    runs-on: utcd-dev-infra1
     needs: backend
     permissions:
       contents: read
