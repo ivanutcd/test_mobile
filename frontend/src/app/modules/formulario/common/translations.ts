@@ -8,7 +8,8 @@ export const traducciones = {
     VISUALIZAR: 'Visualizar',
     ACCIONES: 'Acciones',
     FECHA_CREACION: 'Fecha y hora de creación',
-    FECHA_MODIFICACION: 'Fecha y hora de última modificación'
+    FECHA_MODIFICACION: 'Fecha y hora de última modificación',
+    DUPLICAR: ' Duplicar'
 }
 
 export default traducciones;

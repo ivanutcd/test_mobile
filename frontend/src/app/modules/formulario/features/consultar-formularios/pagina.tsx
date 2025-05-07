@@ -11,7 +11,8 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
-  AddCircleOutline as AddIcon
+  AddCircleOutline as AddIcon,
+  FileCopy as DuplicateIcon
 } from '@mui/icons-material';
 import { traducciones } from '../../common/translations';
 import SearchComponent from '@components/searchComponent/index.tsx';
@@ -37,6 +38,11 @@ const Pagina = () => {
         icon: <VisibilityIcon />,
         onClick: () => {},
       },
+      {
+        label: traducciones.DUPLICAR,
+        icon: <DuplicateIcon />,
+        onClick: () => {},
+      }
     ];
 
     const hasAnyActionAccess = actions.some(
@@ -51,7 +57,7 @@ const Pagina = () => {
               field: 'actions',
               renderCell: generateActionColumn(actions),
               type: 'actions',
-              minWidth: 130,
+              minWidth: 160,
             },
           ]
         : []),
