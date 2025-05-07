@@ -74,6 +74,18 @@ const Pagina = () => {
             colId: 'estado',
             headerName: traducciones.ESTADO,
             field: 'estado'
+        },
+        {
+            colId: 'createdDate',
+            headerName: traducciones.FECHA_CREACION,
+            field: 'createdDate',
+            minWidth: 300
+        },
+        {
+            colId: 'updatedDate',
+            headerName: traducciones.FECHA_MODIFICACION,
+            field: 'updatedDate',
+            minWidth: 300
         }
     ];
 

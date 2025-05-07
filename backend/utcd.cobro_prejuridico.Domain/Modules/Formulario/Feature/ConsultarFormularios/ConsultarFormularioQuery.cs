@@ -2,13 +2,13 @@
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 
-public class ConsultarFormularioQuery:IPaginateQuery<FormularioFilters,Projections.FormularioTable.Formulario>
+public class ConsultarFormularioQuery:IPaginateQuery<FormularioRequest,FormularioResponse>
 {
-    public ConsultarFormularioQuery(FormularioFilters filters)
+    public ConsultarFormularioQuery(FormularioRequest request)
     {
-        Filters = filters;
+        Request = request;
     }
 
     public string Description { get; } = "Consultar Query";
-    public FormularioFilters Filters { get; }
+    public FormularioRequest Request { get; }
 }

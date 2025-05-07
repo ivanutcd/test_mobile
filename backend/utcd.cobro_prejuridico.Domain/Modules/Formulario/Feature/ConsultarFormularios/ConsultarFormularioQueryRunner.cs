@@ -3,33 +3,38 @@ using Enee.Core.CQRS.Query;
 using Enee.Core.Domain;
 using Enee.Core.Domain.Repository;
 using Enee.Core.Domain.Specs;
+using utcd.cobro_prejuridico.Domain.Common;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 
-public class ConsultarFormularioQueryRunner: IQueryRunner<ConsultarFormularioQuery, IPaginated<Projections.FormularioTable.Formulario>>
+public class ConsultarFormularioQueryRunner: IQueryRunner<ConsultarFormularioQuery, IPaginated<FormularioResponse>>
 {
     public IReadOnlyRepository<Projections.FormularioTable.Formulario> Repository { get; }
+    public IObjectMapper  Mapper { get; }
 
-    public ConsultarFormularioQueryRunner(IReadOnlyRepository<Projections.FormularioTable.Formulario> repository)
+    public ConsultarFormularioQueryRunner(IReadOnlyRepository<Projections.FormularioTable.Formulario> repository, IObjectMapper mapper)
     {
         Repository = repository;
+        Mapper = mapper;
     }
 
-    public async Task<IPaginated<Projections.FormularioTable.Formulario>> Run(ConsultarFormularioQuery query)
+    public async Task<IPaginated<FormularioResponse>> Run(ConsultarFormularioQuery query)
     {
         var spec = new SpecificationGeneric<Projections.FormularioTable.Formulario>();
-        spec.Query.Where(x => x.NombreTecnico.Contains(query.Filters.NombreTecnico),
-            !string.IsNullOrWhiteSpace(query.Filters.NombreTecnico));
-        spec.Query.Where(x => x.MovilidadAsociada.Contains(query.Filters.MovilidadAsociada),
-            !string.IsNullOrWhiteSpace(query.Filters.MovilidadAsociada));
-        spec.Query.Where(x => x.Estado == query.Filters.Estado,
-            !string.IsNullOrWhiteSpace(query.Filters.Estado));
-        spec.Query.Where(x => x.NombreTecnico.Contains(query.Filters.GeneralSearch) ||
-                      x.MovilidadAsociada.Contains(query.Filters.GeneralSearch) ||
-                      x.Estado.Contains(query.Filters.GeneralSearch),
-    !string.IsNullOrWhiteSpace(query.Filters.GeneralSearch));
+        spec.Query.Where(x => x.NombreTecnico.Contains(query.Request.NombreTecnico),
+            !string.IsNullOrWhiteSpace(query.Request.NombreTecnico));
+        spec.Query.Where(x => x.MovilidadAsociada.Contains(query.Request.MovilidadAsociada),
+            !string.IsNullOrWhiteSpace(query.Request.MovilidadAsociada));
+        spec.Query.Where(x => x.Estado == query.Request.Estado,
+            !string.IsNullOrWhiteSpace(query.Request.Estado));
+        spec.Query.Where(x => x.NombreTecnico.Contains(query.Request.GeneralSearch) ||
+                      x.MovilidadAsociada.Contains(query.Request.GeneralSearch) ||
+                      x.Estado.Contains(query.Request.GeneralSearch),
+    !string.IsNullOrWhiteSpace(query.Request.GeneralSearch));
         spec.Query.OrderBy(x => x.CreatedDate);
-        IPaginated<Projections.FormularioTable.Formulario> paginated = await Repository.Paginate(query.Filters.Page, query.Filters.PageSize, spec);
-        return paginated;
+
+        IPaginated<Projections.FormularioTable.Formulario> paginatedFormulario = await Repository.Paginate(query.Request.Page, query.Request.PageSize, spec);
+        return this.Mapper.Map<IPaginated<FormularioResponse>>(paginatedFormulario);
     }
 }

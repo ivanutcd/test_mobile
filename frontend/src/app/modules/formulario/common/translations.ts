@@ -6,7 +6,9 @@ export const traducciones = {
     ESTADO: 'Estado',
     BOTON_CREAR: 'Crear',
     VISUALIZAR: 'Visualizar',
-    ACCIONES: 'Acciones'
+    ACCIONES: 'Acciones',
+    FECHA_CREACION: 'Fecha y hora de creación',
+    FECHA_MODIFICACION: 'Fecha y hora de última modificación'
 }
 
 export default traducciones;

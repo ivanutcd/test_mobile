@@ -12,5 +12,5 @@ public interface IPaginateQuery<out TPaginatedParams,TResult> : IQuery<IPaginate
     /// <summary>
     /// Parámetros de la consulta
     /// </summary>
-    public TPaginatedParams Filters { get; }
+    public TPaginatedParams Request { get; }
 }

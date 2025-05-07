@@ -13,7 +13,9 @@ using Enee.IoC.Architecture.Extensions;
 using Enee.IoC.Architecture.Others;
 using Marten;
 using Oakton;
+using utcd.cobro_prejuridico.Domain.Common;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable;
+using UtcdRefacturacion.Infraestructure.Modules.Common;
 
 namespace utcd.cobro_prejuridico.Api.Plumbing.Config;
 
@@ -51,6 +53,7 @@ public static class ConfigureServices
             })
             .AddSwaggerGen()
             .AddSingleton<IConfigureMarten, UserMartenConfig>()
+            .AddScoped<IObjectMapper, MapsterObjectMapper>()
             .AddDefaultCors(configuration);
 
         SetupArchitecture? setup = builder.SetupArchitecture(
