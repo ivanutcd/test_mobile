@@ -10,5 +10,6 @@ public class FormularioConfiguration: IEntityTypeConfiguration<Formulario>
     {
         builder.ToTable("formulario", Environment.GetEnvironmentVariable("DB__SCHEMA_TABLES"));
         builder.HasKey(x=>x.Id);
+        builder.HasIndex(x => x.NombreTecnico).IsUnique();
     }
 }
