@@ -1,5 +1,5 @@
 import { Menu } from '../common/menu-items/models/menu.ts';
-import { FacturasMenu } from './modules/facturas/facturas-menu.ts';
+import { FormularioMenu } from './modules/formulario/formulario-menu.tsx';
 
 
-export const AppMenu: Menu[] = [FacturasMenu];
+export const AppMenu: Menu[] = [FormularioMenu];

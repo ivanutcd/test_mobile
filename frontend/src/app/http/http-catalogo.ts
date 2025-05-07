@@ -9,7 +9,7 @@ import { errorInterceptor } from './interceptors/error-interceptor.ts';
 class HttpCatalogo extends HttpAxios {
   constructor() {
     super({
-      baseURL: `${env.BASE_URL_CATALOGO}/api`,
+      baseURL: `${env.BASE_URL_CATALOGO}/api/v1`,
       headers: HeaderApplicationJson,
     });
   }

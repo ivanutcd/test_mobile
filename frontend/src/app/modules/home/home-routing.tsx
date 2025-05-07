@@ -5,7 +5,7 @@ const HomeRouting = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<>Hola</>} />
+        <Route path="/" element={<></>} />
       </Routes>
     </>
   );

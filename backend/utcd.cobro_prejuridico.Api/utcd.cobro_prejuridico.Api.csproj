@@ -40,10 +40,7 @@
     <ItemGroup>
       <ProjectReference Include="..\utcd.cobro_prejuridico.Data\utcd.cobro_prejuridico.Data.csproj" />
       <ProjectReference Include="..\utcd.cobro_prejuridico.Domain\utcd.cobro_prejuridico.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Modules\Almacen\Features\" />
+      <ProjectReference Include="..\utcd.cobro_prejuridico.Infraestructure\utcd.cobro_prejuridico.Infraestructure.csproj" />
     </ItemGroup>
 
 </Project>

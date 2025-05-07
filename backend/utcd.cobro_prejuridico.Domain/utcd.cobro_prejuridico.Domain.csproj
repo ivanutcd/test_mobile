@@ -14,9 +14,4 @@
       <PackageReference Include="Enee.Core.Events"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Modules\" />
-      <Folder Include="Modules\Almacen\Features\" />
-    </ItemGroup>
-
 </Project>

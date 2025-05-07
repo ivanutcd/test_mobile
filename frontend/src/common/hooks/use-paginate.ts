@@ -85,7 +85,7 @@ export const usePaginate = <T>(
   }, [params, setMyParams, setPage]);
 
   const paginated = result.data;
-  console.log(paginated,"paginated")
+
   const newData: PaginateResult<T> = paginated
     ? {
       data: paginated.data,

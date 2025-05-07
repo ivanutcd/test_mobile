@@ -1,8 +1,6 @@
 import { RouteObject } from 'react-router-dom';
-
-
 import HomeModule from './modules/home';
-import FacturasModule from './modules/facturas';
+import FormularioModule from './modules/formulario';
 
 
 
@@ -12,7 +10,7 @@ export const AppRoutes: Array<RouteObject> = [
     element: <HomeModule />,
   },
   {
-    path: 'facturas/*',
-    element: <FacturasModule />,
-  }
+    path: 'formularios/',
+    element: <FormularioModule />,
+  },
 ];

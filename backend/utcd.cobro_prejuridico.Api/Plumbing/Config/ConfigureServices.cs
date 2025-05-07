@@ -6,8 +6,6 @@ using utcd.cobro_prejuridico.Api.Plumbing.Config.Converters;
 using utcd.cobro_prejuridico.Api.Plumbing.Core;
 using Enee.Core.Data.EFCore;
 using utcd.cobro_prejuridico.Data;
-using utcd.cobro_prejuridico.Domain.Modules.Almacen;
-using utcd.cobro_prejuridico.Domain.Modules.Almacen.Aggregates;
 using Enee.IoC.Architecture;
 using Enee.IoC.Architecture.Auth;
 using Enee.IoC.Architecture.Auth.Models;
@@ -15,6 +13,9 @@ using Enee.IoC.Architecture.Extensions;
 using Enee.IoC.Architecture.Others;
 using Marten;
 using Oakton;
+using utcd.cobro_prejuridico.Domain.Common;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable;
+using UtcdRefacturacion.Infraestructure.Modules.Common;
 
 namespace utcd.cobro_prejuridico.Api.Plumbing.Config;
 
@@ -27,7 +28,7 @@ public static class ConfigureServices
     {
         builder.Configuration.AddConfiguration(configuration);
 
-        Assembly? domainAssembly = typeof(Almacen).Assembly;
+        Assembly? domainAssembly = typeof(Formulario).Assembly;
 
         DbSettings? dbSettings = configuration
             .GetRequiredSection(DbSettings.ConfigurationSectionName)
@@ -52,6 +53,7 @@ public static class ConfigureServices
             })
             .AddSwaggerGen()
             .AddSingleton<IConfigureMarten, UserMartenConfig>()
+            .AddScoped<IObjectMapper, MapsterObjectMapper>()
             .AddDefaultCors(configuration);
 
         SetupArchitecture? setup = builder.SetupArchitecture(

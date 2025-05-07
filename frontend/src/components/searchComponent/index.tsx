@@ -12,7 +12,8 @@ const SearchComponent = <T,>({
   save,
   includeToolbar = true,
   actions = [],
-}: SearchComponentProps<T>) => {
+  extraProps,
+}: SearchComponentProps<T> & {extraProps?: Partial<T>} ) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [inputValue, setInputValue] = useState('');
 
@@ -21,6 +22,7 @@ const SearchComponent = <T,>({
   };
 
   const handleClick = (event: any) => {
+    setInputValue('');
     setAnchorEl(event.currentTarget);
   };
 
@@ -30,10 +32,13 @@ const SearchComponent = <T,>({
 
   const handleKeyPress = (event: any) => {
     if (!anchorEl && event.key === 'Enter') {
-      console.log('Enter pressed! Value:', inputValue);
 
-      if (save) {
-        save({ generalSearch: inputValue } as T);
+      if (save && typeof save === 'function') {
+        try {
+          save({ generalSearch: inputValue } as T);
+        } catch (error) {
+          console.error('Error in save function:', error);
+        }
       }
     }
   };
@@ -123,6 +128,7 @@ const SearchComponent = <T,>({
                       open={anchorEl ?? false}
                       onClose={handleClose}
                       save={save}
+                      {...extraProps}
                     />
                   </>
                 </Paper>
