@@ -99,7 +99,7 @@ const Pagina = () => {
         <>
           <MainCard>
             <h1>{traducciones.LISTADO}</h1>
-            <BoxContainer display="flex" flexDirection="row" p={1} gap={2}>
+            <BoxContainer display="flex" flexDirection="row" gap={2}>
               <SearchComponent<SearchProps>
                 includeToolbar={false}
                 ChildComponent={SearchForm}
