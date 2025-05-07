@@ -99,18 +99,16 @@ const Pagina = () => {
         <>
           <MainCard>
             <h1>{traducciones.LISTADO}</h1>
-            <BoxContainer display="flex" flexDirection="row" p={1}>
+            <BoxContainer display="flex" flexDirection="row" gap={2}>
               <SearchComponent<SearchProps>
                 includeToolbar={false}
                 ChildComponent={SearchForm}
                 save={buscar}
                 extraProps={{handleRecargar:recargar}}
               />
-                <BoxContainer sx={{ p: 1 }}>
-                  <Button size="large"><AddIcon />
-                  {traducciones.BOTON_CREAR}
-                  </Button>
-                </BoxContainer>
+              <Button size="large"><AddIcon />
+                {traducciones.BOTON_CREAR}
+              </Button>
             </BoxContainer>
             {!loading && data && (
               <PaginableGrid
