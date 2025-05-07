@@ -51,7 +51,7 @@ const SearchComponent = <T,>({
         width: '100%',
         justifyContent: 'left',
         marginBottom: '2.5%',
-        height: '40px',
+        height: '48px',
       }}
     >
       <TextField
@@ -61,7 +61,7 @@ const SearchComponent = <T,>({
         onFocus={handleClose}
         sx={{
           width: '100%',
-          height: '40px',
+          height: '48px',
           color: '#616161',
           fontSize: '14px',
           fontStyle: 'normal',

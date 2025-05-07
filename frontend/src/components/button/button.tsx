@@ -12,7 +12,7 @@ export const Button = ({ actions, ...props }: MyProps) => {
         <Btn
           color="primary"
           variant={'contained'}
-          sx={{ boxShadow: 'none' }}
+          sx={{ height:'48px', boxShadow: 'none' }}
           {...props}
         />
       </AnimateButton>
