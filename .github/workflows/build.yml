@@ -8,9 +8,9 @@ on:
 env:
   ORGANIZATION: proyectos-enee
   REGISTRY: ghcr.io
-  IMAGE_NAME_BACKEND: 'proyectos-enee/utcd.cobro_prejuridico/backend'
-  IMAGE_NAME_FRONTEND: 'proyectos-enee/utcd.cobro_prejuridico/frontend'
-  DB__CONEXION: 'Server=localhost;Database=utcd.cobro_prejuridico;User Id=postgres; Password=utcd.cobro_prejuridico;Enlist=true;'
+  IMAGE_NAME_BACKEND: 'proyectos-enee/utcd/cobroprejuridico/backend'
+  IMAGE_NAME_FRONTEND: 'proyectos-enee/utcd/cobroprejuridico/frontend'
+  DB__CONEXION: 'Server=localhost;Database=enee;User Id=postgres; Password=P@ssword1234;Enlist=true;'
 
 jobs:
   backend:
@@ -68,6 +68,7 @@ jobs:
             QUEUE__PASSWORD=Cambiar*001
             MONITORING__OTL_METRICS_ENDPOINT=http://localhost:4317
             MONITORING__OTL_TRACES_ENDPOINT=http://localhost:4318
+            SERVER__PARAMETROS=https://dev-api-parametros.eneeutcd.hn
           no-cache: true
           push: true
           tags: ${{ steps.meta.outputs.tags }}
