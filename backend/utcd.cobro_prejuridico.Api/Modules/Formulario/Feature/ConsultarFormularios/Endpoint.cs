@@ -6,12 +6,12 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarFormula
 
 public static class Endpoint
 {
-    public static void ConsultarFormulario(this IEndpointRouteBuilder app)
+    public static void ConsultarFormularios(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", async (IQueryDispatcher dispatcher, [AsParameters] FormularioRequest filters) =>
+        app.MapGet("/", async (IQueryDispatcher dispatcher, [AsParameters] FormularioRequest request) =>
             {
                 IPaginated<FormularioResponse>? result =
-                    await dispatcher.Execute(new ConsultarFormularioQuery(filters));
+                    await dispatcher.Execute(new ConsultarFormularioQuery(request));
                 return result;
             })
             .Produces<IPaginated<FormularioResponse>>()

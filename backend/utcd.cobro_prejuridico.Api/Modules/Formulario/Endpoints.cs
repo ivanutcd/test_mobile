@@ -13,6 +13,6 @@ public class Endpoints : CarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
 
-        app.ConsultarFormulario();
+        app.ConsultarFormularios();
     }
 }
