@@ -16,6 +16,15 @@ export const FormularioMenu: Menu = {
           icon: IconDashboard,
           breadcrumbs: true,
           access: [],
+    },
+    {
+      id: 'formularios-dinamicos',
+      title: 'Formularios Dinámicos',
+      type: 'item',
+      url: '/formularios-dinamicos',
+      icon: IconDashboard,
+      breadcrumbs: true,
+      access: [],
     }
   ]
 }

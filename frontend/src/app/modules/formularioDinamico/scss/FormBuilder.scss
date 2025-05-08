@@ -1,0 +1,70 @@
+.form-builder-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 20px;
+  width: 96%;
+}
+
+.form-builder {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #f4f4f4;
+  border-top: 20px solid #5fd0df;
+  filter: drop-shadow(0 0 6px rgba(142, 166, 175, 0.138));
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #f4f4f4;
+  position: relative;
+  min-height: auto !important;
+  box-shadow: 0 0 10px rgba(142, 166, 175, 0.138);
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px;
+
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    min-height: 50px;
+    gap: 1rem;
+    padding: 20px;
+    border-radius: 10px;
+    position: absolute;
+    right: -70px;
+    top: 0;
+    background-color: #ffffff;
+    border: 1px solid #f4f4f4;
+    transition: transform 0.3s ease-in-out;
+    filter: drop-shadow(0 0 6px rgba(142, 166, 175, 0.138));
+    // &:hover {
+    //   transform: scale(1.2) translate(10px, 10px);
+    // }
+  }
+}
+
+.icon-animated:focus {
+  animation: iconAnimated 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+}
+
+@keyframes iconAnimated {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.5);
+  }
+}
