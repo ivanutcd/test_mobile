@@ -6,7 +6,7 @@ import InputNumberC from './input/input-number.tsx';
 import ComboBox from './select/combobox.tsx';
 import MonthCalendar from './date-time/month-picker.tsx';
 import DateTimePicker from './date-time/date-time-picker.tsx';
-
+import Textarea from './textarea/textarea.tsx';
 export {
   DateP as DatePicker,
   SwitchC as Switch,
@@ -16,4 +16,5 @@ export {
   ComboBox as ComboBox,
   MonthCalendar as MonthCalendar,
   DateTimePicker as DateTimePicker,
+  Textarea as Textarea,
 };
