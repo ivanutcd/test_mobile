@@ -1,4 +1,3 @@
-
 import RadioGroup from '@mui/material/RadioGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
@@ -16,10 +15,10 @@ import {
   InputText,
   InputNumber,
   DatePicker,
-  Textarea
+  Textarea,
 } from '@components/form';
 
-import { FileUpload} from '@proyectos-enee/enee_componentes';
+import { FileUpload } from '@proyectos-enee/enee_componentes';
 type FieldType =
   | 'text'
   | 'number'
@@ -95,7 +94,6 @@ export default function FormRender({ formData }: { formData: any }) {
                       defaultValue={field.defaultValue}
                       style={{ borderRadius: '10px' }}
                       rows={field.rows}
-             
                     />
                   ),
                   number: (
@@ -200,13 +198,13 @@ export default function FormRender({ formData }: { formData: any }) {
 
                 return renderField[field.type] || null;
               })}
-            
-           <div  className="form-render-footer">
-                  <Button form={nameForm} type="reset" variant="text">
-                    Cancelar
-                  </Button>
-                  <Button form={nameForm} size="large" fullWidth type="submit">
-                    Guardar
+
+              <div className="form-render-footer">
+                <Button form={nameForm} type="reset" variant="text">
+                  Cancelar
+                </Button>
+                <Button form={nameForm} size="large" fullWidth type="submit">
+                  Guardar
                 </Button>
               </div>
             </div>

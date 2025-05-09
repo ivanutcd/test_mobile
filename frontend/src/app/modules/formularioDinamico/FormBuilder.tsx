@@ -3,7 +3,7 @@ import './scss/FormBuilder.scss';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton } from '@mui/material'; 
+import { IconButton } from '@mui/material';
 
 import FieldSetting from './FieldSetting';
 import { useState, useMemo, useEffect } from 'react';
@@ -15,7 +15,11 @@ interface FormData {
   formFields: FormField[];
 }
 
-export default function FormBuilder({onFormChange }: { onFormChange?: (form: FormData) => void }) {
+export default function FormBuilder({
+  onFormChange,
+}: {
+  onFormChange?: (form: FormData) => void;
+}) {
   const [dataForm, setDataForm] = useState<FormData>({
     formName: 'Formulario de prueba',
     formDescription: 'Este es un formulario de prueba',
@@ -79,16 +83,20 @@ export default function FormBuilder({onFormChange }: { onFormChange?: (form: For
       <div className="form-builder">
         <h1>{dataForm.formName}</h1>
         <p>{dataForm.formDescription}</p>
-   
       </div>
       {dataForm.formFields.map(field => (
         <div className="card-container">
           <div className="card">
-            <FieldSetting field={field} onFieldChange={(field) => {
-              const newDataForm = { ...dataForm };
-              newDataForm.formFields = newDataForm.formFields.map(f => f.id === field.id ? field : f);
-              setDataForm(newDataForm);
-            }} />
+            <FieldSetting
+              field={field}
+              onFieldChange={field => {
+                const newDataForm = { ...dataForm };
+                newDataForm.formFields = newDataForm.formFields.map(f =>
+                  f.id === field.id ? field : f,
+                );
+                setDataForm(newDataForm);
+              }}
+            />
           </div>
           <div className="options">
             {dataForm.formFields.length > 1 && (

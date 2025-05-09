@@ -3,14 +3,13 @@ import HomeModule from './modules/home';
 import FormularioModule from './modules/formulario';
 import FormularioDinamicoModule from './modules/formularioDinamico';
 
-
 export const AppRoutes: Array<RouteObject> = [
   {
     path: '/',
     element: <HomeModule />,
   },
   {
-    path: 'formularios/',
+    path: 'formularios/*',
     element: <FormularioModule />,
   },
   {

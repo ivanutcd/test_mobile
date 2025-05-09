@@ -216,43 +216,42 @@ export default function FieldSetting({
             gap: '1rem',
           }}
         >
-   
           {(field.type === 'select' ||
             field.type === 'checkbox' ||
-            field.type === 'radio') && ((
-                <div className="configurar-container">
-                  {(field.options || []).length > 0
-                    ? (field.options || []).map((option, index) => (
-                        <div key={index} className="option-container">
-                          <TextField
-                            fullWidth
-                            size="small"
-                            value={option}
-                            onChange={e => {
-                              const newOptions = [...(field.options || [])];
-                              newOptions[index] = e.target.value;
-                              onFieldChange({ ...field, options: newOptions });
-                            }}
-                          />
-  
-                          <Tooltip title="Eliminar campo" placement="right">
-                            <IconButton
-                              edge="end"
-                              aria-label="delete"
-                              size="small"
-                              color="primary"
-                              onClick={() => handleRemoveOption(index)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      ))
-                    : ''}
-  
-                  <Button onClick={handleAddOption}>Agregar más</Button>
-                </div>
-              ))}
+            field.type === 'radio') && (
+            <div className="configurar-container">
+              {(field.options || []).length > 0
+                ? (field.options || []).map((option, index) => (
+                    <div key={index} className="option-container">
+                      <TextField
+                        fullWidth
+                        size="small"
+                        value={option}
+                        onChange={e => {
+                          const newOptions = [...(field.options || [])];
+                          newOptions[index] = e.target.value;
+                          onFieldChange({ ...field, options: newOptions });
+                        }}
+                      />
+
+                      <Tooltip title="Eliminar campo" placement="right">
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          size="small"
+                          color="primary"
+                          onClick={() => handleRemoveOption(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  ))
+                : ''}
+
+              <Button onClick={handleAddOption}>Agregar más</Button>
+            </div>
+          )}
         </Col>
       </GridContainer>
     </div>

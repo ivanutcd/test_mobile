@@ -18,16 +18,15 @@ const FormularioDinamicoModule = () => {
   });
 
   return (
-    <MainCard  sx={{ minHeight: 'calc(100vh - 210px)' }}>
+    <MainCard sx={{ minHeight: 'calc(100vh - 210px)' }}>
       <GridContainer>
         <Col xs={12} md={8}>
-
           <FormBuilder onFormChange={setFormData} />
         </Col>
-        <Col xs={12} md={4} >
-         <div className="form-render-container">
-          <FormRender formData={formData} />
-         </div>
+        <Col xs={12} md={4}>
+          <div className="form-render-container">
+            <FormRender formData={formData} />
+          </div>
         </Col>
       </GridContainer>
     </MainCard>
