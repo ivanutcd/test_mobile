@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
 import { IconButton } from '@mui/material';
-
+import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useMemo, useEffect } from 'react';
 import { FormField, FormFieldType } from './formField';
@@ -79,7 +79,8 @@ export default function FormBuilder({
   );
 
   return (
-    <div className="form-builder-container">
+
+    <BoxContainer className="form-builder-container">
       <div className="form-builder">
         <h1>{dataForm.formName}</h1>
         <p>{dataForm.formDescription}</p>
@@ -127,6 +128,6 @@ export default function FormBuilder({
           </div>
         </div>
       ))}
-    </div>
+    </BoxContainer>
   );
 }
