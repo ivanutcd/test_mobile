@@ -1,4 +1,4 @@
-import { Formulario } from '../../components/formulario';
+import Formulario from '../../components/formulario';
 import { EstadosFormularios } from '../../utils/estado-formularios';
 import { EstadoFormularios } from '../../interfaces/formulario-form-props';
 import { FormularioInterface } from '../../interfaces/formulario';

@@ -9,7 +9,8 @@ export const traducciones = {
     ACCIONES: 'Acciones',
     FECHA_CREACION: 'Fecha y hora de creación',
     FECHA_MODIFICACION: 'Fecha y hora de última modificación',
-    DUPLICAR: ' Duplicar'
+    DUPLICAR: ' Duplicar',
+    CONFIGURAR: 'Configurar'
 }
 
 export default traducciones;

@@ -5,7 +5,7 @@ import { Row } from '@components/ui-layout/row';
 import { FormularioFormProps } from '../interfaces/formulario-form-props';
 import { EstadosFormularios } from '../utils/estado-formularios';
 
-export const Formulario = ({
+const Formulario = ({
   valorInicial,
   onSubmit,
   loading,
@@ -63,6 +63,7 @@ export const Formulario = ({
                   />
                 </Col>
               </Row>
+              
             </GridContainer>
           );
         }}
@@ -70,3 +71,5 @@ export const Formulario = ({
     </>
   );
 };
+
+export default Formulario;

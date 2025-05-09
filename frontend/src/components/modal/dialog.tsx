@@ -1,19 +1,19 @@
-import Button from '@mui/material/Button';
+
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { BoxContainer } from '@components/ui-layout/box-container.tsx';
+import React from 'react';
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
+  '.MuiDialogContent-root': {
+    padding: theme.spacing(0),
+  }
+  
 }));
 
 export interface DialogProps {
@@ -22,6 +22,7 @@ export interface DialogProps {
   actions?: ActionButtonProps[];
   open: boolean;
   handleClose: () => void;
+  fullScreen?: boolean;
 }
 
 interface ActionButtonProps {
@@ -29,24 +30,32 @@ interface ActionButtonProps {
   onClick: () => void;
   variant: 'text' | 'outlined' | 'contained';
   color: string;
+  type:string;
 }
 
 const CustomModal = ({
+  fullScreen,
   modalTitle,
   children,
-  actions,
   open,
   handleClose,
 }: DialogProps) => {
+
+  const emitHandleClose = () => {
+    handleClose();
+  };
+
   return (
     <>
       <BootstrapDialog
-        onClose={handleClose}
+        onClose={emitHandleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullScreen={fullScreen}
+        maxWidth="lg"
       >
         <DialogTitle
-          variant="h3"
+          variant="h4"
           sx={{ m: 0, p: 2, pr: 6 }}
           id="customized-dialog-title"
         >
@@ -54,7 +63,7 @@ const CustomModal = ({
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={emitHandleClose}
           sx={{
             position: 'absolute',
             right: 8,
@@ -64,22 +73,12 @@ const CustomModal = ({
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent dividers>{children}</DialogContent>
-        {actions && actions.length > 0 && (
-          <DialogActions>
-            {actions?.map((item, index) => (
-              <Button
-                key={index}
-                autoFocus={index === 0}
-                onClick={item.onClick}
-                variant={item.variant}
-                sx={{ color: item.color }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </DialogActions>
-        )}
+        <DialogContent dividers > 
+          <BoxContainer display="flex"  flexDirection="column" gap={2} padding={2}>
+            {children}
+           
+          </BoxContainer>
+        </DialogContent>
       </BootstrapDialog>
     </>
   );

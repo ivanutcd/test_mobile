@@ -13,7 +13,9 @@ import {
   Visibility as VisibilityIcon,
   AddCircleOutline as AddIcon,
   FileCopy as DuplicateIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
+import { useState } from 'react';
 import { traducciones } from '../../common/translations';
 import SearchComponent from '@components/searchComponent/index.tsx';
 import SearchForm from '../../components/searchForm';
@@ -22,9 +24,20 @@ import { PaginateResult } from '@common/hooks/models/paginate-result.ts';
 import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import { useNavigate } from 'react-router';
 
+
+// Luego se reemplaza por el componente de enee_componentes
+import CustomModal from '@components/modal/dialog';
+
+// Luego se reemplazar por este componente
+// import { CustomModal } from '@proyectos-enee/enee_componentes';
+
+import  Formulario  from '../../components/formulario';
+
+
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
@@ -42,6 +55,13 @@ const Pagina = () => {
       },
     },
     {
+      label: traducciones.CONFIGURAR,
+      icon: <SettingsIcon />,
+      onClick: params => {
+        navigate(`/formularios/${params.id}/configurar`);
+      },
+    },
+    {
       label: traducciones.DUPLICAR,
       icon: <DuplicateIcon />,
       onClick: () => {},
@@ -51,6 +71,7 @@ const Pagina = () => {
   const hasAnyActionAccess = actions.some(
     accion => !accion.hide || !accion.hide(null),
   );
+
 
   const columns: ColumnDef[] = [
     ...(hasAnyActionAccess
@@ -100,8 +121,7 @@ const Pagina = () => {
 
   return (
     <>
-      <MainCard>
-        <h1>{traducciones.LISTADO}</h1>
+      <MainCard title={traducciones.LISTADO}>
         <BoxContainer display="flex" flexDirection="row" gap={2}>
           <SearchComponent<SearchProps>
             includeToolbar={false}
@@ -109,7 +129,7 @@ const Pagina = () => {
             save={buscar}
             extraProps={{ handleRecargar: recargar }}
           />
-          <Button size="large">
+          <Button size="large" onClick={() => setOpen(true)}>
             <AddIcon />
             {traducciones.BOTON_CREAR}
           </Button>
@@ -120,6 +140,18 @@ const Pagina = () => {
             columnDefs={columns}
           />
         )}
+  
+
+          <CustomModal
+            open={open}
+            handleClose={() => setOpen(false)}
+            modalTitle="Configurar Formulario"
+      >
+      
+            <Formulario onSubmit={() => {}} nameForm="formulario" loading={false} />
+          </CustomModal>
+   
+
       </MainCard>
     </>
   );

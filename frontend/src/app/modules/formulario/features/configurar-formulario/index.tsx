@@ -5,8 +5,12 @@ import FormRender from './formRender';
 import { GridContainer } from '@components/ui-layout/grid-container.tsx';
 import { Col } from '@components/ui-layout/col.tsx';
 import { FormField } from './formField';
+import { useParams } from 'react-router-dom';
 
-const FormularioDinamicoModule = () => {
+const ConfigurarFormulario = () => {
+  const { id } = useParams();
+  console.log(id);
+  
   const [formData, setFormData] = useState<{
     formName: string;
     formDescription: string;
@@ -18,7 +22,7 @@ const FormularioDinamicoModule = () => {
   });
 
   return (
-    <MainCard sx={{ minHeight: 'calc(100vh - 210px)' }}>
+    <MainCard title="Configurar Formulario" sx={{ minHeight: 'calc(100vh - 210px)' }}>
       <GridContainer>
         <Col xs={12} md={8}>
           <FormBuilder onFormChange={setFormData} />
@@ -33,4 +37,4 @@ const FormularioDinamicoModule = () => {
   );
 };
 
-export default FormularioDinamicoModule;
+export default ConfigurarFormulario;
