@@ -1,6 +1,7 @@
 using Enee.Core.Common.Util;
 using Enee.Core.CQRS.Command;
 using Enee.Core.CQRS.Validation;
+using Enee.IoC.Architecture.Auth;
 using utcd.cobro_prejuridico.Api.Common;
 using utcd.cobro_prejuridico.Api.Utilities.Response;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormulario;
@@ -35,6 +36,7 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.CrearFormulario
                 .Produces<EntityIdResponse>()
                 .WithSummary("Crear Formulario.")
                 .WithDescription("Creación de formulario dinamico.")
+                //.Access(Permisos.CREAR_FORMULARIO)
                 .WithOpenApi();
         }
     }

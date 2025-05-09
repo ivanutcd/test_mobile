@@ -1,4 +1,4 @@
-﻿using Enee.Core.CQRS.Query;
+using Enee.Core.CQRS.Query;
 using Enee.Core.Domain;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 
