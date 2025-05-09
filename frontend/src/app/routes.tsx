@@ -9,7 +9,7 @@ export const AppRoutes: Array<RouteObject> = [
     element: <HomeModule />,
   },
   {
-    path: 'formularios/',
+    path: 'formularios/*',
     element: <FormularioModule />,
   },
   {

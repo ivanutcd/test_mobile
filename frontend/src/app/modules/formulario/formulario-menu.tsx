@@ -1,4 +1,4 @@
-import { IconDashboard } from '@tabler/icons-react';
+import { IconDashboard, IconList } from '@tabler/icons-react';
 import { Menu } from '../../../common/menu-items/models/menu.ts';
 
 export const FormularioMenu: Menu = {
@@ -16,6 +16,17 @@ export const FormularioMenu: Menu = {
       icon: IconDashboard,
       breadcrumbs: true,
       access: [],
+      children: [
+        {
+          id: 'visualizar-formulario',
+          title: 'Visualizar Formulario',
+          type: 'item',
+          url: `/formularios/:id/ver`,
+          icon: IconList,
+          breadcrumbs: true,
+          access: [],
+        },
+      ],
     },
     {
       id: 'formularios-dinamicos',
