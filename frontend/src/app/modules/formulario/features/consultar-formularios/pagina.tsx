@@ -30,26 +30,50 @@ import CustomModal from '@components/modal/dialog';
 // Luego se reemplazar por este componente
 // import { CustomModal } from '@proyectos-enee/enee_componentes';
 
-import Formulario from '../../components/formulario';
-import VerFormulario from '../visualizar-formulario/pagina.tsx';
-import { Box } from '@mui/system';
-import EditarFormulario from '../Editar-formulario/pagina.tsx';
+import GestionarFormulario from '../gestionar-formulario/index.ts';
+import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
+import FormularioEditar from '../Editar-formulario/index.tsx';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [openVer, setOpenVer] = useState(false);
-  const [openEditar, setOpenEditar] = useState(false);
-  const [rowData, setRowData] = useState('');
-  const cerrarEditar = (ce: boolean) => setOpenEditar(ce);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalEditar, setOpenModalEditar] = useState(false);
+  const [formularioId, setFormularioId] = useState('');
+  const [mode, setMode] = useState<ModeFormulario>(null);
+
+  const handleSuccess = () => {
+    // setMode(null);
+    setOpenModal(false);
+    recargar();
+  };
+
+  const handleCloseModal = () => {
+    // setMode(null);
+    setOpenModal(false);
+  };
+  const handleCloseModalEditar = () => {
+    setOpenModalEditar(false);
+  };
+  const handleOpenModal = (newMode: ModeFormulario) => {
+    setMode(newMode);
+    setOpenModal(true);
+  };
+
+  const handleOpenModalEditar = (newMode: ModeFormulario) => {
+    setMode(newMode);
+    setOpenModalEditar(true);
+  };
+
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
       label: traducciones.EDITAR,
       onClick: params => {
-        setOpenEditar(true);
-        setRowData(params.id);
+        setFormularioId('');
+        setFormularioId(params.id);
+        handleOpenModalEditar('edit');
       },
     },
     {
@@ -60,8 +84,10 @@ const Pagina = () => {
       label: traducciones.VISUALIZAR,
       icon: <VisibilityIcon />,
       onClick: params => {
-        setOpenVer(true);
-        setRowData(params.id);
+        setFormularioId('');
+        setFormularioId(params.id);
+        handleOpenModal('view');
+        // navigate(`/formularios/${params.id}/ver`);
       },
     },
     {
@@ -138,7 +164,7 @@ const Pagina = () => {
             save={buscar}
             extraProps={{ handleRecargar: recargar }}
           />
-          <Button size="large" onClick={() => setOpen(true)}>
+          <Button size="large" onClick={() => handleOpenModal('create')}>
             <AddIcon />
             {traducciones.BOTON_CREAR}
           </Button>
@@ -151,60 +177,28 @@ const Pagina = () => {
         )}
 
         <CustomModal
-          open={open}
-          handleClose={() => setOpen(false)}
-          modalTitle="Configurar Formulario"
+          open={openModal}
+          handleClose={handleCloseModal}
+          modalTitle={TitleFormulario(mode)}
         >
-          <Formulario
-            onSubmit={() => {}}
-            nameForm="formulario"
-            loading={false}
+          <GestionarFormulario
+            mode={mode}
+            id={formularioId}
+            onCancel={handleCloseModal}
+            onSuccess={handleSuccess}
           />
         </CustomModal>
 
         <CustomModal
-          open={openVer}
-          handleClose={() => setOpenVer(false)}
-          modalTitle="Ver detalles"
+          open={openModalEditar}
+          handleClose={handleCloseModalEditar}
+          modalTitle={TitleFormulario(mode)}
         >
-          <VerFormulario id={rowData} />
-
-          <Box display="flex" justifyContent="flex-end" gap={2}>
-            <Button
-              variant="outlined"
-              sx={{
-                height: '40px',
-                width: '154px',
-                color: '#616161',
-                borderColor: 'rgba(97, 97, 97, 0.26)',
-                backgroundColor: '#FAFAFA',
-              }}
-              onClick={() => setOpenVer(false)}
-            >
-              Cerrar
-            </Button>
-            <Button
-              sx={{
-                height: '40px',
-                width: '154px',
-              }}
-              color="primary"
-              onClick={() => setOpenVer(false)}
-            >
-              Publicar formulario
-            </Button>
-          </Box>
-        </CustomModal>
-
-        <CustomModal
-          open={openEditar}
-          handleClose={() => setOpenEditar(false)}
-          modalTitle="Editar Formulario"
-        >
-          <EditarFormulario
-            id={rowData}
-            modal={cerrarEditar}
-            recargar={recargar}
+          <FormularioEditar
+            mode={mode}
+            id={formularioId}
+            onCancel={handleCloseModalEditar}
+            onSuccess={handleSuccess}
           />
         </CustomModal>
       </MainCard>

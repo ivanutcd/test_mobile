@@ -1,37 +1,42 @@
-import Formulario from '../../components/formulario';
-import { EstadosFormularios } from '../../utils/estado-formularios';
-import { EstadoFormularios } from '../../interfaces/formulario-form-props';
-import { FormularioInterface } from '../../interfaces/formulario';
-import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
+import { useEffect } from 'react';
+import { FormularioProps } from '../../common/types';
+import FormularioBase from '../../components/FormularioBase';
 
-interface Props {
-  id: string;
+interface VisualizarFormularioProps extends FormularioProps {
+  nameForm: string;
+  catalogs: any;
+  onPublicarFormulario: (fn: (id: string) => void) => void;
 }
-const VerFormulario = ({ id }: Props) => {
-  const [{ data: formulario, loading }] = useObtenerFormularioById(id ?? '');
 
-  if (loading || !formulario) return <></>;
-
-  const initialData: FormularioInterface = {
-    ...formulario,
-    estado: EstadosFormularios.find(
-      x => x.id === formulario.estado.toString(),
-    ) as unknown as EstadoFormularios,
+const VerFormulario = ({
+  nameForm,
+  initialValues,
+  isLoading,
+  onPublicarFormulario,
+}: VisualizarFormularioProps) => {
+  const publicarFormularioFn = (id: string) => {
+    if (id) {
+      // ejecuta evento,
+      // onSuccess para refrescar la lista y cerrar modal
+      // onCancel para cerrar modal
+    }
   };
-  const nameForm = 'formulario';
+
+  useEffect(() => {
+    if (onPublicarFormulario) {
+      onPublicarFormulario(publicarFormularioFn);
+    }
+  }, [onPublicarFormulario]);
+
   return (
-    <>
-      {' '}
-      <Formulario
-        valorInicial={initialData}
-        onSubmit={form => {
-          console.log(form);
-        }}
-        loading={false}
+    <div>
+      <FormularioBase
+        loading={isLoading}
         nameForm={nameForm}
-        viewMode={true}
+        mode="view"
+        defaultValues={initialValues}
       />
-    </>
+    </div>
   );
 };
 

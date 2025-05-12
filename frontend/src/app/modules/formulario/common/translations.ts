@@ -1,5 +1,9 @@
 export const traducciones = {
   LISTADO: 'Listado de formularios',
+  CREACION: 'Crear nuevo formulario',
+  EDICION: 'Editar formulario',
+  DETALLE: 'Detalle de formulario',
+  GESTIONAR: 'Gestión de formulario',
   NOMBRE_TECNICO: 'Nombre Tecnico',
   MOVILIDAD_ASOCIADA: 'Movilidad Asociada',
   VERSION: 'Version',
