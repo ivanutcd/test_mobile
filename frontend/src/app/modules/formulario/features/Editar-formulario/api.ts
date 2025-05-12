@@ -12,7 +12,7 @@ export const editarFormulario = async (
     nombreTecnico,
     descripcion,
     movilidadAsociada,
-    estado: estado.id,
+    estado: estado,
   };
   return httpApi.put(`${Formularios_baseUrl}/${id}`, transformedData);
 };

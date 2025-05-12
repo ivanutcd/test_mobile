@@ -1,49 +1,87 @@
-import Formulario from '../../components/formulario';
-import { EstadosFormularios } from '../../utils/estado-formularios';
-import { EstadoFormularios } from '../../interfaces/formulario-form-props';
 import { FormularioInterface } from '../../interfaces/formulario';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { editarFormulario } from './api';
 import { Box, Button } from '@mui/material';
 import { useNotification } from '@components/snackbar/use-notification';
 import { traducciones } from '../../common/translations';
+import FormularioBase from '../../components/FormularioBase';
+import { useCatalogos } from '@common/catalog/hooks';
+import { useState, useEffect } from 'react';
+import {
+  FormularioDataEmpty,
+  FormularioProps,
+  ModeFormulario,
+} from '../../common/types';
+import { FormularioData } from '../../models/formulario.models';
 
-interface Props {
-  id: string;
-  modal: (open: boolean) => void;
-  recargar: () => void;
+interface Props extends FormularioProps {
+  mode: ModeFormulario;
 }
-const EditarFormulario = ({ id, modal, recargar }: Props) => {
-  const [{ data: formulario, loading }] = useObtenerFormularioById(id ?? '');
+const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
+  const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
   const { success } = useNotification();
+  const [initialValues, setInitialValues] = useState(FormularioDataEmpty);
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: catalogs } = useCatalogos(
+    'tipo_movilidad',
+    'estado_formulario',
+  );
+  const nameForm = `${mode ?? 'skeleton'}Formulario`;
+  const [{ data: response, loading }] = useObtenerFormularioById(id ?? '');
+
+  useEffect(() => {
+    if (id && response) {
+      const estado = catalogs?.estado_formulario.find(
+        x => x.id === response.estado,
+      );
+      const movilidadAsociada = catalogs?.tipo_movilidad.find(
+        x => x.id === response.movilidadAsociada,
+      );
+      const mergedInitialValues: FormularioData = {
+        ...response,
+        estadoItem: estado,
+        estadoNombre: estado?.nombre ?? response?.estado,
+        movilidadAsociadaItem: movilidadAsociada,
+        movilidadAsociadaNombre:
+          movilidadAsociada?.nombre ?? response?.movilidadAsociada,
+      };
+
+      setInitialValues(mergedInitialValues);
+    }
+
+    setIsLoading(loading);
+  }, [
+    id,
+    response,
+    loading,
+    catalogs?.estado_formulario,
+    catalogs?.tipo_movilidad,
+  ]);
+
   if (loading || !formulario) return <></>;
   const guardar = async (formValues: FormularioInterface) => {
     const values: FormularioInterface = {
       ...formValues,
       id: id!,
     };
-    editarFormulario(id, values).then(() => {
+
+    editarFormulario(values.id, values).then(() => {
       success('Formulario editado correctamente');
-      recargar();
-      modal(false);
+      onSuccess();
+      onCancel();
     });
   };
-  const initialData: FormularioInterface = {
-    ...formulario,
-    estado: EstadosFormularios.find(
-      x => x.id === formulario.estado.toString(),
-    ) as unknown as EstadoFormularios,
-  };
-  const nameForm = 'editar-formulario';
+
   return (
     <>
       {' '}
-      <Formulario
-        valorInicial={initialData}
+      <FormularioBase
+        defaultValues={initialValues}
         onSubmit={guardar}
-        loading={false}
+        loading={isLoading}
         nameForm={nameForm}
-        viewMode={false}
+        catalogs={catalogs}
+        mode={'edit'}
       />
       <Box display="flex" justifyContent="flex-end" gap={2}>
         <Button
@@ -56,7 +94,7 @@ const EditarFormulario = ({ id, modal, recargar }: Props) => {
             backgroundColor: '#FAFAFA',
           }}
           onClick={() => {
-            modal(false);
+            onCancel();
           }}
         >
           Cerrar
