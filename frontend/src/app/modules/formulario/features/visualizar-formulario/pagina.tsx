@@ -40,4 +40,4 @@ const Pagina = ({
   );
 };
 
-export default Pagina;
+export default VerFormulario;

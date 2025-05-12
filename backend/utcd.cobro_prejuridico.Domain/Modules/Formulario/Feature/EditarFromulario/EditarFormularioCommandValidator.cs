@@ -17,18 +17,19 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
             IReadOnlyRepository<Projections.FormularioTable.Formulario> repository
         )
         {
-           
-
-
             RuleFor(x => x.NombreTecnico)
                 .NotEmpty()
                 .NotNull()
                 .Matches("^[a-zA-Z0-9 ]*$")
                 .WithMessage("{PropertyName} no debe contener caracteres especiales.")
-                .Must((request, nombreTecnico) =>
-                {
-                    return !repository.AsQueryable().Any(x => x.NombreTecnico == nombreTecnico && x.Id != request.Id);
-                })
+                .Must(
+                    (request, nombreTecnico) =>
+                    {
+                        return !repository
+                            .AsQueryable()
+                            .Any(x => x.NombreTecnico == nombreTecnico && x.Id != request.Id);
+                    }
+                )
                 .WithMessage("Ya existe un {PropertyName} con el nombre '{PropertyValue}'.")
                 .MaximumLength(200);
 

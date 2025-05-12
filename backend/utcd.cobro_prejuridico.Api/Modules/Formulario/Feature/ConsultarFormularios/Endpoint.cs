@@ -8,17 +8,20 @@ public static class Endpoint
 {
     public static void ConsultarFormularios(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/", async (IQueryDispatcher dispatcher, [AsParameters] FormularioRequest request) =>
-            {
-                IPaginated<FormularioResponse>? result =
-                    await dispatcher.Execute(new ConsultarFormularioQuery(request));
-                return result;
-            })
+        app.MapGet(
+                "/",
+                async (IQueryDispatcher dispatcher, [AsParameters] FormularioRequest request) =>
+                {
+                    IPaginated<FormularioResponse>? result = await dispatcher.Execute(
+                        new ConsultarFormularioQuery(request)
+                    );
+                    return result;
+                }
+            )
             .Produces<IPaginated<FormularioResponse>>()
             .WithSummary("Listado formulario")
             .WithDescription("Permite listar formularios")
             .WithOpenApi();
         // .Access();
     }
-
 }

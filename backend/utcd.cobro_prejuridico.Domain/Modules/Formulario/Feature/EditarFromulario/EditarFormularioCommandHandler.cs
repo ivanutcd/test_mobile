@@ -16,10 +16,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
     {
         private IWritableEventStoreRepository<FormularioRoot> Store { get; }
 
-
-        public EditarFormularioCommandHandler(
-            IWritableEventStoreRepository<FormularioRoot> store
-        )
+        public EditarFormularioCommandHandler(IWritableEventStoreRepository<FormularioRoot> store)
         {
             Store = store;
         }
@@ -32,7 +29,6 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
                 command.Descripcion,
                 command.MovilidadAsociada,
                 command.Estado
-               
             );
             await Store.Update(sucursalRoot);
         }

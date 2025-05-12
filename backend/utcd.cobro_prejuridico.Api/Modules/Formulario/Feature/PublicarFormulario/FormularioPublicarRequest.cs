@@ -2,6 +2,6 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.PublicarFormular
 {
     public class FormularioPublicarRequest
     {
-        public Guid Id { get; set; }    
+        public Guid Id { get; set; }
     }
 }

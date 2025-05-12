@@ -28,7 +28,5 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
             MovilidadAsociada = movilidadAsociada;
             Estado = estado;
         }
-
-      
     }
 }

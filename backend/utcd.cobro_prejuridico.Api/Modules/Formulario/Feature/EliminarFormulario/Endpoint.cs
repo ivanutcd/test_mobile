@@ -17,7 +17,9 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EliminarFormular
                     "/{id}",
                     async ([FromRoute] Guid id, IDispatcher dispatcher) =>
                     {
-                        Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(new EliminarFormularioCommand(id));
+                        Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(
+                            new EliminarFormularioCommand(id)
+                        );
                         return result.ToResponse(new EntityIdResponse() { Id = id });
                     }
                 )

@@ -18,9 +18,7 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.PublicarFormular
                     "/",
                     async (FormularioPublicarRequest input, IDispatcher dispatcher) =>
                     {
-                        var command = new PublicarFormularioCommand(
-                           input.Id
-                        );
+                        var command = new PublicarFormularioCommand(input.Id);
 
                         Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(
                             command

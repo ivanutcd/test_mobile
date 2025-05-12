@@ -60,7 +60,11 @@ const Pagina = () => {
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
-      onClick: () => {},
+      label: traducciones.EDITAR,
+      onClick: params => {
+        setOpenEditar(true);
+        setRowData(params.id);
+      },
     },
     {
       icon: <DeleteIcon />,
