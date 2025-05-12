@@ -9,7 +9,7 @@ import * as yup from 'yup';
 
 const validaciones = yup.object().shape({
   nombreTecnico: yup.string().required().max(200, 'Máximo 200 caracteres.'),
-  descripcion: yup.string().required().max(100, 'Máximo 1000 caracteres'),
+  descripcion: yup.string().required().max(2000, 'Máximo 2000 caracteres'),
   estado: yup.object().nonNullable().required(),
   movilidadAsociada: yup.string().nonNullable().required(),
 });
