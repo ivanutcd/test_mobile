@@ -11,29 +11,29 @@ using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulari
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormulario
 {
-    public class PublicarFormularioCommandValidator : CommandValidatorBase<PublicarFormularioCommand>
+    public class PublicarFormularioCommandValidator
+        : CommandValidatorBase<PublicarFormularioCommand>
     {
         public PublicarFormularioCommandValidator(
             IReadOnlyRepository<Projections.FormularioTable.Formulario> repository
         )
         {
             RuleFor(x => x.Id)
-           .NotEmpty()
-           .Custom(
-               (value, context) =>
-               {
-                   Projections.FormularioTable.Formulario entidad = repository.AsQueryable().FindFirst(x => x.Id == value);
+                .NotEmpty()
+                .Custom(
+                    (value, context) =>
+                    {
+                        Projections.FormularioTable.Formulario entidad = repository
+                            .AsQueryable()
+                            .FindFirst(x => x.Id == value);
 
-
-                   if (entidad == null)
-                   {
-                       context.AddFailure(
-                           "No se encontro el formulario"
-                       );
-                   }
-                   ;
-               }
-           );
+                        if (entidad == null)
+                        {
+                            context.AddFailure("No se encontro el formulario");
+                        }
+                        ;
+                    }
+                );
         }
     }
 }

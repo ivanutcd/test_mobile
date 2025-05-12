@@ -14,30 +14,33 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario
         public static void EditarFormulario(this IEndpointRouteBuilder app)
         {
             app.MapPut(
-                     "/{id}",
-                     async (FormularioEditarRequest input, [FromRoute] Guid id,  IDispatcher dispatcher) =>
-                     {
+                    "/{id}",
+                    async (
+                        FormularioEditarRequest input,
+                        [FromRoute] Guid id,
+                        IDispatcher dispatcher
+                    ) =>
+                    {
+                        var command = new EditarFormularioCommand(
+                            id,
+                            input.NombreTecnico,
+                            input.Descripcion,
+                            input.MovilidadAsociada,
+                            input.Estado
+                        );
 
-                         var command = new EditarFormularioCommand(
-                             id,
-                             input.NombreTecnico,
-                             input.Descripcion,
-                             input.MovilidadAsociada,
-                             input.Estado
-                         );
+                        Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(
+                            command
+                        );
 
-                         Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(
-                             command
-                         );
-
-                         return result.ToResponse(new EntityIdResponse(id));
-                     }
-                 )
-                 .Produces<EntityIdResponse>()
-                 .WithSummary("Editar Formulario.")
-                 .WithDescription("Edición de formulario dinamico.")
-                  //.Access(Permisos.EDITAR_FORMULARIO)
-                 .WithOpenApi();
+                        return result.ToResponse(new EntityIdResponse(id));
+                    }
+                )
+                .Produces<EntityIdResponse>()
+                .WithSummary("Editar Formulario.")
+                .WithDescription("Edición de formulario dinamico.")
+                //.Access(Permisos.EDITAR_FORMULARIO)
+                .WithOpenApi();
         }
     }
 }

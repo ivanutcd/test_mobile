@@ -58,13 +58,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         )
         {
             FormularioEditarEvent editar =
-                new(
-                    Id,
-                    nombreTecnico,
-                    descripcion,
-                    movilidadAsociada,
-                    estado
-                );
+                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado);
 
             Apply(NewChange(editar));
         }
@@ -78,6 +72,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Estado = @event.Estado;
             Version++;
         }
+
         public void Eliminar()
         {
             Apply(NewChange(new FormularioEliminado(Id)));
@@ -87,6 +82,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         {
             Version++;
         }
+
         public void PublicarFormilarioEstado(string estado)
         {
             Apply(NewChange(new FormularioPublicadoEvent(this.Id, estado)));

@@ -10,29 +10,29 @@ using JasperFx.Core;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulario
 {
-    public class EliminarFormularioCommandValidator : CommandValidatorBase<EliminarFormularioCommand>
+    public class EliminarFormularioCommandValidator
+        : CommandValidatorBase<EliminarFormularioCommand>
     {
         public EliminarFormularioCommandValidator(
             IReadOnlyRepository<Projections.FormularioTable.Formulario> repository
         )
         {
             RuleFor(x => x.Id)
-           .NotEmpty()
-           .Custom(
-               (value, context) =>
-               {
-                   Projections.FormularioTable.Formulario entidad = repository.AsQueryable().FindFirst(x => x.Id == value);
-                  
+                .NotEmpty()
+                .Custom(
+                    (value, context) =>
+                    {
+                        Projections.FormularioTable.Formulario entidad = repository
+                            .AsQueryable()
+                            .FindFirst(x => x.Id == value);
 
-                   if (entidad == null)
-                   {
-                       context.AddFailure(
-                           "No se encontro el formulario"
-                       );
-                   }
-                   ;
-               }
-           );
+                        if (entidad == null)
+                        {
+                            context.AddFailure("No se encontro el formulario");
+                        }
+                        ;
+                    }
+                );
         }
     }
 }

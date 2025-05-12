@@ -3,7 +3,7 @@ using Enee.Core.Domain;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable;
 
-public class Formulario: EntityAuditable<Guid>, IEntity<Guid>
+public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
 {
     public Guid Id { get; set; }
     public string NombreTecnico { get; set; }

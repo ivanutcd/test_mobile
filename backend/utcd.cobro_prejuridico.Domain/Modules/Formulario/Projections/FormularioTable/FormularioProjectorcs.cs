@@ -22,15 +22,15 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.Formulari
                 }
             );
             Project<FormularioEditarEvent>(
-                 (evento, table) =>
-                 {
+                (evento, table) =>
+                {
                     table.Id = evento.AggregateId;
                     table.NombreTecnico = evento.NombreTecnico;
                     table.Descripcion = evento.Descripcion;
                     table.MovilidadAsociada = evento.MovilidadAsociada;
                     table.Estado = evento.Estado;
                     table.VersionFormulario = string.Empty;
-                 }
+                }
             );
             Deleted<FormularioEliminado>();
             Project<FormularioPublicadoEvent>(

@@ -6,6 +6,5 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario
         public const string EDITAR_FORMULARIO = "editar_formulario";
         public const string ELIMINAR_FORMULARIO = "eliminar_formulario";
         public const string PUBLICAR_FORMULARIO = "publicar_formulario";
-
     }
 }
