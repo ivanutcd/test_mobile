@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Enee.Core.CQRS"/>
-      <PackageReference Include="Enee.Core.Domain"/>
-      <PackageReference Include="Enee.Core.Events"/>
+      <PackageReference Include="Enee.Core.CQRS" />
+      <PackageReference Include="Enee.Core.Domain" />
+      <PackageReference Include="Enee.Core.Events" />
     </ItemGroup>
 
 </Project>
