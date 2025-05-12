@@ -20,7 +20,7 @@ public static class Endpoint
                 }
             )
             .Produces<FormularioIdResponse>()
-            .WithSummary("Obtiene listado de Agentes Recaudadores paginados")
+            .WithSummary("Obtiene el detalle de un formulario")
             .WithDescription("Listar Agentes Recaudadores pagina.")
             .WithOpenApi();
     }
