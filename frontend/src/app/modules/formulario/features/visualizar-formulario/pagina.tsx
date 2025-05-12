@@ -3,14 +3,12 @@ import { EstadosFormularios } from '../../utils/estado-formularios';
 import { EstadoFormularios } from '../../interfaces/formulario-form-props';
 import { FormularioInterface } from '../../interfaces/formulario';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
-import { useParams } from 'react-router-dom';
-import BaseTemplate from '@components/baseTemplate/baseTemplate';
 
-const Pagina = () => {
-  const params = useParams();
-  const [{ data: formulario, loading }] = useObtenerFormularioById(
-    params.id ?? '',
-  );
+interface Props {
+  id: string;
+}
+const VerFormulario = ({ id }: Props) => {
+  const [{ data: formulario, loading }] = useObtenerFormularioById(id ?? '');
 
   if (loading || !formulario) return <></>;
 
@@ -24,19 +22,17 @@ const Pagina = () => {
   return (
     <>
       {' '}
-      <BaseTemplate title="Formulario" divider={true}>
-        <Formulario
-          valorInicial={initialData}
-          onSubmit={form => {
-            console.log(form);
-          }}
-          loading={false}
-          nameForm={nameForm}
-          viewMode={true}
-        />
-      </BaseTemplate>
+      <Formulario
+        valorInicial={initialData}
+        onSubmit={form => {
+          console.log(form);
+        }}
+        loading={false}
+        nameForm={nameForm}
+        viewMode={true}
+      />
     </>
   );
 };
 
-export default Pagina;
+export default VerFormulario;

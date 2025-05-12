@@ -24,20 +24,22 @@ import { PaginateResult } from '@common/hooks/models/paginate-result.ts';
 import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import { useNavigate } from 'react-router';
 
-
 // Luego se reemplaza por el componente de enee_componentes
 // import CustomModal from '@components/modal/dialog';
 
 // Luego se reemplazar por este componente
 import { CustomModal } from '@proyectos-enee/enee_componentes';
 
-import  Formulario  from '../../components/formulario';
-
+import Formulario from '../../components/formulario';
+import VerFormulario from '../visualizar-formulario/pagina.tsx';
+import { Box } from '@mui/system';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [openVer, setOpenVer] = useState(false);
+  const [rowData, setRowData] = useState('');
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
@@ -51,7 +53,8 @@ const Pagina = () => {
       label: traducciones.VISUALIZAR,
       icon: <VisibilityIcon />,
       onClick: params => {
-        navigate(`/formularios/${params.id}/ver`);
+        setOpenVer(true);
+        setRowData(params.id);
       },
     },
     {
@@ -71,7 +74,6 @@ const Pagina = () => {
   const hasAnyActionAccess = actions.some(
     accion => !accion.hide || !accion.hide(null),
   );
-
 
   const columns: ColumnDef[] = [
     ...(hasAnyActionAccess
@@ -140,18 +142,52 @@ const Pagina = () => {
             columnDefs={columns}
           />
         )}
-  
 
-          <CustomModal
-            open={open}
-            handleClose={() => setOpen(false)}
-            modalTitle="Configurar Formulario"
-      >
-      
-            <Formulario onSubmit={() => {}} nameForm="formulario" loading={false} />
-          </CustomModal>
-   
+        <CustomModal
+          open={open}
+          handleClose={() => setOpen(false)}
+          modalTitle="Configurar Formulario"
+        >
+          <Formulario
+            onSubmit={() => {}}
+            nameForm="formulario"
+            loading={false}
+          />
+        </CustomModal>
 
+        <CustomModal
+          open={openVer}
+          handleClose={() => setOpenVer(false)}
+          modalTitle="Ver detalles"
+        >
+          <VerFormulario id={rowData} />
+
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button
+              variant="outlined"
+              sx={{
+                height: '40px',
+                width: '154px',
+                color: '#616161',
+                borderColor: 'rgba(97, 97, 97, 0.26)',
+                backgroundColor: '#FAFAFA',
+              }}
+              onClick={() => setOpenVer(false)}
+            >
+              Cerrar
+            </Button>
+            <Button
+              sx={{
+                height: '40px',
+                width: '154px',
+              }}
+              color="primary"
+              onClick={() => setOpenVer(false)}
+            >
+              Publicar formulario
+            </Button>
+          </Box>
+        </CustomModal>
       </MainCard>
     </>
   );

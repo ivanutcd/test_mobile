@@ -10,17 +10,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac"  />
+      <PackageReference Include="Autofac" />
       <PackageReference Include="Carter" />
-      <PackageReference Include="DotNetEnv"  />
+      <PackageReference Include="DotNetEnv" />
       <PackageReference Include="Enee.Core.Infraestructure" />
       <PackageReference Include="Enee.IoC.Architecture" />
       <PackageReference Include="Enee.Core.Common" />
-      <PackageReference Include="FluentMigrator.Runner"  />
+      <PackageReference Include="FluentMigrator.Runner" />
       <PackageReference Include="Marten" />
       <PackageReference Include="Marten.CommandLine" />
       <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-      <PackageReference Include="Swashbuckle.AspNetCore"/>
+      <PackageReference Include="Swashbuckle.AspNetCore" />
       <!-- MENSAJERIA -->
       <PackageReference Include="MassTransit" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" />
