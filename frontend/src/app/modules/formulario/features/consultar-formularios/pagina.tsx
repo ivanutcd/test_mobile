@@ -33,7 +33,6 @@ import CustomModal from '@components/modal/dialog';
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
 import FormularioEditar from '../Editar-formulario/index.tsx';
-import { set } from 'react-hook-form';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
