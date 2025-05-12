@@ -1,41 +1,42 @@
-import Formulario from '../../components/formulario';
-import { EstadosFormularios } from '../../utils/estado-formularios';
-import { EstadoFormularios } from '../../interfaces/formulario-form-props';
-import { FormularioInterface } from '../../interfaces/formulario';
-import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
-import { useParams } from 'react-router-dom';
-import BaseTemplate from '@components/baseTemplate/baseTemplate';
+import { useEffect } from 'react';
+import { FormularioProps } from '../../common/types';
+import FormularioBase from '../../components/FormularioBase';
 
-const Pagina = () => {
-  const params = useParams();
-  const [{ data: formulario, loading }] = useObtenerFormularioById(
-    params.id ?? '',
-  );
+interface VisualizarFormularioProps extends FormularioProps {
+  nameForm: string;
+  catalogs: any;
+  onPublicarFormulario: (fn: (id: string) => void) => void;
+}
 
-  if (loading || !formulario) return <></>;
-
-  const initialData: FormularioInterface = {
-    ...formulario,
-    estado: EstadosFormularios.find(
-      x => x.id === formulario.estado.toString(),
-    ) as unknown as EstadoFormularios,
+const Pagina = ({
+  nameForm,
+  initialValues,
+  isLoading,
+  onPublicarFormulario,
+}: VisualizarFormularioProps) => {
+  const publicarFormularioFn = (id: string) => {
+    if (id) {
+      // ejecuta evento,
+      // onSuccess para refrescar la lista y cerrar modal
+      // onCancel para cerrar modal
+    }
   };
-  const nameForm = 'formulario';
+
+  useEffect(() => {
+    if (onPublicarFormulario) {
+      onPublicarFormulario(publicarFormularioFn);
+    }
+  }, [onPublicarFormulario]);
+
   return (
-    <>
-      {' '}
-      <BaseTemplate title="Formulario" divider={true}>
-        <Formulario
-          valorInicial={initialData}
-          onSubmit={form => {
-            console.log(form);
-          }}
-          loading={false}
-          nameForm={nameForm}
-          viewMode={true}
-        />
-      </BaseTemplate>
-    </>
+    <div>
+      <FormularioBase
+        loading={isLoading}
+        nameForm={nameForm}
+        mode="view"
+        defaultValues={initialValues}
+      />
+    </div>
   );
 };
 

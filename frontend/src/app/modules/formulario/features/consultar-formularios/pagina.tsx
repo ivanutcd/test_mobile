@@ -24,20 +24,39 @@ import { PaginateResult } from '@common/hooks/models/paginate-result.ts';
 import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import { useNavigate } from 'react-router';
 
-
 // Luego se reemplaza por el componente de enee_componentes
 import CustomModal from '@components/modal/dialog';
 
 // Luego se reemplazar por este componente
 // import { CustomModal } from '@proyectos-enee/enee_componentes';
 
-import  Formulario  from '../../components/formulario';
-
+import GestionarFormulario from '../gestionar-formulario/index.ts';
+import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [formularioId, setFormularioId] = useState('');
+  const [mode, setMode] = useState<ModeFormulario>(null);
+
+  const handleSuccess = () => {
+    // setMode(null);
+    setOpenModal(false);
+    recargar();
+  };
+
+  const handleCloseModal = () => {
+    // setMode(null);
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = (newMode: ModeFormulario) => {
+    setMode(newMode);
+    setOpenModal(true);
+  };
+
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
@@ -51,7 +70,10 @@ const Pagina = () => {
       label: traducciones.VISUALIZAR,
       icon: <VisibilityIcon />,
       onClick: params => {
-        navigate(`/formularios/${params.id}/ver`);
+        setFormularioId('');
+        setFormularioId(params.id);
+        handleOpenModal('view');
+        // navigate(`/formularios/${params.id}/ver`);
       },
     },
     {
@@ -71,7 +93,6 @@ const Pagina = () => {
   const hasAnyActionAccess = actions.some(
     accion => !accion.hide || !accion.hide(null),
   );
-
 
   const columns: ColumnDef[] = [
     ...(hasAnyActionAccess
@@ -129,7 +150,7 @@ const Pagina = () => {
             save={buscar}
             extraProps={{ handleRecargar: recargar }}
           />
-          <Button size="large" onClick={() => setOpen(true)}>
+          <Button size="large" onClick={() => handleOpenModal('create')}>
             <AddIcon />
             {traducciones.BOTON_CREAR}
           </Button>
@@ -140,18 +161,19 @@ const Pagina = () => {
             columnDefs={columns}
           />
         )}
-  
 
-          <CustomModal
-            open={open}
-            handleClose={() => setOpen(false)}
-            modalTitle="Configurar Formulario"
-      >
-      
-            <Formulario onSubmit={() => {}} nameForm="formulario" loading={false} />
-          </CustomModal>
-   
-
+        <CustomModal
+          open={openModal}
+          handleClose={handleCloseModal}
+          modalTitle={TitleFormulario(mode)}
+        >
+          <GestionarFormulario
+            mode={mode}
+            id={formularioId}
+            onCancel={handleCloseModal}
+            onSuccess={handleSuccess}
+          />
+        </CustomModal>
       </MainCard>
     </>
   );
