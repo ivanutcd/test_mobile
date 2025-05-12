@@ -2,8 +2,7 @@ import { useState } from 'react';
 import MainCard from '@common/ui-component/cards/main-card.tsx';
 import FormBuilder from './FormBuilder';
 import FormRender from './formRender';
-import { GridContainer } from '@components/ui-layout/grid-container.tsx';
-import { Col } from '@components/ui-layout/col.tsx';
+import { GridContainer,Col } from '@proyectos-enee/enee_componentes';
 import { FormField } from './formField';
 import { useParams } from 'react-router-dom';
 
@@ -24,6 +23,7 @@ const ConfigurarFormulario = () => {
   return (
     <MainCard title="Configurar Formulario" sx={{ minHeight: 'calc(100vh - 210px)' }}>
       <GridContainer>
+       
         <Col xs={12} md={8}>
           <FormBuilder onFormChange={setFormData} />
         </Col>
