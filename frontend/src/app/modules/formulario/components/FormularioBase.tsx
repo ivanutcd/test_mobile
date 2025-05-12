@@ -73,7 +73,7 @@ const FormularioBase = ({
                       labelField="nombre"
                       label="Movilidad Asociada"
                       name="movilidadAsociadaItem"
-                      items={catalogs.tipo_movilidad ?? []}
+                      items={catalogs?.tipo_movilidad ?? []}
                       whenChange={selectedItem => {
                         setValue('movilidadAsociada', selectedItem?.id ?? '');
                         trigger('movilidadAsociadaItem');
@@ -98,7 +98,7 @@ const FormularioBase = ({
                     labelField="nombre"
                     label="Estado"
                     name="estadoItem"
-                    items={catalogs.estado_formulario ?? []}
+                    items={catalogs?.estado_formulario ?? []}
                     whenChange={selectedItem => {
                       setValue('estado', selectedItem?.id ?? '');
                       trigger('estadoItem');

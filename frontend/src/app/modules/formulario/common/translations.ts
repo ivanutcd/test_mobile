@@ -15,6 +15,7 @@ export const traducciones = {
   FECHA_MODIFICACION: 'Fecha y hora de última modificación',
   DUPLICAR: ' Duplicar',
   CONFIGURAR: 'Configurar',
+  EDITAR: 'Editar',
 };
 
 export default traducciones;

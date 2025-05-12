@@ -8,7 +8,7 @@ interface VisualizarFormularioProps extends FormularioProps {
   onPublicarFormulario: (fn: (id: string) => void) => void;
 }
 
-const Pagina = ({
+const VerFormulario = ({
   nameForm,
   initialValues,
   isLoading,

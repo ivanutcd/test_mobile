@@ -35,10 +35,10 @@ const Pagina = ({
 
   useEffect(() => {
     if (id && response) {
-      const estado = catalogs.estado_formulario.find(
+      const estado = catalogs?.estado_formulario.find(
         x => x.id === response.estado,
       );
-      const movilidadAsociada = catalogs.tipo_movilidad.find(
+      const movilidadAsociada = catalogs?.tipo_movilidad.find(
         x => x.id === response.movilidadAsociada,
       );
       const mergedInitialValues: FormularioData = {
@@ -54,7 +54,13 @@ const Pagina = ({
     }
 
     setIsLoading(loading);
-  }, [id, response, loading]);
+  }, [
+    id,
+    response,
+    loading,
+    catalogs?.estado_formulario,
+    catalogs?.tipo_movilidad,
+  ]);
 
   let publicarFormularioFn: (id: string) => void;
   const setPublicarFormularioFunction = (fn: (id: string) => void) => {

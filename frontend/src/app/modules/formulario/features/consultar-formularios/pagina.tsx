@@ -32,12 +32,15 @@ import CustomModal from '@components/modal/dialog';
 
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
+import FormularioEditar from '../Editar-formulario/index.tsx';
+import { set } from 'react-hook-form';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
 
   const [openModal, setOpenModal] = useState(false);
+  const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
 
@@ -51,10 +54,17 @@ const Pagina = () => {
     // setMode(null);
     setOpenModal(false);
   };
-
+  const handleCloseModalEditar = () => {
+    setOpenModalEditar(false);
+  };
   const handleOpenModal = (newMode: ModeFormulario) => {
     setMode(newMode);
     setOpenModal(true);
+  };
+
+  const handleOpenModalEditar = (newMode: ModeFormulario) => {
+    setMode(newMode);
+    setOpenModalEditar(true);
   };
 
   const actions: Array<ActionColumn> = [
@@ -62,8 +72,9 @@ const Pagina = () => {
       icon: <EditIcon />,
       label: traducciones.EDITAR,
       onClick: params => {
-        setOpenEditar(true);
-        setRowData(params.id);
+        setFormularioId('');
+        setFormularioId(params.id);
+        handleOpenModalEditar('edit');
       },
     },
     {
@@ -175,6 +186,19 @@ const Pagina = () => {
             mode={mode}
             id={formularioId}
             onCancel={handleCloseModal}
+            onSuccess={handleSuccess}
+          />
+        </CustomModal>
+
+        <CustomModal
+          open={openModalEditar}
+          handleClose={handleCloseModalEditar}
+          modalTitle={TitleFormulario(mode)}
+        >
+          <FormularioEditar
+            mode={mode}
+            id={formularioId}
+            onCancel={handleCloseModalEditar}
             onSuccess={handleSuccess}
           />
         </CustomModal>
