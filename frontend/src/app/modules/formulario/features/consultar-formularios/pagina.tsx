@@ -156,7 +156,6 @@ const Pagina = () => {
         </CustomModal>
 
         <CustomModal
-          sx={{ maxWidth: 'sm' }}
           open={openVer}
           handleClose={() => setOpenVer(false)}
           modalTitle="Ver detalles"
