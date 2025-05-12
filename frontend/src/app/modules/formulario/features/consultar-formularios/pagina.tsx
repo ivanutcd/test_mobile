@@ -33,17 +33,24 @@ import CustomModal from '@components/modal/dialog';
 import Formulario from '../../components/formulario';
 import VerFormulario from '../visualizar-formulario/pagina.tsx';
 import { Box } from '@mui/system';
+import EditarFormulario from '../Editar-formulario/pagina.tsx';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openVer, setOpenVer] = useState(false);
+  const [openEditar, setOpenEditar] = useState(false);
   const [rowData, setRowData] = useState('');
+  const cerrarEditar = (ce: boolean) => setOpenEditar(ce);
   const actions: Array<ActionColumn> = [
     {
       icon: <EditIcon />,
-      onClick: () => {},
+      label: traducciones.EDITAR,
+      onClick: params => {
+        setOpenEditar(true);
+        setRowData(params.id);
+      },
     },
     {
       icon: <DeleteIcon />,
@@ -187,6 +194,18 @@ const Pagina = () => {
               Publicar formulario
             </Button>
           </Box>
+        </CustomModal>
+
+        <CustomModal
+          open={openEditar}
+          handleClose={() => setOpenEditar(false)}
+          modalTitle="Editar Formulario"
+        >
+          <EditarFormulario
+            id={rowData}
+            modal={cerrarEditar}
+            recargar={recargar}
+          />
         </CustomModal>
       </MainCard>
     </>
