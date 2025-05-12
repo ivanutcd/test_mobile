@@ -5,6 +5,14 @@ import { Row } from '@components/ui-layout/row';
 import { FormularioFormProps } from '../interfaces/formulario-form-props';
 import { EstadosFormularios } from '../utils/estado-formularios';
 
+import * as yup from 'yup';
+
+const validaciones = yup.object().shape({
+  nombreTecnico: yup.string().required().max(200, 'Máximo 200 caracteres.'),
+  descripcion: yup.string().required().max(100, 'Máximo 1000 caracteres'),
+  estado: yup.object().nonNullable().required(),
+  movilidadAsociada: yup.string().nonNullable().required(),
+});
 const Formulario = ({
   valorInicial,
   onSubmit,
@@ -19,6 +27,7 @@ const Formulario = ({
         isLoading={loading}
         initialValues={valorInicial}
         onSubmit={onSubmit}
+        validations={validaciones}
       >
         {() => {
           return (
@@ -63,7 +72,6 @@ const Formulario = ({
                   />
                 </Col>
               </Row>
-              
             </GridContainer>
           );
         }}
