@@ -18,12 +18,12 @@ const schema = yup.object({
     .max(2000, 'Máximo 2000 caracteres'),
   estadoItem: yup
     .object()
-    .test('estado-valido', 'Este campo es requerido', function (value) {
+    .test('estado-valido', 'Este campo es requerido', function () {
       return this.parent.estado ? true : false;
     }),
   movilidadAsociadaItem: yup
     .object()
-    .test('movilidad-valido', 'Este campo es requerido', function (value) {
+    .test('movilidad-valido', 'Este campo es requerido', function () {
       return this.parent.movilidadAsociada ? true : false;
     }),
 });
