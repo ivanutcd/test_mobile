@@ -10,17 +10,15 @@ import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import './scss/form-render.scss';
 import { Button } from '@proyectos-enee/enee_componentes';
-// import  {Button}  from '@components/button/button';
 import {
   HookForm,
   InputText,
   InputNumber,
   DatePicker,
   Textarea,
-} from '@components/form';
-// import { FileUpload } from '@mui/icons-material';
+} from '@proyectos-enee/enee_componentes';
 
-// import { FileUpload } from '@proyectos-enee/enee_componentes';
+import { FileUpload } from '@proyectos-enee/enee_componentes';
 type FieldType =
   | 'text'
   | 'number'
@@ -71,13 +69,6 @@ export default function FormRender({ formData }: { formData: any }) {
               {formData.formFields.map((field: FormField) => {
                 const renderField = {
                   text: (
-                    // <TextField
-                    //   key={field.id}
-                    //   label={field.label}
-                    //   required={field.required}
-                    //   placeholder={field.placeholder}
-                    //   defaultValue={field.defaultValue}
-                    // />
                     <InputText
                       name={field.id}
                       label={field.label}
@@ -176,34 +167,25 @@ export default function FormRender({ formData }: { formData: any }) {
                     />
                   ),
                   file: (
-                    // <FileUpload
-                    //   key={field.id}
-                    //   label={field.label}
-                    //   multiple={true}
-                    //   onChange={() => {
-                    //     console.log(field.value);
-                    //   }}
-                    // />
-           
-                      <Button variant="contained" color="primary">
-                      
-                        {field.label}
-                      </Button>
-        
+                    <FileUpload
+                      key={field.id}
+                      label={field.label}
+                      multiple={true}
+                      onChange={() => {
+                        console.log(field.value);
+                      }}
+                    />
                   ),
                   image: (
-                    // <FileUpload
-                    //   key={field.id}
-                    //   type="image"
-                    //   multiple={true}
-                    //   label={field.label}
-                    //   onChange={() => {
-                    //     console.log(field.value);
-                    //   }}
-                    // />
-                    <Button variant="contained" color="primary">
-                      {field.label}
-                    </Button>
+                    <FileUpload
+                      key={field.id}
+                      type="image"
+                      multiple={true}
+                      label={field.label}
+                      onChange={() => {
+                        console.log(field.value);
+                      }}
+                    />
                   ),
                 };
 
@@ -211,10 +193,15 @@ export default function FormRender({ formData }: { formData: any }) {
               })}
 
               <div className="form-render-footer">
-                <Button form={nameForm} type="reset" variant="text">
+                <Button
+                  form={nameForm}
+                  type="reset"
+                  variant="contained"
+                  color="inherit"
+                >
                   Cancelar
                 </Button>
-                <Button form={nameForm} size="large" fullWidth type="submit">
+                <Button form={nameForm} fullWidth type="submit">
                   Guardar
                 </Button>
               </div>
