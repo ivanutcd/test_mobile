@@ -16,7 +16,7 @@ import {
   InputNumber,
   DatePicker,
   Textarea,
-} from '@components/form';
+} from '@proyectos-enee/enee_componentes';
 
 import { FileUpload } from '@proyectos-enee/enee_componentes';
 type FieldType =
@@ -69,13 +69,6 @@ export default function FormRender({ formData }: { formData: any }) {
               {formData.formFields.map((field: FormField) => {
                 const renderField = {
                   text: (
-                    // <TextField
-                    //   key={field.id}
-                    //   label={field.label}
-                    //   required={field.required}
-                    //   placeholder={field.placeholder}
-                    //   defaultValue={field.defaultValue}
-                    // />
                     <InputText
                       name={field.id}
                       label={field.label}
@@ -200,10 +193,15 @@ export default function FormRender({ formData }: { formData: any }) {
               })}
 
               <div className="form-render-footer">
-                <Button form={nameForm} type="reset" variant="text">
+                <Button
+                  form={nameForm}
+                  type="reset"
+                  variant="contained"
+                  color="inherit"
+                >
                   Cancelar
                 </Button>
-                <Button form={nameForm} size="large" fullWidth type="submit">
+                <Button form={nameForm} fullWidth type="submit">
                   Guardar
                 </Button>
               </div>

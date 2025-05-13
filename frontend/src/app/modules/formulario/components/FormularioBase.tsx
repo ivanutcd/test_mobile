@@ -36,7 +36,7 @@ const FormularioBase = ({
       >
         {({ setValue, trigger }: UseFormReturn<FormularioData>) => {
           return (
-            <Grid container spacing={2} p={1}>
+            <Grid container spacing={2} p={0}>
               {/* Campo nombreTecnico */}
               <Grid item xs={12}>
                 <InputText
