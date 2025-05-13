@@ -10,6 +10,7 @@ import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import './scss/form-render.scss';
 import { Button } from '@proyectos-enee/enee_componentes';
+// import  {Button}  from '@components/button/button';
 import {
   HookForm,
   InputText,
@@ -17,8 +18,9 @@ import {
   DatePicker,
   Textarea,
 } from '@components/form';
+// import { FileUpload } from '@mui/icons-material';
 
-import { FileUpload } from '@proyectos-enee/enee_componentes';
+// import { FileUpload } from '@proyectos-enee/enee_componentes';
 type FieldType =
   | 'text'
   | 'number'
@@ -174,25 +176,34 @@ export default function FormRender({ formData }: { formData: any }) {
                     />
                   ),
                   file: (
-                    <FileUpload
-                      key={field.id}
-                      label={field.label}
-                      multiple={true}
-                      onChange={() => {
-                        console.log(field.value);
-                      }}
-                    />
+                    // <FileUpload
+                    //   key={field.id}
+                    //   label={field.label}
+                    //   multiple={true}
+                    //   onChange={() => {
+                    //     console.log(field.value);
+                    //   }}
+                    // />
+           
+                      <Button variant="contained" color="primary">
+                      
+                        {field.label}
+                      </Button>
+        
                   ),
                   image: (
-                    <FileUpload
-                      key={field.id}
-                      type="image"
-                      multiple={true}
-                      label={field.label}
-                      onChange={() => {
-                        console.log(field.value);
-                      }}
-                    />
+                    // <FileUpload
+                    //   key={field.id}
+                    //   type="image"
+                    //   multiple={true}
+                    //   label={field.label}
+                    //   onChange={() => {
+                    //     console.log(field.value);
+                    //   }}
+                    // />
+                    <Button variant="contained" color="primary">
+                      {field.label}
+                    </Button>
                   ),
                 };
 

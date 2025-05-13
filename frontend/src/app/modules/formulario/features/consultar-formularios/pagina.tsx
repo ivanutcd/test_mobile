@@ -25,10 +25,10 @@ import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import { useNavigate } from 'react-router';
 
 // Luego se reemplaza por el componente de enee_componentes
-// import CustomModal from '@components/modal/dialog';
+import CustomModal from '@components/modal/dialog';
 
 // Luego se reemplazar por este componente
-import { CustomModal } from '@proyectos-enee/enee_componentes';
+// import { CustomModal } from '@proyectos-enee/enee_componentes';
 
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
