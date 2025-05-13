@@ -14,6 +14,7 @@ import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { FormularioData } from '../../models/formulario.models';
 import CrearFormulario from '../crear-formulario';
 import VisualizarFormulario from '../visualizar-formulario';
+import { EstadosFormulariosEnum } from '../../utils/estado-formularios';
 
 interface GestionarFormularioProps extends FormularioProps {
   mode: ModeFormulario;
@@ -129,7 +130,8 @@ const Pagina = ({
             Guardar
           </Button>
         )}
-        {mode === 'view' && (
+
+        {mode === 'view' && initialValues.estado !== EstadosFormulariosEnum.Publicado && (
           <Button
             variant="contained"
             color="primary"

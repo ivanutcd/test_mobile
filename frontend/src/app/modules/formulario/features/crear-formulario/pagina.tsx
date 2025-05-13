@@ -1,9 +1,10 @@
 import * as yup from 'yup';
 import { useNotification } from '@components/snackbar/use-notification.ts';
 import FormularioBase from '../../components/FormularioBase';
-import { FormularioProps } from '../../common/types';
+import { FormularioDataEmpty, FormularioProps } from '../../common/types';
 import { FormularioData } from '../../models/formulario.models';
 import { crearFormulario } from './api';
+import { EstadosFormularios } from '../../utils/estado-formularios';
 
 // Validaciones
 const schema = yup.object({
@@ -37,15 +38,19 @@ const Pagina = ({ onSuccess, nameForm, catalogs }: CrearFormularioProps) => {
   const { success } = useNotification();
 
   const onSubmit = async (data: FormularioData) => {
-    console.log('Formulario enviado:', data);
-
     await crearFormulario(data);
-    success(`Formulario ${data.nombreTecnico} creado exitosamente`);
+    success(`Formulario ${data.nombreTecnico} creado exitosamente.`);
 
     setTimeout(() => {
       onSuccess();
     }, 1000);
   };
+
+  const initialValues = FormularioDataEmpty;
+  const estadoInicial = EstadosFormularios[0];
+  initialValues.estadoItem = estadoInicial;
+  initialValues.estado = estadoInicial.id;
+  initialValues.estadoNombre = estadoInicial.nombre;
 
   return (
     <div>
@@ -56,6 +61,7 @@ const Pagina = ({ onSuccess, nameForm, catalogs }: CrearFormularioProps) => {
         catalogs={catalogs}
         mode="create"
         onSubmit={onSubmit}
+        defaultValues={initialValues}
       />
     </div>
   );

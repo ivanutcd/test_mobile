@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { FormularioProps } from '../../common/types';
 import FormularioBase from '../../components/FormularioBase';
+import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler';
 
 interface VisualizarFormularioProps extends FormularioProps {
   nameForm: string;
@@ -13,12 +14,18 @@ const VerFormulario = ({
   initialValues,
   isLoading,
   onPublicarFormulario,
+  onSuccess,
 }: VisualizarFormularioProps) => {
+  const { publicar } = usePublicarFormularioHandler();
+
   const publicarFormularioFn = (id: string) => {
     if (id) {
-      // ejecuta evento,
-      // onSuccess para refrescar la lista y cerrar modal
-      // onCancel para cerrar modal
+      publicar(id, {
+        onComplete: () => {
+          setTimeout(() => onSuccess?.(), 500);
+        },
+        onCancel: () => {},
+      });
     }
   };
 
