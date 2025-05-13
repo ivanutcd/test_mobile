@@ -7,7 +7,7 @@ const FormularioRouting = () => {
     <Routes>
       <Route path="" element={<ConsultarFormularios />} />
       <Route path=":id/ver" element={<VisualizarFormulario />} />
-      <Route path=":id/configurar" element={<ConfigurarFormulario />} />
+      <Route path=":id/configurar" element={<ConfigurarFormulario />} />  
     </Routes>
   );
 };

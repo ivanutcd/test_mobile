@@ -3,7 +3,8 @@ import {
   FormularioProps,
   ModeFormulario,
 } from '../../common/types';
-import { Button, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
+import { Button } from '@proyectos-enee/enee_componentes';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import { useCatalogos } from '@common/catalog/hooks';
 import { useEffect, useState } from 'react';
@@ -75,7 +76,12 @@ const Pagina = ({
 
   return (
     <BoxContainer
-      sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        padding: 0,
+      }}
       maxWidth="500px"
     >
       <BoxContainer sx={{ flexGrow: 1, overflow: 'auto' }}>
@@ -106,7 +112,12 @@ const Pagina = ({
       <BoxContainer
         sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}
       >
-        <Button variant="outlined" color="secondary" onClick={onCancel}>
+        <Button
+          variant="contained"
+          color="inherit"
+          onClick={onCancel}
+        
+        >
           Cancelar
         </Button>
         {mode !== 'view' && (
@@ -119,16 +130,17 @@ const Pagina = ({
             Guardar
           </Button>
         )}
-        {mode === 'view' &&
-          initialValues.estado !== EstadosFormulariosEnum.Publicado && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={ejecutarPublicar}
-            >
-              Publicar formulario
-            </Button>
-          )}
+
+        {mode === 'view' && initialValues.estado !== EstadosFormulariosEnum.Publicado && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={ejecutarPublicar}
+            sx={{ width: '200px' }}
+          >
+            Publicar formulario
+          </Button>
+        )}
       </BoxContainer>
     </BoxContainer>
   );
