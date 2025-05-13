@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable;
 
 namespace utcd.cobro_prejuridico.Data.Configurations;
@@ -11,5 +14,12 @@ public class FormularioConfiguration: IEntityTypeConfiguration<Formulario>
         builder.ToTable("formulario", Environment.GetEnvironmentVariable("DB__SCHEMA_TABLES"));
         builder.HasKey(x=>x.Id);
         builder.HasIndex(x => x.NombreTecnico).IsUnique();
+        builder.Property(x => x.EstructuraFormulario)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, new JsonSerializerOptions())
+            )
+            .HasColumnType("jsonb");
+
     }
 }

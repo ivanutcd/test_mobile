@@ -2,6 +2,7 @@ using Enee.Core.CQRS.Query;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormulario;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromulario;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulario;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCamposDinamicos;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormulario;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable
@@ -39,6 +40,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.Formulari
                     tabla.Estado = @event.Estado;
                 }
             );
+            Project<CamposDinamicosEstructuraFormularioGuardarEvent>(
+               (@event, tabla) =>
+               {
+                   tabla.EstructuraFormulario = @event.EstructuraFormulario;
+               }
+           );
         }
     }
 }

@@ -2,6 +2,7 @@ using Enee.Core.Domain;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormulario;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromulario;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulario;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCamposDinamicos;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormulario;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -16,6 +17,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string MovilidadAsociada { get; set; }
         public string Estado { get; set; }
         public string VersionFormulario { get; set; }
+        public Dictionary<string, object>? EstructuraFormulario { get; set; }
 
         public FormularioRoot() { }
 
@@ -91,6 +93,16 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         private void Apply(FormularioPublicadoEvent @event)
         {
             Estado = @event.Estado;
+            Version++;
+        }
+        public void GuardarEstructuraFormulario( Dictionary<string, object> estructuraFormulario)
+        {
+            Apply(NewChange(new CamposDinamicosEstructuraFormularioGuardarEvent(this.Id, estructuraFormulario)));
+        }
+
+        private void Apply(CamposDinamicosEstructuraFormularioGuardarEvent @event)
+        {
+            EstructuraFormulario = @event.EstructuraFormulario;
             Version++;
         }
     }
