@@ -14,6 +14,7 @@ import {
   AddCircleOutline as AddIcon,
   FileCopy as DuplicateIcon,
   Settings as SettingsIcon,
+  Rocket as RocketIcon,
 } from '@mui/icons-material';
 import { useState } from 'react';
 import { traducciones } from '../../common/translations';
@@ -33,10 +34,14 @@ import CustomModal from '@components/modal/dialog';
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
 import FormularioEditar from '../Editar-formulario/index.tsx';
+import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
+import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
+
+  const { publicar } = usePublicarFormularioHandler();
 
   const [openModal, setOpenModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
@@ -75,6 +80,7 @@ const Pagina = () => {
         setFormularioId(params.id);
         handleOpenModalEditar('edit');
       },
+      disabled: params => params.estado === EstadosFormulariosEnum.Publicado,
     },
     {
       icon: <DeleteIcon />,
@@ -101,6 +107,19 @@ const Pagina = () => {
       label: traducciones.DUPLICAR,
       icon: <DuplicateIcon />,
       onClick: () => {},
+    },
+    {
+      label: 'Publicar formulario',
+      icon: <RocketIcon />,
+      onClick: rowData => {
+        publicar(rowData.id, {
+          onComplete: () => {
+            setTimeout(() => handleSuccess(), 500);
+          },
+          onCancel: () => {},
+        });
+      },
+      hide: params => params.estado === EstadosFormulariosEnum.Publicado,
     },
   ];
 
