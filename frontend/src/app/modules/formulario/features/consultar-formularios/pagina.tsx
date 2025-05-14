@@ -22,7 +22,11 @@ import SearchForm from '../../components/searchForm';
 import { SearchProps } from './props.ts';
 import { PaginateResult } from '@common/hooks/models/paginate-result.ts';
 import { useNavigate } from 'react-router';
-import { CustomModal,PaginableGrid,BoxContainer } from '@proyectos-enee/enee_componentes';
+import {
+  CustomModal,
+  PaginableGrid,
+  BoxContainer,
+} from '@proyectos-enee/enee_componentes';
 import { useConfirmDialog } from '@components/dialog/confirm-dialog.tsx';
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
@@ -31,7 +35,6 @@ import { Formulario } from '../../models/formulario.models.ts';
 import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
-
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -88,7 +91,7 @@ const Pagina = () => {
       disabled: params => params.estado === EstadosFormulariosEnum.Publicado,
     },
     {
-      icon: <DeleteIcon  />,
+      icon: <DeleteIcon />,
       onClick: params => {
         handleOpenConfirmationDelete(params);
       },
@@ -111,11 +114,11 @@ const Pagina = () => {
     {
       label: traducciones.DUPLICAR,
       icon: <DuplicateIcon color="primary" />,
-      onClick: () => {}, 
+      onClick: () => {},
     },
     {
-      label: 'Publicar formulario',
-      icon: <RocketIcon />,
+      label: traducciones.PUBLICAR,
+      icon: <RocketIcon color="primary" />,
       onClick: rowData => {
         publicar(rowData.id, {
           onComplete: () => {
@@ -193,7 +196,7 @@ const Pagina = () => {
             {traducciones.BOTON_CREAR}
           </Button>
         </BoxContainer>
-        
+
         {!loading && data && (
           <PaginableGrid
             paginable={data as PaginateResult<any>}
