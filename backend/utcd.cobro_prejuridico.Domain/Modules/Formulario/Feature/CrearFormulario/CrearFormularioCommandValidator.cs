@@ -1,6 +1,7 @@
 using Enee.Core.CQRS.Validation;
 using Enee.Core.Domain.Repository;
 using FluentValidation;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormulario
 {
@@ -28,7 +29,14 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
 
             RuleFor(x => x.MovilidadAsociada).NotEmpty().NotNull();
 
-            RuleFor(x => x.Estado).NotEmpty().NotNull();
+            RuleFor(x => x.Estado)
+                .NotEmpty()
+                .NotNull()
+                .Must(value =>
+                {
+                    return value == FormularioEstado.Borrador.Value;
+                })
+                .WithMessage("El estado inicial debe de ser Borrador.");
         }
     }
 }

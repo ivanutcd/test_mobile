@@ -1,12 +1,11 @@
-export const enum EstadosFormulariosEnum {
-  Activo = 'Activo',
-  Inactivo = 'Inactivo',
+export enum EstadosFormulariosEnum {
+  Borrador = 'borrador',
+  Publicado = 'publicado',
 }
 
-export const EstadosFormularios = [
-  { id: EstadosFormulariosEnum.Activo, nombre: EstadosFormulariosEnum.Activo },
-  {
-    id: EstadosFormulariosEnum.Inactivo,
-    nombre: EstadosFormulariosEnum.Inactivo,
-  },
-];
+export const EstadosFormularios = Object.entries(EstadosFormulariosEnum).map(
+  ([nombre, id]) => ({
+    id,
+    nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase(),
+  }),
+);

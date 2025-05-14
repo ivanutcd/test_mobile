@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
-
+import { useTheme } from '@mui/material/styles';
 export interface ActionColumn {
   icon: React.ReactNode;
   color?:
@@ -18,6 +18,7 @@ export interface ActionColumn {
   disabled?: (rowData: any) => boolean; // Función para deshabilitar la acción
 }
 
+
 interface ActionColumnProps {
   actions: ActionColumn[];
   rowData: any; // Propiedad para pasar los datos de la fila
@@ -30,7 +31,7 @@ export const generateActionColumn =
 
 const ActionColumn: React.FC<ActionColumnProps> = ({ actions, rowData }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const theme = useTheme();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -55,7 +56,7 @@ const ActionColumn: React.FC<ActionColumnProps> = ({ actions, rowData }) => {
             key={index}
             onClick={() => handleActionClick(action, rowData)}
             disabled={action.disabled ? action.disabled(rowData) : false}
-            sx={{ color: '#4DAEBB' }}
+            sx={{ color: theme.palette.primary.main }}
           >
             {action.icon}
           </IconButton>
@@ -71,6 +72,13 @@ const ActionColumn: React.FC<ActionColumnProps> = ({ actions, rowData }) => {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              elevation={0}
+              sx={{
+                '& .MuiPaper-root': {
+                  borderRadius: '8px',
+                  border: `1px solid ${theme.palette.divider}`,
+                },
+              }}
             >
               {actions.slice(3).map((action, index) => (
                 <MenuItem
@@ -80,6 +88,9 @@ const ActionColumn: React.FC<ActionColumnProps> = ({ actions, rowData }) => {
                   style={{
                     display:
                       action.hide && action.hide(rowData) ? 'none' : 'flex',
+                    color: theme.palette.text.primary,
+                    alignItems: 'center',
+                    gap: '8px',
                   }}
                 >
                   {action.icon} {action.label || 'Sin etiqueta'}

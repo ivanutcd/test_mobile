@@ -24,6 +24,7 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
+  const isCreateMode = mode === 'create';
 
   return (
     <>
@@ -36,7 +37,7 @@ const FormularioBase = ({
       >
         {({ setValue, trigger }: UseFormReturn<FormularioData>) => {
           return (
-            <Grid container spacing={2} p={1}>
+            <Grid container spacing={2} p={0}>
               {/* Campo nombreTecnico */}
               <Grid item xs={12}>
                 <InputText
@@ -103,6 +104,7 @@ const FormularioBase = ({
                       setValue('estado', selectedItem?.id ?? '');
                       trigger('estadoItem');
                     }}
+                    disabled={isCreateMode}
                   />
                 )}
               </Grid>
