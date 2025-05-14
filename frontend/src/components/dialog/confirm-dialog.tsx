@@ -8,6 +8,7 @@ import { ButtonProps } from '@mui/material/Button';
 import { TextFieldProps } from '@mui/material/TextField';
 import { DefaultContent } from '@components/dialog/default-content.tsx';
 
+
 interface ConfirmOptions {
   title?: React.ReactNode;
   description: React.ReactNode;
@@ -51,7 +52,7 @@ export const useConfirmDialog = () => {
         cancellationButtonProps: {
           color: 'inherit',
           variant: 'contained',
-          sx: { color: '#9e9e9e', boxShadow: 'none' },
+          sx: { color: '#616161', boxShadow: 'none' },
         },
       })
         .then(() => {

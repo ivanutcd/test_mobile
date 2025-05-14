@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { Box } from '@mui/system';
 import { makeStyles } from '@mui/styles';
 import { DataGridProps } from '@mui/x-data-grid/models/props/DataGridProps';
-
 import { NoRowsOverlay } from '@components/grid/components/no-rows-overlay.tsx';
 import { mapColumns } from '@components/grid/utils/map-columns.tsx';
 import { ColumnDef } from '@components/grid/models/column-def.tsx';
