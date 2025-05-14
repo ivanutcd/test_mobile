@@ -134,7 +134,7 @@ const Pagina = ({
             variant="contained"
             color="primary"
             onClick={ejecutarPublicar}
-            sx={{ width: '200px' }}
+        
           >
             Publicar formulario
           </Button>

@@ -1,6 +1,5 @@
 import MainCard from '@common/ui-component/cards/main-card.tsx';
 import { Button } from '@components/button/button.tsx';
-import { PaginableGrid } from '@components/grid/paginable-grid.tsx';
 import { usePaginadoFormularios } from '../../hooks/usePaginadoFormularios.ts';
 import { ColumnDef } from '@components/grid/models/column-def.tsx';
 import {
@@ -21,30 +20,43 @@ import SearchComponent from '@components/searchComponent/index.tsx';
 import SearchForm from '../../components/searchForm';
 import { SearchProps } from './props.ts';
 import { PaginateResult } from '@common/hooks/models/paginate-result.ts';
-import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import { useNavigate } from 'react-router';
-import { CustomModal } from '@proyectos-enee/enee_componentes';
+import { CustomModal,PaginableGrid,BoxContainer } from '@proyectos-enee/enee_componentes';
+import { useConfirmDialog } from '@components/dialog/confirm-dialog.tsx';
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
 import FormularioEditar from '../Editar-formulario/index.tsx';
+import { Formulario } from '../../models/formulario.models.ts';
+import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
   const navigate = useNavigate();
-
+  const confirm = useConfirmDialog();
   const [openModal, setOpenModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
 
   const handleSuccess = () => {
-    // setMode(null);
     setOpenModal(false);
     recargar();
   };
 
+  const handleOpenConfirmationDelete = async (params: Formulario) => {
+    const result = await confirm({
+      title: `Eliminar ${params.nombreTecnico}`,
+      description: '¿Estás seguro de querer eliminar este formulario?',
+      confirmationText: 'Eliminar',
+      cancellationText: 'Cancelar',
+    });
+    if (result) {
+      await eliminarFormulario(params.id);
+      recargar();
+    }
+  };
+
   const handleCloseModal = () => {
-    // setMode(null);
     setOpenModal(false);
   };
   const handleCloseModalEditar = () => {
@@ -65,36 +77,35 @@ const Pagina = () => {
       icon: <EditIcon />,
       label: traducciones.EDITAR,
       onClick: params => {
-        setFormularioId('');
         setFormularioId(params.id);
         handleOpenModalEditar('edit');
       },
     },
     {
-      icon: <DeleteIcon />,
-      onClick: () => {},
+      icon: <DeleteIcon  />,
+      onClick: params => {
+        handleOpenConfirmationDelete(params);
+      },
     },
     {
       label: traducciones.VISUALIZAR,
-      icon: <VisibilityIcon />,
+      icon: <VisibilityIcon color="primary" />,
       onClick: params => {
-        setFormularioId('');
         setFormularioId(params.id);
         handleOpenModal('view');
-        // navigate(`/formularios/${params.id}/ver`);
       },
     },
     {
       label: traducciones.CONFIGURAR,
-      icon: <SettingsIcon />,
+      icon: <SettingsIcon color="primary" />,
       onClick: params => {
         navigate(`/formularios/${params.id}/configurar`);
       },
     },
     {
       label: traducciones.DUPLICAR,
-      icon: <DuplicateIcon />,
-      onClick: () => {},
+      icon: <DuplicateIcon color="primary" />,
+      onClick: () => {}, 
     },
   ];
 
@@ -159,10 +170,11 @@ const Pagina = () => {
             extraProps={{ handleRecargar: recargar }}
           />
           <Button size="large" onClick={() => handleOpenModal('create')}>
-            <AddIcon />
+            <AddIcon style={{ marginRight: 10 }} />
             {traducciones.BOTON_CREAR}
           </Button>
         </BoxContainer>
+        
         {!loading && data && (
           <PaginableGrid
             paginable={data as PaginateResult<any>}

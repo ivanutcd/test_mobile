@@ -7,34 +7,51 @@ import { IconButton } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useMemo, useEffect } from 'react';
-import { FormField, FormFieldType } from './formField';
+import { FormField, } from './formField';
+import { FormType } from './FormType';
+import { CustomChip } from '@proyectos-enee/enee_componentes';
 
 interface FormData {
   formName: string;
   formDescription: string;
   formFields: FormField[];
+  estado: string;
+  movilidadAsociada: string;
+  versionFormulario: string;
 }
 
 export default function FormBuilder({
   onFormChange,
+  formData
 }: {
   onFormChange?: (form: FormData) => void;
+  formData: FormType;
 }) {
-  const [dataForm, setDataForm] = useState<FormData>({
-    formName: 'Formulario de prueba',
-    formDescription: 'Este es un formulario de prueba',
-    formFields: [
+
+  if (formData.formFields === undefined) {
+
+    formData.formFields = [
       {
         id: '1',
-        label: '',
-        type: 'text' as FormFieldType,
+        label: 'Campo 1',
+        type: 'text',
         required: true,
         options: [],
         placeholder: 'Ingrese el campo 1',
         defaultValue: '',
         position: 1,
       },
-    ],
+    ];
+  }
+  console.warn(formData);
+
+  const [dataForm, setDataForm] = useState<FormData>({
+    formName: formData.nombreTecnico,
+    formDescription: formData.descripcion,
+    formFields: formData.formFields || [],
+    estado: formData.estado,
+    versionFormulario: formData.versionFormulario,
+    movilidadAsociada: formData.movilidadAsociada,
   });
 
   useEffect(() => {
@@ -84,6 +101,9 @@ export default function FormBuilder({
       <div className="form-builder">
         <h1>{dataForm.formName}</h1>
         <p>{dataForm.formDescription}</p>
+        <CustomChip label={dataForm.movilidadAsociada}  variant="filled"  />
+        <CustomChip label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`} style={{ position: 'absolute', top: 10, right: 10 }} variant="outlined" color={dataForm.estado === 'Activo' ? 'success' : 'error'} />
+
       </div>
       {dataForm.formFields.map(field => (
         <div className="card-container">
