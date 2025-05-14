@@ -24,6 +24,7 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
+  const isCreateMode = mode === 'create';
 
   return (
     <>
@@ -103,6 +104,7 @@ const FormularioBase = ({
                       setValue('estado', selectedItem?.id ?? '');
                       trigger('estadoItem');
                     }}
+                    disabled={isCreateMode}
                   />
                 )}
               </Grid>

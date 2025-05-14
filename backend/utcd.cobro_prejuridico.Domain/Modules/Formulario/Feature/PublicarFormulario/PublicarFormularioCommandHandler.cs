@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Enee.Core.CQRS.Command;
 using Enee.Core.Domain.Repository;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates;
-using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulario;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormulario
 {
@@ -23,7 +18,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormu
         {
             FormularioRoot root = await Store.Find(command.Id);
 
-            root.PublicarFormilarioEstado(Estados.Publicado);
+            root.PublicarFormilarioEstado(FormularioEstado.Publicado.Value);
             await Store.Update(root);
         }
     }

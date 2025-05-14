@@ -7,6 +7,7 @@ using Enee.Core.CQRS.Validation;
 using Enee.Core.Domain.Repository;
 using FluentValidation;
 using JasperFx.Core;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormulario;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormulario
@@ -31,9 +32,15 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.PublicarFormu
                         {
                             context.AddFailure("No se encontro el formulario");
                         }
-                        ;
                     }
-                );
+                )
+                .Must(value =>
+                {
+                    return !repository
+                        .AsQueryable()
+                        .Any(x => x.Id == value && x.Estado != FormularioEstado.Borrador.Value);
+                })
+                .WithMessage("El estado debe estar en 'Borrador' para publicarlo.");
         }
     }
 }
