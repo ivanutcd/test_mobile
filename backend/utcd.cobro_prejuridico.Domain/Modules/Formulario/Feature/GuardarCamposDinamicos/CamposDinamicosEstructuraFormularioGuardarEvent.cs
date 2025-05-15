@@ -9,9 +9,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCampos
 {
     public class CamposDinamicosEstructuraFormularioGuardarEvent : DomainEvent<Guid>
     {
-        public Dictionary<string, object> EstructuraFormulario { get; set; }
+        public string EstructuraFormulario { get; set; }
 
-        public CamposDinamicosEstructuraFormularioGuardarEvent(Guid aggregateId, Dictionary<string, object> estructuraFormulario)
+        public CamposDinamicosEstructuraFormularioGuardarEvent(Guid aggregateId, string estructuraFormulario)
             : base(aggregateId)
         {
             EstructuraFormulario = estructuraFormulario;

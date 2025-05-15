@@ -8,5 +8,5 @@ using Enee.Core.CQRS.Command;
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCamposDinamicos
 {
     public record GuardarCamposDinamicosFormularioCommand(Guid Id,
-         Dictionary<string, object> EstructuraFormulario) : ICommand;
+         string EstructuraFormulario) : ICommand;
 }

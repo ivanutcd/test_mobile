@@ -31,22 +31,19 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCampos
                         ;
                     }
                 );
-            //RuleFor(x => x.EstructuraFormulario)
-            //    .NotNull()
-            //    .WithMessage("La estructura del formulario no puede ser nula.")
-            //    .NotEmpty()
-            //    .WithMessage("La estructura del formulario no puede estar vacía.")
-            //    .Must(IsJsonObjectValid)
-            //    .WithMessage("La estructura del formulario no es un JSON válido.");
+            RuleFor(x => x.EstructuraFormulario)
+                .NotNull()
+                .WithMessage("La estructura del formulario no puede ser nula.")
+                .NotEmpty()
+                .WithMessage("La estructura del formulario no puede estar vacía.")
+                .Must(IsJsonObjectValid)
+                .WithMessage("La estructura del formulario no es un JSON válido.");
         }
-        private bool IsJsonObjectValid(object estructura)
+        private bool IsJsonObjectValid(string estructura)
         {
-            if (estructura is not string s)
-                return false;
-
             try
             {
-                JsonDocument.Parse(s);
+                JsonDocument.Parse(estructura);
                 return true;
             }
             catch

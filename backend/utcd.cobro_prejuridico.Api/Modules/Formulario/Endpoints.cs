@@ -1,4 +1,5 @@
 using Carter;
+using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarCampoDinamicoFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.CrearFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario;
@@ -26,5 +27,6 @@ public class Endpoints : CarterModule
         app.EliminarFormulario();
         app.PublicarFormulario();
         app.GuardarComposDinamicosFormulario();
+        app.ConsultarEstructuraFormularioId();
     }
 }

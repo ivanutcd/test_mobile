@@ -14,8 +14,8 @@ namespace utcd.cobro_prejuridico.Data.Migrations.Formulario
             Alter.Table("Formulario")
                 .InSchema(schema)
                 .AddColumn("EstructuraFormulario")
-                .AsCustom("jsonb") 
-                .Nullable(); 
+                .AsString()
+                .Nullable();
         }
 
         public override void Down()

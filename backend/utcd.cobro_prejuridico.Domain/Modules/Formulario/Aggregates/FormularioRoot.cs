@@ -17,7 +17,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string MovilidadAsociada { get; set; }
         public string Estado { get; set; }
         public string VersionFormulario { get; set; }
-        public Dictionary<string, object>? EstructuraFormulario { get; set; }
+        public string? EstructuraFormulario { get; set; }
 
         public FormularioRoot() { }
 
@@ -95,7 +95,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Estado = @event.Estado;
             Version++;
         }
-        public void GuardarEstructuraFormulario( Dictionary<string, object> estructuraFormulario)
+        public void GuardarEstructuraFormulario( string estructuraFormulario)
         {
             Apply(NewChange(new CamposDinamicosEstructuraFormularioGuardarEvent(this.Id, estructuraFormulario)));
         }

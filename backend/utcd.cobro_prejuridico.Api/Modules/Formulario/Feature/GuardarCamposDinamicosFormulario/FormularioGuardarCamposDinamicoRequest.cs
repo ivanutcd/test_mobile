@@ -3,6 +3,6 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.GuardarComposDin
     public class FormularioGuardarCamposDinamicoRequest
     {
         public Guid Id { get; set; }
-        public Dictionary<string, object> EstructuraFormulario { get; set; }
+        public string EstructuraFormulario { get; set; }
     }
 }
