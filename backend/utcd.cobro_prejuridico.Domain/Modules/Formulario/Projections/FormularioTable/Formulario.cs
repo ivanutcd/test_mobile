@@ -11,4 +11,6 @@ public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
     public string MovilidadAsociada { get; set; }
     public string Estado { get; set; }
     public string VersionFormulario { get; set; }
+   public string? EstructuraFormulario { get; set; }
 }
+
