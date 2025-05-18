@@ -9,7 +9,10 @@ import FieldSetting from './FieldSetting';
 import { useState, useMemo, useEffect } from 'react';
 import { FormField, } from './formField';
 import { FormType } from './FormType';
-import { CustomChip } from '@proyectos-enee/enee_componentes';
+import { Box } from '@mui/material';
+import { CustomChip, Button } from '@proyectos-enee/enee_componentes';
+import { guardarComposDinamicosFormulario, obtenerEstructuraFormulario } from './api';
+
 
 interface FormData {
   formName: string;
@@ -28,6 +31,7 @@ export default function FormBuilder({
   formData: FormType;
 }) {
 
+
   if (formData.formFields === undefined) {
 
     formData.formFields = [
@@ -43,7 +47,29 @@ export default function FormBuilder({
       },
     ];
   }
-  console.warn(formData);
+  console.warn(formData.
+    id);
+
+  const obtenerEstructura = async () => {
+    const response = await obtenerEstructuraFormulario(formData.id);
+    if (response.status === 200) {
+      setDataForm(response.data);
+    }
+  }
+  useEffect(() => {
+    obtenerEstructura();
+  }, []);
+
+
+  const guardarComposDinamicos = async () => {
+    const payload = {
+      id: formData.id,
+      estructuraFormulario: JSON.stringify(dataForm.formFields),
+    }
+    const response = await guardarComposDinamicosFormulario(payload as any);
+    console.log(response);
+
+  }
 
   const [dataForm, setDataForm] = useState<FormData>({
     formName: formData.nombreTecnico,
@@ -98,16 +124,16 @@ export default function FormBuilder({
   return (
 
     <BoxContainer className="form-builder-container">
-      <div className="form-builder">
+      <Box className="form-builder">
         <h1>{dataForm.formName}</h1>
         <p>{dataForm.formDescription}</p>
         <CustomChip label={dataForm.movilidadAsociada}  variant="filled"  />
         <CustomChip label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`} style={{ position: 'absolute', top: 10, right: 10 }} variant="outlined" color={dataForm.estado === 'Activo' ? 'success' : 'error'} />
-
-      </div>
-      {dataForm.formFields.map(field => (
-        <div className="card-container">
-          <div className="card">
+        <Button  onClick={guardarComposDinamicos} variant="contained" color="primary">Guardar</Button>
+      </Box>
+      {dataForm.formFields.map((field, index) => (
+        <Box className="card-container" key={index}>
+          <Box className="card">
             <FieldSetting
               field={field}
               onFieldChange={field => {
@@ -118,8 +144,8 @@ export default function FormBuilder({
                 setDataForm(newDataForm);
               }}
             />
-          </div>
-          <div className="options">
+          </Box>
+          <Box className="options">
             {dataForm.formFields.length > 1 && (
               <Tooltip title="Eliminar campo" placement="right">
                 <IconButton
@@ -145,8 +171,8 @@ export default function FormBuilder({
                 <AddIcon />
               </IconButton>
             </Tooltip>
-          </div>
-        </div>
+          </Box>
+        </Box>
       ))}
     </BoxContainer>
   );

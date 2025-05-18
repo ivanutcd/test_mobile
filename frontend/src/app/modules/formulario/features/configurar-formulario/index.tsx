@@ -31,7 +31,7 @@ const ConfigurarFormulario = () => {
     movilidadAsociada: formulario?.movilidadAsociadaItem?.nombre ?? '',
   });
 
-  console.error(formulario);
+
 
 
   return (
