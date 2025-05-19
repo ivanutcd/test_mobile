@@ -35,6 +35,8 @@ import { Formulario } from '../../models/formulario.models.ts';
 import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
+import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
 
@@ -54,6 +56,20 @@ const Pagina = () => {
     setOpenModal(false);
     recargar();
   };
+
+  const handleOpenConfirmationDuplicate = async (params: Formulario) => {
+    const result = await confirm({
+      title: `Duplicar ${params.nombreTecnico}`,
+      description: '¿Estás seguro de querer duplicar este formulario?',
+      confirmationText: 'Duplicar',
+      cancellationText: 'Cancelar',
+    });
+    if (result) {
+      const payload = {id: params.id};
+      await duplicarFormulario(payload);
+      recargar();
+    }
+  }
 
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
@@ -118,7 +134,7 @@ const Pagina = () => {
     {
       label: traducciones.DUPLICAR,
       icon: <DuplicateIcon color="primary" />,
-      onClick: () => {},
+      onClick: (params) => { handleOpenConfirmationDuplicate(params); },
     },
     {
       label: traducciones.PUBLICAR,
