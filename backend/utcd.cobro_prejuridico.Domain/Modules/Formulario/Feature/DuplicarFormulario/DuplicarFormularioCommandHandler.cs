@@ -39,8 +39,7 @@ public class DuplicarFormularioCommandHandler : ICommandHandler<DuplicarFormular
             result.Descripcion,
             result.MovilidadAsociada,
             result.Estado,
-            DateTime.Now,
-            true,
+            command.Id,
             result.EstructuraFormulario
         );
         await WritableEventStore.Create(nuevoFormulario);

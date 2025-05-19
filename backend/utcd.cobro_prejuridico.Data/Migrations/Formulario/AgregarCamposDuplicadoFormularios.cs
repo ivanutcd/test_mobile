@@ -13,11 +13,8 @@ namespace utcd.cobro_prejuridico.Data.Migrations.Formulario
 
             Alter.Table("Formulario")
                 .InSchema(schema)
-                .AddColumn("FechaDuplicado")
-                .AsDateTime()
-                .Nullable()
-                .AddColumn("EsDuplicado")
-                .AsBoolean()
+                .AddColumn("FormularioOrigenId")
+                .AsGuid()
                 .Nullable();
         }
 
@@ -25,8 +22,7 @@ namespace utcd.cobro_prejuridico.Data.Migrations.Formulario
         {
             var schema = dbSetting.Value.SchemaTables;
 
-            Delete.Column("EstructuraFormulario")
-                .FromTable("Formulario")
+            Delete.Column("FormularioOrigenId").FromTable("Formulario")
                 .InSchema(schema);
         }
     }

@@ -18,8 +18,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string Estado { get; set; }
         public string VersionFormulario { get; set; }
         public string? EstructuraFormulario { get; set; }
-        public DateTime? FechaDuplicado { get; set; }
-        public bool? EsDuplicado { get; set; }
+        public Guid? FormularioOrigenId { get; set; }
 
         public FormularioRoot() { }
 
@@ -29,8 +28,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             string descripcion,
             string movilidadAsociada,
             string estado,
-            DateTime? fechaDuplicado,
-            bool? esDuplicado,
+            Guid? formularioOrigenId,
             string? estructuraFormulario
         )
         {
@@ -42,8 +40,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
                         descripcion,
                         movilidadAsociada,
                         estado,
-                        fechaDuplicado,
-                        esDuplicado,
+                        formularioOrigenId,
                         estructuraFormulario
                     )
                 )

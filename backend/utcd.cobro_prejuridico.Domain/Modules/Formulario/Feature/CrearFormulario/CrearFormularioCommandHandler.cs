@@ -29,7 +29,6 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
                 command.MovilidadAsociada,
                 command.Estado,
                 null,
-                null,
                 null
             );
             await WritableEventStore.Create(model);
