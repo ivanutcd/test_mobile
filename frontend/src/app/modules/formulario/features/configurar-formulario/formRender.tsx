@@ -51,11 +51,12 @@ export default function FormRender({ formData }: { formData: any }) {
   return (
     <div className="form-render">
       <div className="form-header">
-        <h2 className="form-name">{formData.formName}</h2>
+        <h2 className="form-name">{formData.nombreTecnico}</h2>
         <p className="form-description" style={{ color: 'black' }}>
-          {formData.formDescription}
+          {formData.descripcion}
         </p>
       </div>
+   
 
       <HookForm
         initialValues={formValues}
