@@ -12,5 +12,7 @@ public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
     public string Estado { get; set; }
     public string VersionFormulario { get; set; }
    public string? EstructuraFormulario { get; set; }
+   public DateTime? FechaDuplicado { get; set; }
+   public bool? EsDuplicado { get; set; }
 }
 
