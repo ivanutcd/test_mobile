@@ -9,7 +9,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
             string nombreTecnico,
             string descripcion,
             string movilidadAsociada,
-            string estado
+            string estado,
+            Guid? formularioOrigenId,
+            string? estructuraFormulario
         )
             : base(aggregateId)
         {
@@ -17,11 +19,15 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
             Descripcion = descripcion;
             MovilidadAsociada = movilidadAsociada;
             Estado = estado;
+            FormularioOrigenId = formularioOrigenId;
+            EstructuraFormulario = estructuraFormulario;
         }
 
         public string NombreTecnico { get; }
         public string Descripcion { get; }
         public string MovilidadAsociada { get; }
         public string Estado { get; }
+        public string? EstructuraFormulario { get; }
+        public Guid? FormularioOrigenId { get; }
     }
 }
