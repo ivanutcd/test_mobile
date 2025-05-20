@@ -19,7 +19,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.Formulari
                     table.Descripcion = @event.Descripcion;
                     table.MovilidadAsociada = @event.MovilidadAsociada;
                     table.Estado = @event.Estado;
-                    table.VersionFormulario = string.Empty;
+                    table.VersionFormulario = @event.VersionFormulario;
+                    table.EstructuraFormulario = @event.EstructuraFormulario;
+                    table.FormularioBaseId = @event.FormularioBaseId;
                 }
             );
             Project<FormularioEditarEvent>(
