@@ -1,4 +1,4 @@
-﻿using Ardalis.Specification;
+using Ardalis.Specification;
 using Enee.Core.CQRS.Command;
 using Enee.Core.Domain.Repository;
 using Enee.Core.Domain.Specs;
@@ -39,8 +39,9 @@ public class DuplicarFormularioCommandHandler : ICommandHandler<DuplicarFormular
             result.Descripcion,
             result.MovilidadAsociada,
             result.Estado,
-            command.Id,
-            result.EstructuraFormulario
+            result.VersionFormulario,
+            result.EstructuraFormulario,
+            command.Id
         );
         await WritableEventStore.Create(nuevoFormulario);
     }

@@ -18,7 +18,6 @@ public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
     public Formulario? FormularioBase { get; set; }
     #endregion
 
-   public Guid? FormularioOrigenId { get; set; }
 
 }
 

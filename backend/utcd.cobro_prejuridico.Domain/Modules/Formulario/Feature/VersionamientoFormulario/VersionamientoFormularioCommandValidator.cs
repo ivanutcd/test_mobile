@@ -33,11 +33,18 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                             context.AddFailure("No se encontro el formulario");
                             return;
                         }
-                        Guid formularioOrigenId = entidad.FormularioBaseId ?? entidad.Id;
-                        var formulariosRelacionados = repository
-                                .AsQueryable()
-                                .Where(x => x.FormularioBaseId == formularioOrigenId || x.Id == formularioOrigenId)
-                                .ToList();
+                        Guid? formularioActualId = entidad.FormularioBaseId ?? entidad.Id;
+                        var formulariosRelacionados = new List<Projections.FormularioTable.Formulario>();
+                        Projections.FormularioTable.Formulario? formularioActual = repository.AsQueryable().FindFirst(x => x.Id == formularioActualId);
+                        while (formularioActual != null)
+                        {
+                            formulariosRelacionados.Add(formularioActual);
+
+                            if (formularioActual.FormularioBaseId == null)
+                                break;
+
+                            formularioActual = repository.AsQueryable().FindFirst(x => x.Id == formularioActual.FormularioBaseId);
+                        }
                         if (formulariosRelacionados.Any(f => f.Estado == FormularioEstado.Borrador.Value))
                         {
                             context.AddFailure(new FluentValidation.Results.ValidationFailure("Id",

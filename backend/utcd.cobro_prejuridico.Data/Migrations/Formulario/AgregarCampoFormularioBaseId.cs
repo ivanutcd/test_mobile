@@ -18,6 +18,10 @@ namespace utcd.cobro_prejuridico.Data.Migrations.Formulario
         {
             var schema = dbSetting.Value.SchemaTables;
 
+            Delete.Column("FormularioOrigenId")
+                   .FromTable("Formulario")
+                   .InSchema(schema);
+
             Alter.Table("Formulario")
                 .InSchema(schema)
                 .AddColumn("FormularioBaseId")
@@ -38,6 +42,12 @@ namespace utcd.cobro_prejuridico.Data.Migrations.Formulario
 
             Delete.Column("FormularioBaseId")
                 .FromTable("Formulario").InSchema(schema);
+
+            Alter.Table("Formulario")
+              .InSchema(schema)
+              .AddColumn("FormularioOrigenId")
+              .AsGuid()
+              .Nullable();
         }
     }
 }

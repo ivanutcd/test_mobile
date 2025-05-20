@@ -29,21 +29,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
         }
         public async Task Handle(VersionamientoFormularioCommand command)
         {
-            var FormularioBaseId = new Guid();
             var stringVersion = new StringVersion(FormularioRepository);
             var version = await stringVersion.Version(command.Id);
             SpecificationGeneric<Projections.FormularioTable.Formulario> spec = new();
             spec.Query.Where(x => x.Id == command.Id);
             Projections.FormularioTable.Formulario formularioBase = await FormularioRepository.FirstOrDefault(spec);
             var id = Guid.NewGuid();
-            if(formularioBase.FormularioBaseId == null)
-            {
-                FormularioBaseId = formularioBase.Id;
-            }
-            else
-            {
-                FormularioBaseId = formularioBase.FormularioBaseId.Value;
-            }
             var model = new FormularioRoot(
                 id,
                 formularioBase.NombreTecnico,
@@ -52,7 +43,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                 FormularioEstado.Borrador.Value,
                 version,
                 formularioBase.EstructuraFormulario,
-                FormularioBaseId
+                command.Id
             );
 
             await WritableEventStore.Create(model);
