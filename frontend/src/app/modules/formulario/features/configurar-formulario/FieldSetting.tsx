@@ -119,8 +119,9 @@ export default function FieldSetting({
         <Col xs={4} md={4}>
           <TextField
             placeholder={field.label}
+
             fullWidth
-            label="Nombre del campo"
+            label={`${field.label || 'Nombre del campo'}`}
             onChange={e => onFieldChange({ ...field, label: e.target.value })}
           />
         </Col>

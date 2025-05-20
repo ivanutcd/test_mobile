@@ -37,9 +37,16 @@ import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
+import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
+
+
+  
+  
+
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { publicar } = usePublicarFormularioHandler();
@@ -53,6 +60,20 @@ const Pagina = () => {
     setOpenModal(false);
     recargar();
   };
+
+  const handleOpenConfirmationDuplicate = async (params: Formulario) => {
+    const result = await confirm({
+      title: `Duplicar ${params.nombreTecnico}`,
+      description: '¿Estás seguro de querer duplicar este formulario?',
+      confirmationText: 'Duplicar',
+      cancellationText: 'Cancelar',
+    });
+    if (result) {
+      const payload = {id: params.id};
+      await duplicarFormulario(payload);
+      recargar();
+    }
+  }
 
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
@@ -117,7 +138,7 @@ const Pagina = () => {
     {
       label: traducciones.DUPLICAR,
       icon: <DuplicateIcon color="primary" />,
-      onClick: () => {},
+      onClick: (params) => { handleOpenConfirmationDuplicate(params); },
     },
     {
       label: traducciones.PUBLICAR,
@@ -193,6 +214,7 @@ const Pagina = () => {
       colId: 'updatedDate',
       headerName: traducciones.FECHA_MODIFICACION,
       field: 'updatedDate',
+      sortable: true,
       minWidth: 300,
     },
   ];
@@ -217,6 +239,8 @@ const Pagina = () => {
           <PaginableGrid
             paginable={data as PaginateResult<any>}
             columnDefs={columns}
+            sortModel={[{ field: 'createdDate', sort: 'desc' }]}
+
           />
         )}
 

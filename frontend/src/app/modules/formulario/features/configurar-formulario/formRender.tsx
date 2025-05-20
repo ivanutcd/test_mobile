@@ -51,11 +51,12 @@ export default function FormRender({ formData }: { formData: any }) {
   return (
     <div className="form-render">
       <div className="form-header">
-        <h2 className="form-name">{formData.formName}</h2>
+        <h2 className="form-name">{formData.nombreTecnico}</h2>
         <p className="form-description" style={{ color: 'black' }}>
-          {formData.formDescription}
+          {formData.descripcion}
         </p>
       </div>
+   
 
       <HookForm
         initialValues={formValues}
@@ -66,10 +67,11 @@ export default function FormRender({ formData }: { formData: any }) {
         {() => {
           return (
             <div className="form-render-container">
-              {formData.formFields.map((field: FormField) => {
+              {formData.formFields.map((field: FormField | any) => {
                 const renderField = {
                   text: (
                     <InputText
+                      key={field.id}
                       name={field.id}
                       label={field.label}
                       required={field.required}
@@ -79,6 +81,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                   textarea: (
                     <Textarea
+                      key={field.id}
                       id={field.id}
                       name={field.id}
                       label={field.label}
@@ -91,6 +94,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                   number: (
                     <InputNumber
+                      key={field.id}
                       name={field.id}
                       label={field.label}
                       type="number"
@@ -100,7 +104,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     />
                   ),
                   select: (
-                    <FormControl fullWidth>
+                    <FormControl fullWidth key={field.id}>
                       <InputLabel>{field.label}</InputLabel>
                       <Select
                         value={field.value}
@@ -110,8 +114,8 @@ export default function FormRender({ formData }: { formData: any }) {
                           console.log(field.value);
                         }}
                       >
-                        {field.options?.map((option: string, index: number) => (
-                          <MenuItem key={index} value={option}>
+                        {field.options?.map((option: string, optionIndex: number) => (
+                          <MenuItem key={option + optionIndex} value={option}>
                             {option}
                           </MenuItem>
                         ))}
@@ -119,11 +123,12 @@ export default function FormRender({ formData }: { formData: any }) {
                     </FormControl>
                   ),
                   checkbox: (
-                    <FormControl>
+                    <FormControl key={field.id}>
                       <FormLabel component="legend">{field.label}</FormLabel>
                       <FormGroup>
-                        {field.options?.map((option: string) => (
+                        {field.options?.map((option: string, optionIndex: number) => (
                           <FormControlLabel
+                            key={option + optionIndex}
                             control={
                               <Checkbox
                                 onChange={() => {
@@ -139,7 +144,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     </FormControl>
                   ),
                   radio: (
-                    <FormControl>
+                    <FormControl key={field.id}>
                       <FormLabel id="demo-radio-buttons-group-label">
                         {field.label}
                       </FormLabel>
@@ -148,9 +153,9 @@ export default function FormRender({ formData }: { formData: any }) {
                         defaultValue="female"
                         name="radio-buttons-group"
                       >
-                        {field.options?.map((option: string, index: number) => (
+                        {field.options?.map((option: string, optionIndex: number) => (
                           <FormControlLabel
-                            key={index}
+                            key={option + optionIndex}
                             value={option}
                             control={<Radio />}
                             label={option}
@@ -160,7 +165,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     </FormControl>
                   ),
                   date: (
-                    <DatePicker
+                    <DatePicker   
                       key={field.id}
                       label={field.label}
                       name={field.id}
@@ -189,7 +194,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                 };
 
-                return renderField[field.type] || null;
+                return renderField[field.type as keyof typeof renderField] || null;
               })}
 
               <div className="form-render-footer">

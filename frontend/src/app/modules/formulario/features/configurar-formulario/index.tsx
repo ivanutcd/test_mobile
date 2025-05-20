@@ -10,41 +10,42 @@ import { FormField } from './formField';
 import { useParams } from 'react-router-dom';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 
-
 const ConfigurarFormulario = () => {
   const { id } = useParams();
   const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
+  console.log(formulario);
 
   const [formData, setFormData] = useState<{
-    formName: string;
-    formDescription: string;
     formFields: FormField[];
     estado: string;
     movilidadAsociada: string;
-
+    nombreTecnico: string;
+    descripcion: string;
   }>({
-    formName: formulario?.nombreTecnico
-    ?? '',
-    formDescription: formulario?.descripcion ?? '',
-    formFields: [],
+    formFields: (formulario as FormType)?.formFields ?? [],
     estado: formulario?.estado ?? '',
     movilidadAsociada: formulario?.movilidadAsociadaItem?.nombre ?? '',
+    nombreTecnico: formulario?.nombreTecnico ?? '',
+    descripcion: formulario?.descripcion ?? '',
   });
 
-  console.error(formulario);
-
-
   return (
-    <MainCard title={`Configurar ${formulario?.nombreTecnico ?? ''}`} sx={{ minHeight: 'calc(100vh - 210px)' }}>
+    <MainCard
+      title={`Configurar ${formulario?.nombreTecnico ?? ''}`}
+      sx={{ minHeight: 'calc(100vh - 210px)' }}
+    >
       {formulario && (
         <GridContainer>
           <Col xs={12} md={8}>
-            <FormBuilder onFormChange={setFormData} formData={formulario as FormType} />
-        </Col>
-        <Col xs={12} md={4}>
-          <div className="form-render-container">
-            <FormRender formData={formData} />
-          </div>
+            <FormBuilder
+              onFormChange={setFormData}
+              formData={formulario as FormType}
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <div className="form-render-container">
+              <FormRender formData={formData} />
+            </div>
           </Col>
         </GridContainer>
       )}
