@@ -104,9 +104,17 @@ const FormularioBase = ({
                       setValue('estado', selectedItem?.id ?? '');
                       trigger('estadoItem');
                     }}
-                    disabled={isCreateMode}
+                    disabled={true}
                   />
                 )}
+              </Grid>
+              <Grid item xs={12}>
+                <InputText
+                  label="Versión del formulario"
+                  name="versionFormulario"
+                  readOnly={true}
+                  value={defaultValues?.versionFormulario}
+                />
               </Grid>
             </Grid>
           );

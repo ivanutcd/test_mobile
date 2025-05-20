@@ -36,6 +36,7 @@ import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+import { useNotification } from '@components/snackbar/use-notification.ts';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -51,7 +52,7 @@ const Pagina = () => {
   const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
-
+  const {error} = useNotification();
   const handleSuccess = () => {
     setOpenModal(false);
     recargar();
@@ -128,7 +129,12 @@ const Pagina = () => {
       label: traducciones.CONFIGURAR,
       icon: <SettingsIcon color="primary" />,
       onClick: params => {
+        if (params.estado === EstadosFormulariosEnum.Borrador) {
         navigate(`/formularios/${params.id}/configurar`);
+        }
+        else {
+          error('No se puede configurar un formulario que no esté en estado borrador');
+        }
       },
     },
     {
