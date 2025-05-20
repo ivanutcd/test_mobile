@@ -39,6 +39,11 @@ import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
+
+
+  
+  
+
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { publicar } = usePublicarFormularioHandler();
@@ -192,6 +197,7 @@ const Pagina = () => {
       colId: 'updatedDate',
       headerName: traducciones.FECHA_MODIFICACION,
       field: 'updatedDate',
+      sortable: true,
       minWidth: 300,
     },
   ];
@@ -216,6 +222,8 @@ const Pagina = () => {
           <PaginableGrid
             paginable={data as PaginateResult<any>}
             columnDefs={columns}
+            sortModel={[{ field: 'createdDate', sort: 'desc' }]}
+
           />
         )}
 

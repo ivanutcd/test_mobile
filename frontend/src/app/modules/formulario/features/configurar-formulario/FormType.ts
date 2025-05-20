@@ -8,6 +8,7 @@ export interface FormType {
   movilidadAsociada: string;
   estado: string;
   versionFormulario: string;
+  unidad: string;
   createdBy: string | null;
   createdDate: string | null;
   updatedBy: string | null;

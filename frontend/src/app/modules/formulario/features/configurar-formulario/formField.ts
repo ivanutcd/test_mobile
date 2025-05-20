@@ -26,4 +26,6 @@ export interface FormField {
   step?: number; // paso para range
   minDate?: string; // fecha mínima para date
   maxDate?: string; // fecha máxima para date
+  minTime?: string; // hora mínima para date
+  maxTime?: string; // hora máxima para date
 }
