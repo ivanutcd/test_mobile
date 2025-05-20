@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { IconButton, Box } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { FormField } from './formField';
 import { FormType } from './FormType';
 import { CustomChip, Button } from '@proyectos-enee/enee_componentes';
@@ -42,39 +42,27 @@ export default function FormBuilder({
     unidad: formData.unidad,
   });
 
+  // Obtener estructura del formulario desde la API
   useEffect(() => {
     const obtenerEstructura = async () => {
-      const response = (await obtenerEstructuraFormulario(formData.id)) as {
+      const response = await obtenerEstructuraFormulario(formData.id) as {
         objeto: FormData;
       };
 
-      formData.formFields = response.objeto.formFields;
-      setDataForm(formData as FormData);
-      if (onFormChange) {
-        onFormChange(formData as FormData);
-      }
+      const updatedForm = {
+        ...formData,
+        formFields: response.objeto.formFields,
+      } as FormData;
+
+      setDataForm(updatedForm);
+      onFormChange?.(updatedForm);
     };
+
     obtenerEstructura();
-  }, [onFormChange, formData.id]);
+  }, [formData.id, onFormChange]);
 
-  const guardarComposDinamicos = async () => {
-    const formulario = {
-      formFields: dataForm.formFields,
-      nombreTecnico: dataForm.nombreTecnico,
-      descripcion: dataForm.descripcion,
-      movilidadAsociada: dataForm.movilidadAsociada,
-      unidad: dataForm.unidad,
-    };
-
-    const payload = {
-      id: formData.id,
-      estructuraFormulario: JSON.stringify(formulario),
-    };
-    await guardarComposDinamicosFormulario(payload as any);
-  };
-
+  // Agregar un nuevo campo
   const addField = (position: number) => {
-    const newDataForm = { ...dataForm };
     const newField: FormField = {
       id: String(dataForm.formFields.length + 1),
       label: `Campo ${dataForm.formFields.length + 1}`,
@@ -83,35 +71,115 @@ export default function FormBuilder({
       options: [],
       placeholder: `Ingrese el campo ${dataForm.formFields.length + 1}`,
       defaultValue: '',
-      position: dataForm.formFields.length + 1,
+      position: position + 1,
       min: 0,
       max: 100,
       step: 0,
       minDate: '',
       maxDate: '',
     };
-    newDataForm.formFields.splice(position, 0, newField);
-    newDataForm.formFields = newDataForm.formFields.map((field, index) => ({
+
+    const updatedFields = [...dataForm.formFields];
+    updatedFields.splice(position, 0, newField);
+    const resequencedFields = updatedFields.map((field, index) => ({
       ...field,
       id: String(index + 1),
       position: index + 1,
     }));
-    setDataForm(newDataForm);
-    if (onFormChange) {
-      onFormChange(newDataForm as FormData);
-    }
+
+    const updatedForm = { ...dataForm, formFields: resequencedFields };
+    setDataForm(updatedForm);
+    onFormChange?.(updatedForm);
   };
 
+  // Eliminar un campo
   const deleteField = (id: string) => {
-    const newDataForm = { ...dataForm };
-    newDataForm.formFields = newDataForm.formFields.filter(
-      field => field.id !== id,
-    );
-    setDataForm(newDataForm);
-    if (onFormChange) {
-      onFormChange(newDataForm as FormData);
-    }
+    const updatedFields = dataForm.formFields.filter(field => field.id !== id);
+    const resequencedFields = updatedFields.map((field, index) => ({
+      ...field,
+      id: String(index + 1),
+      position: index + 1,
+    }));
+
+    const updatedForm = { ...dataForm, formFields: resequencedFields };
+    setDataForm(updatedForm);
+    onFormChange?.(updatedForm);
   };
+
+  // Guardar formulario
+  const guardarComposDinamicos = async () => {
+    const estructuraFormulario = JSON.stringify({
+      formFields: dataForm.formFields,
+      nombreTecnico: dataForm.nombreTecnico,
+      descripcion: dataForm.descripcion,
+      movilidadAsociada: dataForm.movilidadAsociada,
+      unidad: dataForm.unidad,
+    });
+
+    const payload = {
+      id: formData.id,
+      estructuraFormulario,
+    };
+
+    await guardarComposDinamicosFormulario(payload as any );
+  };
+
+  // Memoizar campos para renderizar
+  const renderedFields = useMemo(() => {
+    return dataForm.formFields.map((field, index) => (
+      <Box className="card-container" key={index}>
+        <Box className="card">
+          <FieldSetting
+            field={field}
+            onFieldChange={updatedField => {
+              const updatedFields = dataForm.formFields.map(f =>
+                f.id === updatedField.id ? updatedField : f
+              );
+              const updatedForm = { ...dataForm, formFields: updatedFields };
+              setDataForm(updatedForm);
+              onFormChange?.(updatedForm);
+            }}
+          />
+        </Box>
+        <Box className="options">
+          {dataForm.formFields.length > 1 && (
+            <Tooltip title="Eliminar campo" placement="right">
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                size="small"
+                color="primary"
+                onClick={() => deleteField(field.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title="Agregar campo" placement="right">
+            <IconButton
+              className="icon-animated"
+              edge="end"
+              aria-label="add"
+              size="small"
+              color="primary"
+              onClick={() => addField(field.position)}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    ));
+  }, [dataForm.formFields, onFormChange]);
+
+  // Agrega un campo inicial si no hay ninguno (solo una vez)
+  useEffect(() => {
+    if (dataForm.formFields.length === 0) {
+      addField(0);
+    }
+    // Solo al montar y si está vacío
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <BoxContainer className="form-builder-container">
@@ -135,49 +203,7 @@ export default function FormBuilder({
           </Button>
         </div>
       </Box>
-      {dataForm.formFields.map((field, index) => (
-        <Box className="card-container" key={index}>
-          <Box className="card">
-            <FieldSetting
-              field={field}
-              onFieldChange={field => {
-                const newDataForm = { ...dataForm };
-                newDataForm.formFields = newDataForm.formFields.map(f =>
-                  f.id === field.id ? field : f,
-                );
-                setDataForm(newDataForm);
-              }}
-            />
-          </Box>
-          <Box className="options">
-            {dataForm.formFields.length > 1 && (
-              <Tooltip title="Eliminar campo" placement="right">
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  size="small"
-                  color="primary"
-                  onClick={() => deleteField(field.id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title="Agregar campo" placement="right">
-              <IconButton
-                className="icon-animated"
-                edge="end"
-                aria-label="add"
-                size="small"
-                color="primary"
-                onClick={() => addField(field.position)}
-              >
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      ))}
+      {renderedFields}
     </BoxContainer>
   );
 }
