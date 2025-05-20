@@ -24,18 +24,17 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                 .Custom(
                     (value, context) =>
                     {
-                        Projections.FormularioTable.Formulario entidad = repository
+                        Projections.FormularioTable.Formulario formularioActual = repository
                             .AsQueryable()
                             .FindFirst(x => x.Id == value);
 
-                        if (entidad == null)
+                        if (formularioActual == null)
                         {
                             context.AddFailure("No se encontro el formulario");
                             return;
                         }
-                        Guid? formularioActualId = entidad.FormularioBaseId ?? entidad.Id;
                         var formulariosRelacionados = new List<Projections.FormularioTable.Formulario>();
-                        Projections.FormularioTable.Formulario? formularioActual = repository.AsQueryable().FindFirst(x => x.Id == formularioActualId);
+                        
                         while (formularioActual != null)
                         {
                             formulariosRelacionados.Add(formularioActual);
