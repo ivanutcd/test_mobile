@@ -14,6 +14,7 @@ import {
   FileCopy as DuplicateIcon,
   Settings as SettingsIcon,
   Rocket as RocketIcon,
+  ControlPointDuplicate as ControlPointDuplicateOutlinedIcon,
 } from '@mui/icons-material';
 import { useState } from 'react';
 import { traducciones } from '../../common/translations';
@@ -35,8 +36,10 @@ import { Formulario } from '../../models/formulario.models.ts';
 import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
+import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import { useNotification } from '@components/snackbar/use-notification.ts';
+
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -48,6 +51,7 @@ const Pagina = () => {
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { publicar } = usePublicarFormularioHandler();
+  const { versionar } = useVersionarFormulario();
   const [openModal, setOpenModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
@@ -154,6 +158,19 @@ const Pagina = () => {
         });
       },
       hide: params => params.estado === EstadosFormulariosEnum.Publicado,
+    },
+    {
+      label: traducciones.VERSIONAR,
+      icon: <ControlPointDuplicateOutlinedIcon  color="primary" />,
+      onClick: rowData => {
+        versionar(rowData.id, {
+          onComplete: () => {
+            setTimeout(() => handleSuccess(), 500);
+          },
+          onCancel: () => {},
+        });
+      },
+      hide: params => params.estado !== EstadosFormulariosEnum.Publicado,
     },
   ];
 
