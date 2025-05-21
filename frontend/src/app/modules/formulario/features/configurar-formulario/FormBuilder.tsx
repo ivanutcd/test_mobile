@@ -3,7 +3,7 @@ import './scss/FormBuilder.scss';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box, Popover } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
@@ -14,6 +14,7 @@ import {
   guardarComposDinamicosFormulario,
   obtenerEstructuraFormulario,
 } from './api';
+import { IconArrowBadgeDown, IconSelect } from '@tabler/icons-react';
 
 interface FormData {
   nombreTecnico: string;
@@ -121,7 +122,7 @@ export default function FormBuilder({
       estructuraFormulario,
     };
 
-    await guardarComposDinamicosFormulario(payload as any );
+    await guardarComposDinamicosFormulario(payload as any);
   };
 
   // Memoizar campos para renderizar
@@ -180,19 +181,76 @@ export default function FormBuilder({
     // Solo al montar y si está vacío
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [anchorChip, setAnchorChip] = useState<null | HTMLElement>(null);
+  const [versiones, setVersiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
+
+  const handleChipClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorChip(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorChip(null);
+  };
+
+  const handleSeleccionVersion = (version: string) => {
+    console.log('Seleccionaste versión:', version);
+    setAnchorChip(null);
+  };
+
+  const open = Boolean(anchorChip);
 
   return (
     <BoxContainer className="form-builder-container">
       <Box className="form-builder">
         <h1>{dataForm.nombreTecnico}</h1>
-        <p>{dataForm.descripcion}</p>
+        // eslint-disable-next-line
         <CustomChip label={dataForm.movilidadAsociada} variant="filled" />
         <CustomChip
-          label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`}
+          label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario} `}
           style={{ position: 'absolute', top: 10, right: 10 }}
           variant="outlined"
           color={dataForm.estado === 'Activo' ? 'success' : 'default'}
+          onClick={handleChipClick}
+          icon={<IconArrowBadgeDown />}
+          clickable
         />
+
+        <Popover
+          open={open}
+          anchorEl={anchorChip}
+          onClose={handleClosePopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          slotProps={{
+            paper: {
+              sx: { padding: '0.5rem', minWidth: 150 }}
+          }}
+        >
+          <Box>
+            {versiones.map((v, i) => (
+              <Box
+                key={i}
+                onClick={() => handleSeleccionVersion(v)}
+                sx={{
+                  cursor: 'pointer',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  '&:hover': {
+                    backgroundColor: '#f0f0f0',
+                  },
+                }}
+              >
+                Versión {v}
+              </Box>
+            ))}
+          </Box>
+        </Popover>
         <div style={{ position: 'absolute', bottom: 10, right: 10 }}>
           <Button
             onClick={guardarComposDinamicos}
