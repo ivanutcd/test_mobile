@@ -5,7 +5,6 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.Formulari
 
 public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
 {
-    public Guid Id { get; set; }
     public string NombreTecnico { get; set; }
     public string Descripcion { get; set; }
     public string MovilidadAsociada { get; set; }

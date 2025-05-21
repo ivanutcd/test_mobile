@@ -59,3 +59,5 @@ mermaid-filter.err
 /backend/.vs/utcd.cobro_prejuridico/v17/.suo
 /backend/.vs/utcd.cobro_prejuridico/v17/DocumentLayout.backup.json
 /backend/.vs/utcd.cobro_prejuridico/v17/DocumentLayout.json
+.vs/
+.vs
