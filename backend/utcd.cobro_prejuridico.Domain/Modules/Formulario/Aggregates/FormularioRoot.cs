@@ -108,6 +108,17 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Estado = @event.Estado;
             Version++;
         }
+        public void ObsoletoFormilarioEstado(string estado)
+        {
+            Apply(NewChange(new FormularioObsoletoEvent(this.Id, estado)));
+        }
+
+        private void Apply(FormularioObsoletoEvent @event)
+        {
+            Estado = @event.Estado;
+            Version++;
+        }
+
         public void GuardarEstructuraFormulario( string estructuraFormulario)
         {
             Apply(NewChange(new CamposDinamicosEstructuraFormularioGuardarEvent(this.Id, estructuraFormulario)));
