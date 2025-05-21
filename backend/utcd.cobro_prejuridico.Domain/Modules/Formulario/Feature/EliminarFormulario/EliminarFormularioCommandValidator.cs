@@ -30,7 +30,11 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EliminarFormu
                         {
                             context.AddFailure("No se encontro el formulario");
                         }
-                        ;
+
+                        if (entidad != null && entidad.Estado != "borrador")
+                        {
+                            context.AddFailure("No se puede eliminar este formulario.");
+                        }
                     }
                 );
         }

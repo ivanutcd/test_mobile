@@ -2,8 +2,9 @@ import './scss/FormBuilder.scss';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box,Chip, Menu, MenuItem } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
@@ -121,7 +122,7 @@ export default function FormBuilder({
       estructuraFormulario,
     };
 
-    await guardarComposDinamicosFormulario(payload as any );
+    await guardarComposDinamicosFormulario(payload as any);
   };
 
   // Memoizar campos para renderizar
@@ -180,19 +181,68 @@ export default function FormBuilder({
     // Solo al montar y si está vacío
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [anchorChip, setAnchorChip] = useState<null | HTMLElement>(null);
+  const [versiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
+
+  const handleChipClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorChip(event.currentTarget);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorChip(null);
+  };
+
+  const handleSeleccionVersion = (version: string) => {
+    console.log('Seleccionaste versión:', version);
+    setAnchorChip(null);
+  };
+
+  const open = Boolean(anchorChip);
 
   return (
     <BoxContainer className="form-builder-container">
       <Box className="form-builder">
         <h1>{dataForm.nombreTecnico}</h1>
-        <p>{dataForm.descripcion}</p>
         <CustomChip label={dataForm.movilidadAsociada} variant="filled" />
-        <CustomChip
+        <Chip
           label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`}
-          style={{ position: 'absolute', top: 10, right: 10 }}
+          onClick={handleChipClick}
+          icon={<KeyboardArrowDownIcon />}
+          clickable
           variant="outlined"
           color={dataForm.estado === 'Activo' ? 'success' : 'default'}
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            fontWeight: 500,
+            paddingRight: '4px',
+          }}
         />
+
+        <Menu
+          anchorEl={anchorChip}
+          open={open}
+          onClose={handleClosePopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          MenuListProps={{
+            'aria-labelledby': 'version-chip',
+          }}
+        >
+          {versiones.map((version, index) => (
+            <MenuItem key={index} onClick={() => handleSeleccionVersion(version)}>
+              Versión {version}
+            </MenuItem>
+          ))}
+        </Menu>
+
         <div style={{ position: 'absolute', bottom: 10, right: 10 }}>
           <Button
             onClick={guardarComposDinamicos}

@@ -51,6 +51,7 @@ const Pagina = ({ onSuccess, nameForm, catalogs }: CrearFormularioProps) => {
   initialValues.estadoItem = estadoInicial;
   initialValues.estado = estadoInicial.id;
   initialValues.estadoNombre = estadoInicial.nombre;
+  initialValues.versionFormulario = '1.0.0'
 
   return (
     <div>
