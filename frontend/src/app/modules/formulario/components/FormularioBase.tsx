@@ -24,7 +24,6 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
-  const isCreateMode = mode === 'create';
 
   return (
     <>

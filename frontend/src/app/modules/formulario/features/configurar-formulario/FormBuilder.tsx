@@ -182,8 +182,7 @@ export default function FormBuilder({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [anchorChip, setAnchorChip] = useState<null | HTMLElement>(null);
-  // eslint-disable-next-line
-  const [versiones, setVersiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
+  const [versiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
 
   const handleChipClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorChip(event.currentTarget);
