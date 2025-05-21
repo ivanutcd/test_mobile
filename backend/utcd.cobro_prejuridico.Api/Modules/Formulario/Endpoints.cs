@@ -30,7 +30,7 @@ public class Endpoints : CarterModule
         app.PublicarFormulario();
         app.GuardarComposDinamicosFormulario();
         app.ConsultarEstructuraFormularioId();
-        app.VersionamientoFormularioRequest();
+        app.VersionamientoFormulario();
         app.DuplicarFormulario();
     }
 }

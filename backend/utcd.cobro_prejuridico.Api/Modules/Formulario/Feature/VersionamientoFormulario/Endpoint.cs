@@ -9,7 +9,7 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.VersionamientoFo
 {
     public static class Endpoint
     {
-        public static void VersionamientoFormularioRequest(this IEndpointRouteBuilder app)
+        public static void VersionamientoFormulario(this IEndpointRouteBuilder app)
         {
             app.MapPost(
                     "/versionamiento-formulario",
