@@ -50,6 +50,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.Formulari
                    tabla.EstructuraFormulario = @event.EstructuraFormulario;
                }
            );
+            Project<FormularioObsoletoEvent>(
+              (@event, tabla) =>
+              {
+                  tabla.Estado = @event.Estado;
+              }
+          );
         }
     }
 }

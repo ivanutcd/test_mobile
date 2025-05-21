@@ -17,5 +17,10 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Common
         {
             get => new FormularioEstado("publicado");
         }
+        public static FormularioEstado Obsoleto
+        {
+            get => new FormularioEstado("obsoleto");
+        }
+
     }
 }
