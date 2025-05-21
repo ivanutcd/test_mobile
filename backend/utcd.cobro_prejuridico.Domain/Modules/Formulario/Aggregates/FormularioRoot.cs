@@ -18,7 +18,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string Estado { get; set; }
         public string VersionFormulario { get; set; }
         public string? EstructuraFormulario { get; set; }
-        public Guid? FormularioOrigenId { get; set; }
+        public Guid? FormularioBaseId { get; set; }
+
+
 
         public FormularioRoot() { }
 
@@ -28,8 +30,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             string descripcion,
             string movilidadAsociada,
             string estado,
-            Guid? formularioOrigenId,
-            string? estructuraFormulario
+            string versionFormulario,
+            string? estructuraFormulario,
+            Guid? formularioBaseId
         )
         {
             Apply(
@@ -40,8 +43,10 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
                         descripcion,
                         movilidadAsociada,
                         estado,
-                        formularioOrigenId,
-                        estructuraFormulario
+                        versionFormulario,
+                        estructuraFormulario,
+                        formularioBaseId
+
                     )
                 )
             );
@@ -54,6 +59,9 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Descripcion = @event.Descripcion;
             MovilidadAsociada = @event.MovilidadAsociada;
             Estado = @event.Estado;
+            VersionFormulario = @event.VersionFormulario;
+            EstructuraFormulario = @event.EstructuraFormulario;
+            FormularioBaseId = @event.FormularioBaseId;
             Version++;
         }
 
