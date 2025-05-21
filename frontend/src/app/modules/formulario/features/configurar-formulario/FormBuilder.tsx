@@ -2,8 +2,9 @@ import './scss/FormBuilder.scss';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box, Popover } from '@mui/material';
+import { IconButton, Box,Chip, Menu, MenuItem } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
@@ -14,7 +15,6 @@ import {
   guardarComposDinamicosFormulario,
   obtenerEstructuraFormulario,
 } from './api';
-import { IconArrowBadgeDown } from '@tabler/icons-react';
 
 interface FormData {
   nombreTecnico: string;
@@ -203,21 +203,26 @@ export default function FormBuilder({
     <BoxContainer className="form-builder-container">
       <Box className="form-builder">
         <h1>{dataForm.nombreTecnico}</h1>
-        // eslint-disable-next-line
         <CustomChip label={dataForm.movilidadAsociada} variant="filled" />
-        <CustomChip
-          label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario} `}
-          style={{ position: 'absolute', top: 10, right: 10 }}
+        <Chip
+          label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`}
+          onClick={handleChipClick}
+          icon={<KeyboardArrowDownIcon />}
+          clickable
           variant="outlined"
           color={dataForm.estado === 'Activo' ? 'success' : 'default'}
-          onClick={handleChipClick}
-          icon={<IconArrowBadgeDown />}
-          clickable
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            fontWeight: 500,
+            paddingRight: '4px',
+          }}
         />
 
-        <Popover
-          open={open}
+        <Menu
           anchorEl={anchorChip}
+          open={open}
           onClose={handleClosePopover}
           anchorOrigin={{
             vertical: 'bottom',
@@ -227,30 +232,17 @@ export default function FormBuilder({
             vertical: 'top',
             horizontal: 'right',
           }}
-          slotProps={{
-            paper: {
-              sx: { padding: '0.5rem', minWidth: 150 }}
+          MenuListProps={{
+            'aria-labelledby': 'version-chip',
           }}
         >
-          <Box>
-            {versiones.map((v, i) => (
-              <Box
-                key={i}
-                onClick={() => handleSeleccionVersion(v)}
-                sx={{
-                  cursor: 'pointer',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
-                  },
-                }}
-              >
-                Versión {v}
-              </Box>
-            ))}
-          </Box>
-        </Popover>
+          {versiones.map((version, index) => (
+            <MenuItem key={index} onClick={() => handleSeleccionVersion(version)}>
+              Versión {version}
+            </MenuItem>
+          ))}
+        </Menu>
+
         <div style={{ position: 'absolute', bottom: 10, right: 10 }}>
           <Button
             onClick={guardarComposDinamicos}
