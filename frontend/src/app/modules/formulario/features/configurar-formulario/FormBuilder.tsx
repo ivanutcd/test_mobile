@@ -2,9 +2,8 @@ import './scss/FormBuilder.scss';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box,Chip, Menu, MenuItem,Drawer ,Typography } from '@mui/material';
+import { IconButton, Box, Menu, MenuItem,Drawer } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
@@ -187,9 +186,6 @@ export default function FormBuilder({
   const [anchorChip, setAnchorChip] = useState<null | HTMLElement>(null);
   const [versiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
   const [openModalVersiones, setOpenModalVersiones] = useState(false);
-  const handleChipClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorChip(event.currentTarget);
-  };
 
   const handleClosePopover = () => {
     setAnchorChip(null);
