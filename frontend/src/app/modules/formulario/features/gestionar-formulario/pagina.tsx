@@ -18,6 +18,7 @@ import { EstadosFormulariosEnum } from '../../utils/estado-formularios';
 
 interface GestionarFormularioProps extends FormularioProps {
   mode: ModeFormulario;
+  ocultarAcciones?: boolean;
 }
 
 const Pagina = ({
@@ -25,6 +26,7 @@ const Pagina = ({
   onSuccess,
   id,
   mode,
+  ocultarAcciones = false,
 }: GestionarFormularioProps) => {
   const [initialValues, setInitialValues] = useState(FormularioDataEmpty);
   const [isLoading, setIsLoading] = useState(false);
@@ -101,6 +103,7 @@ const Pagina = ({
             initialValues={initialValues}
             isLoading={isLoading}
             onPublicarFormulario={setPublicarFormularioFunction}
+            ocultarAcciones = {false} 
           />
         )}
       </BoxContainer>
@@ -131,7 +134,7 @@ const Pagina = ({
           </Button>
         )}
 
-        {mode === 'view' && initialValues.estado !== EstadosFormulariosEnum.Publicado && (
+        {!ocultarAcciones && mode === 'view' && initialValues.estado !== EstadosFormulariosEnum.Publicado && (
           <Button
             variant="contained"
             color="primary"

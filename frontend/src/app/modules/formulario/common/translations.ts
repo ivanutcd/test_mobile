@@ -17,7 +17,10 @@ export const traducciones = {
   CONFIGURAR: 'Configurar',
   EDITAR: 'Guardar',
   PUBLICAR: 'Publicar formulario',
-  VERSIONAR: 'Crear nueva versión'
+  VERSIONAR: 'Crear nueva versión',
+  NUMEROVERSION: 'número de versión',
+  AUTOR: 'Autor',
+  REGISTROVERSIONES: 'Registro de versiones del formulario',
 };
 
 export default traducciones;

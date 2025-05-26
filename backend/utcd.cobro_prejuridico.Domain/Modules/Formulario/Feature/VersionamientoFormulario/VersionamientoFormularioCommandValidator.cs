@@ -33,18 +33,33 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                             context.AddFailure("No se encontro el formulario");
                             return;
                         }
-                        var formulariosRelacionados = new List<Projections.FormularioTable.Formulario>();
-                        
-                        while (formularioActual != null)
+                        var relacionados = new List<Projections.FormularioTable.Formulario>();
+                        Projections.FormularioTable.Formulario actual = formularioActual;
+                        while (actual != null)
                         {
-                            formulariosRelacionados.Add(formularioActual);
+                            relacionados.Add(actual);
 
-                            if (formularioActual.FormularioBaseId == null)
+                            if (actual.FormularioBaseId == null)
                                 break;
 
-                            formularioActual = repository.AsQueryable().FindFirst(x => x.Id == formularioActual.FormularioBaseId);
+                            actual = repository.AsQueryable().FindFirst(x => x.Id == actual.FormularioBaseId);
                         }
-                        if (formulariosRelacionados.Any(f => f.Estado == FormularioEstado.Borrador.Value))
+
+                        void AgregarHijos(Guid id)
+                        {
+                            var hijos = repository.AsQueryable()
+                                .Where(x => x.FormularioBaseId == id)
+                                .ToList();
+
+                            foreach (Projections.FormularioTable.Formulario hijo in hijos)
+                            {
+                                relacionados.Add(hijo);
+                                AgregarHijos(hijo.Id);
+                            }
+                        }
+
+                        AgregarHijos(formularioActual.Id);
+                        if (relacionados.Any(f => f.Estado == FormularioEstado.Borrador.Value))
                         {
                             context.AddFailure(new FluentValidation.Results.ValidationFailure("Id",
                                 "No se puede versionar porque existe al menos un formulario relacionado en estado Borrador.")

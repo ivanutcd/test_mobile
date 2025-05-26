@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box,Chip, Menu, MenuItem } from '@mui/material';
+import { IconButton, Box,Chip, Menu, MenuItem,Drawer ,Typography } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
@@ -15,7 +15,10 @@ import {
   guardarComposDinamicosFormulario,
   obtenerEstructuraFormulario,
 } from './api';
-
+import Pagina from '../consultar-versiones-formulario/pagina';
+import traducciones from '../../common/translations';
+import CloseIcon from '@mui/icons-material/Close';
+import MainCard from '@common/ui-component/cards/main-card';
 interface FormData {
   nombreTecnico: string;
   unidad: string;
@@ -183,7 +186,7 @@ export default function FormBuilder({
   }, []);
   const [anchorChip, setAnchorChip] = useState<null | HTMLElement>(null);
   const [versiones] = useState<string[]>(['1.0', '1.1', '1.2']); //sustituir con la feature de obtener versiones
-
+  const [openModalVersiones, setOpenModalVersiones] = useState(false);
   const handleChipClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorChip(event.currentTarget);
   };
@@ -196,7 +199,14 @@ export default function FormBuilder({
     console.log('Seleccionaste versión:', version);
     setAnchorChip(null);
   };
-
+  const [formularioSeleccionadoId, setFormularioSeleccionadoId] = useState<string | null>(null);
+  const abrirModalVersiones = (id: string) => {
+    setFormularioSeleccionadoId(id);
+    setOpenModalVersiones(true);
+  };
+  const cerrarModalVersiones = () => {
+    setOpenModalVersiones(false);
+  };
   const open = Boolean(anchorChip);
 
   return (
@@ -204,21 +214,7 @@ export default function FormBuilder({
       <Box className="form-builder">
         <h1>{dataForm.nombreTecnico}</h1>
         <CustomChip label={dataForm.movilidadAsociada} variant="filled" />
-        <Chip
-          label={`${dataForm.estado}  Versión:  ${dataForm.versionFormulario}`}
-          onClick={handleChipClick}
-          icon={<KeyboardArrowDownIcon />}
-          clickable
-          variant="outlined"
-          color={dataForm.estado === 'Activo' ? 'success' : 'default'}
-          sx={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            fontWeight: 500,
-            paddingRight: '4px',
-          }}
-        />
+       
 
         <Menu
           anchorEl={anchorChip}
@@ -243,7 +239,14 @@ export default function FormBuilder({
           ))}
         </Menu>
 
-        <div style={{ position: 'absolute', bottom: 10, right: 10 }}>
+        <div style={{ position: 'absolute', bottom: 50, right: 10, display: 'flex', gap: '10px' }}>
+          <Button
+            onClick={() => abrirModalVersiones(formData.id)}
+            variant="contained"
+            color="inherit"
+          >
+            Ver Versiones
+          </Button>
           <Button
             onClick={guardarComposDinamicos}
             variant="contained"
@@ -254,6 +257,32 @@ export default function FormBuilder({
         </div>
       </Box>
       {renderedFields}
-    </BoxContainer>
+      <Drawer
+        anchor="right"
+        open={openModalVersiones}
+        onClose={cerrarModalVersiones}
+        PaperProps={{ sx: { width: 550 } }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              backgroundColor: 'rgba(0, 0, 0, 0.2)' 
+            }
+          }
+        }}
+      >
+      <Box p={0}>
+        <MainCard
+          title={traducciones.REGISTROVERSIONES}
+          secondary={
+        <IconButton onClick={cerrarModalVersiones}>
+          <CloseIcon />
+        </IconButton>
+      }
+    >
+      {formularioSeleccionadoId && <Pagina id={formularioSeleccionadoId} />}
+    </MainCard>
+    </Box>
+    </Drawer>
+  </BoxContainer>
   );
 }
