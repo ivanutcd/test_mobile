@@ -2,14 +2,14 @@ import gluestackPlugin from '@gluestack-ui/nativewind-utils/tailwind-plugin';
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', 
+  darkMode: 'class',
   content: [
-    "App.{tsx,jsx,ts,js}",
-    "index.{tsx,jsx,ts,js}",
-    "src/**/*.{tsx,jsx,ts,js}",
-    "app/**/*.{tsx,jsx,ts,js}",
-    "components/**/*.{tsx,jsx,ts,js}",
-      "./node_modules/@gluestack-ui/**/*.{js,ts,jsx,tsx}"
+    'App.{tsx,jsx,ts,js}',
+    'index.{tsx,jsx,ts,js}',
+    'src/**/*.{tsx,jsx,ts,js}',
+    'app/**/*.{tsx,jsx,ts,js}',
+    'components/**/*.{tsx,jsx,ts,js}',
+    './node_modules/@gluestack-ui/**/*.{js,ts,jsx,tsx}',
   ],
   presets: [require('nativewind/preset')],
   safelist: [
@@ -176,6 +176,7 @@ module.exports = {
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
       },
+
       fontFamily: {
         heading: undefined,
         body: undefined,
@@ -198,6 +199,9 @@ module.exports = {
         'soft-2': '0px 0px 20px rgba(38, 38, 38, 0.2)',
         'soft-3': '0px 0px 30px rgba(38, 38, 38, 0.1)',
         'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
+      },
+      Button: {
+        borderRadius: 10,
       },
     },
   },
