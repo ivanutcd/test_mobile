@@ -1,0 +1,13 @@
+{
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "global.css",
+    "theme": "theme.ts"
+  },
+  "app": {
+    "entry": "App.tsx",
+    "components": "components/ui",
+    "theme": "theme.ts",
+    "config": "gluestack-ui.config.json"
+  }
+}

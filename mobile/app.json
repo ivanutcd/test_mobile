@@ -1,31 +1,42 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
-    "owner": "adiazg",
+    "name": "UTCD Forms",
+    "slug": "utcd-forms",
+    "owner": "utcd-forms",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "mobileapp",
-    "icon": "./assets/icon.png",
+    "scheme": "utcd-forms",
+    "icon": "./assets/splash-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash-icon-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.utcd-forms.mobile",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show you the nearest forms."
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/splash-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash-icon-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adiazg.mobile"
+      "package": "com.utcd-forms.mobile"
     },
+    
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/splash-icon-icon.png"
     },
     "extra": {
       "eas": {

@@ -11,8 +11,18 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@services/*": ["src/services/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@/*": [
+        "./*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ]
     }
   },
   "extends": "expo/tsconfig.base"
