@@ -24,42 +24,42 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                 .Custom(
                     (value, context) =>
                     {
-                        Projections.FormularioTable.Formulario formularioActual = repository
+                        Projections.FormularioTable.Formulario formularioInicial = repository
                             .AsQueryable()
                             .FindFirst(x => x.Id == value);
 
-                        if (formularioActual == null)
+                        if (formularioInicial == null)
                         {
                             context.AddFailure("No se encontro el formulario");
                             return;
                         }
-                        var relacionados = new List<Projections.FormularioTable.Formulario>();
-                        Projections.FormularioTable.Formulario actual = formularioActual;
-                        while (actual != null)
+                        var formulariosRelacionados = new List<Projections.FormularioTable.Formulario>();
+                        Projections.FormularioTable.Formulario formularioEnCadena = formularioInicial;
+                        while (formularioEnCadena != null)
                         {
-                            relacionados.Add(actual);
+                            formulariosRelacionados.Add(formularioEnCadena);
 
-                            if (actual.FormularioBaseId == null)
+                            if (formularioEnCadena.FormularioBaseId == null)
                                 break;
 
-                            actual = repository.AsQueryable().FindFirst(x => x.Id == actual.FormularioBaseId);
+                            formularioEnCadena = repository.AsQueryable().FindFirst(x => x.Id == formularioEnCadena.FormularioBaseId);
                         }
 
-                        void AgregarHijos(Guid id)
+                        void RecorrerHaciaUltimaVersion(Guid id)
                         {
-                            var hijos = repository.AsQueryable()
+                            var formulariosDerivados = repository.AsQueryable()
                                 .Where(x => x.FormularioBaseId == id)
                                 .ToList();
 
-                            foreach (Projections.FormularioTable.Formulario hijo in hijos)
+                            foreach (Projections.FormularioTable.Formulario version in formulariosDerivados)
                             {
-                                relacionados.Add(hijo);
-                                AgregarHijos(hijo.Id);
+                                formulariosRelacionados.Add(version);
+                                RecorrerHaciaUltimaVersion(version.Id);
                             }
                         }
 
-                        AgregarHijos(formularioActual.Id);
-                        if (relacionados.Any(f => f.Estado == FormularioEstado.Borrador.Value))
+                        RecorrerHaciaUltimaVersion(formularioInicial.Id);
+                        if (formulariosRelacionados.Any(f => f.Estado == FormularioEstado.Borrador.Value))
                         {
                             context.AddFailure(new FluentValidation.Results.ValidationFailure("Id",
                                 "No se puede versionar porque existe al menos un formulario relacionado en estado Borrador.")

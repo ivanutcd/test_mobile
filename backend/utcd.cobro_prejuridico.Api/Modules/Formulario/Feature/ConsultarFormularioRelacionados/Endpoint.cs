@@ -11,7 +11,7 @@ public static class Endpoint
     public static void ConsultarFormulariosRelacionados(this IEndpointRouteBuilder app)
     {
         app.MapGet(
-                "/consultar-formularios-relacionado{id}",
+                "/consultar-formularios-relacionado/{id}",
                    async (
                        [FromRoute] Guid id,
                     IQueryDispatcher dispatcher

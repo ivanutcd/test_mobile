@@ -14,7 +14,7 @@ export const usePaginadoFormulariosRelacionados = <T>(id?: string) => {
     setError(null);
 
     try {
-      const response = await httpApi.get<T[]>(`formulario/consultar-formularios-relacionado${id}`);
+      const response = await httpApi.get<T[]>(`formulario/consultar-formularios-relacionado/${id}`);
       const formatted = response.map((item: any) => ({
         ...item,
         createdDate: DateUtil.toFormat(item.createdDate, 'dd/MM/yyyy hh:mm:ss a'),

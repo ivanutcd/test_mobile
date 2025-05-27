@@ -27,36 +27,49 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarForm
         public async Task<List<FormularioRelacionadoResponse>> Run(ConsultarFormularioRelacionadosQuery query)
         {
             var spec = new SpecificationGeneric<Projections.FormularioTable.Formulario>();
-            IEnumerable<Projections.FormularioTable.Formulario> paginatedFormulario = await Repository.List(spec);
-            IList<Projections.FormularioTable.Formulario> relacionadosOrdenados = GetFormulariosRelacionados(paginatedFormulario, query.Id);
-            return this.Mapper.Map<List<FormularioRelacionadoResponse>>(relacionadosOrdenados);
+            IEnumerable<Projections.FormularioTable.Formulario> formulario = await Repository.List(spec);
+            IList<Projections.FormularioTable.Formulario> formulariosRelacionadosOrdenados = ObtenerFormulariosRelacionados(formulario, query.Id).OrderByDescending(s=>s.CreatedDate).ToList();
+
+            return this.Mapper.Map<List<FormularioRelacionadoResponse>>(formulariosRelacionadosOrdenados);
         }
-        List<Projections.FormularioTable.Formulario> GetFormulariosRelacionados(
-                                                     IEnumerable<Projections.FormularioTable.Formulario> all,
-                                                     Guid id,
-                                                     HashSet<Guid> visitados = null)
+        private List<Projections.FormularioTable.Formulario> ObtenerFormulariosRelacionados(
+           IEnumerable<Projections.FormularioTable.Formulario> todosLosFormularios,
+           Guid id,
+           HashSet<Guid> visitados = null)
         {
             visitados ??= new HashSet<Guid>();
             var resultado = new List<Projections.FormularioTable.Formulario>();
 
-            if (visitados.Contains(id)) return resultado;
+            if (visitados.Contains(id))
+                return resultado;
 
             visitados.Add(id);
 
-            Projections.FormularioTable.Formulario formulario = all.FirstOrDefault(f => f.Id == id);
-            if (formulario == null) return resultado;
+            Projections.FormularioTable.Formulario formularioActual = todosLosFormularios.FirstOrDefault(f => f.Id == id);
+            if (formularioActual == null)
+                return resultado;
 
-            resultado.Add(formulario);
-
-            if (formulario.FormularioBaseId.HasValue)
+            resultado.Add(formularioActual);
+            if (formularioActual.FormularioBaseId.HasValue)
             {
-                resultado.AddRange(GetFormulariosRelacionados(all, formulario.FormularioBaseId.Value, visitados));
+                resultado.AddRange(ObtenerFormulariosRelacionados(
+                    todosLosFormularios,
+                    formularioActual.FormularioBaseId.Value,
+                    visitados
+                ));
             }
 
-            var hijos = all.Where(f => f.FormularioBaseId == id).ToList();
-            foreach (Projections.FormularioTable.Formulario hijo in hijos)
+            var formulariosDerivados = todosLosFormularios
+                .Where(f => f.FormularioBaseId == id)
+                .ToList();
+
+            foreach (Projections.FormularioTable.Formulario formularioDerivado in formulariosDerivados)
             {
-                resultado.AddRange(GetFormulariosRelacionados(all, hijo.Id, visitados));
+                resultado.AddRange(ObtenerFormulariosRelacionados(
+                    todosLosFormularios,
+                    formularioDerivado.Id,
+                    visitados
+                ));
             }
 
             return resultado;
