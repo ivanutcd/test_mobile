@@ -11,6 +11,9 @@
 
 # dependencies
 /node_modules
+/mobile/node_modules
+/mobile/ios
+/mobile/android
 
 # profiling files
 chrome-profiler-events*.json
