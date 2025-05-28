@@ -21,6 +21,7 @@ export const traducciones = {
   NUMEROVERSION: 'número de versión',
   AUTOR: 'Autor',
   REGISTROVERSIONES: 'Registro de versiones del formulario',
+  RESTAURAR: 'Restaurar Formulario',
 };
 
 export default traducciones;

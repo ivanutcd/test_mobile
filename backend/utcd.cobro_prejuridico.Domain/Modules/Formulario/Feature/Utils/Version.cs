@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ardalis.Specification;
 using Enee.Core.Domain.Repository;
 using Enee.Core.Domain.Specs;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Utils
 {
@@ -30,7 +25,21 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Utils
             else {
                 if (!string.IsNullOrWhiteSpace(estructuraFormulario.VersionFormulario))
                 {
+                    void RecorrerHaciaUltimaVersion(Guid id)
+                    {
+                        Projections.FormularioTable.Formulario obtenerUltimoFormulario = FormularioRepository.AsQueryable().FirstOrDefault(x => x.FormularioBaseId == id);
+                        if (obtenerUltimoFormulario == null)
+                        {
+                            return;
+                        }
+                        estructuraFormulario = obtenerUltimoFormulario;
+                        RecorrerHaciaUltimaVersion(obtenerUltimoFormulario.Id);
+                    }
+
+                    RecorrerHaciaUltimaVersion(estructuraFormulario.Id);
+
                     version = Parse(estructuraFormulario.VersionFormulario);
+
                 }
                 else
                 {

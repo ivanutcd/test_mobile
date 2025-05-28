@@ -2,12 +2,12 @@ using Enee.Core.CQRS.Validation;
 using Enee.Core.Domain.Repository;
 using FluentValidation;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
-namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.VersionamientoFormulario
+
+namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.RestaurarVersionFormulario
 {
-    public class VersionamientoFormularioCommandValidator
-        : CommandValidatorBase<VersionamientoFormularioCommand>
+    public class RestaurarVersionFormularioCommandValidatos : CommandValidatorBase<RestaurarVersionFormularioCommand>
     {
-        public VersionamientoFormularioCommandValidator(
+        public RestaurarVersionFormularioCommandValidatos(
             IReadOnlyRepository<Projections.FormularioTable.Formulario> repository
         )
         {
@@ -23,6 +23,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                         if (formularioInicial == null)
                         {
                             context.AddFailure("No se encontro el formulario");
+                            return;
+                        }
+
+                        if (formularioInicial.Estado != FormularioEstado.Obsoleto.Value)
+                        {
+                            context.AddFailure("Solo se permite formularios obsoletos");
                             return;
                         }
                         var formulariosRelacionados = new List<Projections.FormularioTable.Formulario>();
@@ -61,7 +67,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.Versionamient
                         }
                     }
                 );
-               
+
         }
     }
 }

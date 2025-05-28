@@ -1,6 +1,7 @@
 export enum EstadosFormulariosEnum {
   Borrador = 'borrador',
   Publicado = 'publicado',
+  Obsoleto = 'obsoleto',
 }
 
 export const EstadosFormularios = Object.entries(EstadosFormulariosEnum).map(
