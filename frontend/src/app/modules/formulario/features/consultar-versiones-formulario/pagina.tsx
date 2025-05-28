@@ -10,8 +10,6 @@ import {
   CustomModal,
 } from '@proyectos-enee/enee_componentes';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
-import FormularioEditar from '../Editar-formulario/index.tsx';
-
 import {
   ActionColumn,
 } from '@components/grid/components/action-column.tsx';
@@ -24,28 +22,20 @@ import { useRestaurarVersionFormularioHandler } from '../restaurar-version-formu
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 const Pagina = ({ id }: SearchProps) => {
   const { data, loading, recargar } = usePaginadoFormulariosRelacionados(id ?? undefined);
-  const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const handleCloseModalEditar = () => {
-    setOpenModalEditar(false);
-  };
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-  const handleOpenModalEditar = (newMode: ModeFormulario) => {
-    setMode(newMode);
-    setOpenModalEditar(true);
-  };
+
   
   const handleOpenModal = (newMode: ModeFormulario) => {
     setMode(newMode);
     setOpenModal(true);
   };
   const handleSuccess = () => {
-    setOpenModalEditar(false);
     setOpenModal(false);
     recargar();
   };
