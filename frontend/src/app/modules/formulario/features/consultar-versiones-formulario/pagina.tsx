@@ -20,6 +20,8 @@ import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { SearchProps } from './propos.ts';
 import {Stack, Typography, Box, Divider,IconButton, Tooltip } from '@mui/material';
 import Chip from '@components/chip/chip.tsx';
+import { useRestaurarVersionFormularioHandler } from '../restaurar-version-formulario/restaurar-version-formulario-handler.ts';
+import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 const Pagina = ({ id }: SearchProps) => {
   const { data, loading, recargar } = usePaginadoFormulariosRelacionados(id ?? undefined);
   const [openModalEditar, setOpenModalEditar] = useState(false);
@@ -47,17 +49,11 @@ const Pagina = ({ id }: SearchProps) => {
     setOpenModal(false);
     recargar();
   };
+  const { publicar } = useRestaurarVersionFormularioHandler();
 
+  
   const actions: Array<ActionColumn> = [
-    {
-      icon: <RestorePageIcon />,
-      label: traducciones.EDITAR,
-      onClick: params => {
-        setFormularioId(params.id);
-        handleOpenModalEditar('edit');
-      },
-      
-    },
+    
     {
        label: traducciones.VISUALIZAR,
        icon: <VisibilityIcon color="primary" />,
@@ -66,6 +62,16 @@ const Pagina = ({ id }: SearchProps) => {
           handleOpenModal('view');
         },
         
+    },
+    {
+      icon: <RestorePageIcon />,
+      label: traducciones.RESTAURAR,
+      onClick: async params => {
+        await publicar(params.id, {
+          onComplete: () => handleSuccess()
+        });
+      }
+      
     },
   ];
   interface DetalleChipsProps {
@@ -92,13 +98,20 @@ const Pagina = ({ id }: SearchProps) => {
   
   const RenderActions = ({ formulario }: { formulario: any }) => (
     <Stack direction="row" spacing={1} mt={0}>
-      {actions.map((action, index) => (
-        <Tooltip key={index} title={action.label}>
-          <IconButton color="primary" onClick={() => action.onClick(formulario)}>
-            {action.icon}
-          </IconButton>
-        </Tooltip>
-      ))}
+      {actions
+        .filter(action => {
+          if (action.label === traducciones.RESTAURAR) {
+            return formulario.estado === EstadosFormulariosEnum.Obsoleto;
+          }
+          return true;
+        })
+        .map((action, index) => (
+          <Tooltip key={index} title={action.label}>
+            <IconButton color="primary" onClick={() => action.onClick(formulario)}>
+              {action.icon}
+            </IconButton>
+          </Tooltip>
+        ))}
     </Stack>
   );
 
@@ -144,18 +157,7 @@ const Pagina = ({ id }: SearchProps) => {
           />
         </CustomModal>
 
-        <CustomModal
-          open={openModalEditar}
-          handleClose={handleCloseModalEditar}
-          modalTitle={TitleFormulario(mode)}
-        >
-          <FormularioEditar
-            mode={mode}
-            id={formularioId}
-            onCancel={handleCloseModalEditar}
-            onSuccess={handleSuccess}
-          />
-        </CustomModal>
+     
       </MainCard>
     </>
   );
