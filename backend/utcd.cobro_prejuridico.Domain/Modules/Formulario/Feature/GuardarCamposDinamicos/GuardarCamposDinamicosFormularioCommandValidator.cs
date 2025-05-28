@@ -4,7 +4,6 @@ using System.Text.Json;
 using Enee.Core.CQRS.Validation;
 using Enee.Core.Domain.Repository;
 using FluentValidation;
-using JasperFx.Core;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCamposDinamicos
 {
@@ -22,7 +21,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.GuardarCampos
                     {
                         Projections.FormularioTable.Formulario entidad = repository
                             .AsQueryable()
-                            .FindFirst(x => x.Id == value);
+                            .FirstOrDefault(x => x.Id == value);
 
                         if (entidad == null)
                         {

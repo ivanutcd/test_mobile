@@ -1,7 +1,6 @@
 using Enee.Core.CQRS.Validation;
 using Enee.Core.Domain.Repository;
 using FluentValidation;
-using JasperFx.Core;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.RestaurarVersionFormulario
@@ -19,7 +18,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.RestaurarVers
                     {
                         Projections.FormularioTable.Formulario formularioInicial = repository
                             .AsQueryable()
-                            .FindFirst(x => x.Id == value);
+                            .FirstOrDefault(x => x.Id == value);
 
                         if (formularioInicial == null)
                         {
@@ -41,7 +40,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.RestaurarVers
                             if (formularioEnCadena.FormularioBaseId == null)
                                 break;
 
-                            formularioEnCadena = repository.AsQueryable().FindFirst(x => x.Id == formularioEnCadena.FormularioBaseId);
+                            formularioEnCadena = repository.AsQueryable().FirstOrDefault(x => x.Id == formularioEnCadena.FormularioBaseId);
                         }
 
                         void RecorrerHaciaUltimaVersion(Guid id)
