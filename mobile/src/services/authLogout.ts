@@ -9,9 +9,9 @@ export async function logoutAndRedirectToSSOLogin() {
   await SecureStore.deleteItemAsync('access_token');
   console.log('🔒 Access token eliminado');
 
-  /* const loginUrl = `${AUTH_SERVER}/connect/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
+   const loginUrl = `${AUTH_SERVER}/connect/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
     REDIRECT_URI_MOBILE
-  )}&response_type=code&scope=${scopes}&prompt=login`;*/
+  )}&response_type=code&scope=${scopes}&prompt=login`;
 
   const url = `${logoutEndpoint}?post_logout_redirect_uri=${encodeURIComponent(
     REDIRECT_URI_MOBILE,
