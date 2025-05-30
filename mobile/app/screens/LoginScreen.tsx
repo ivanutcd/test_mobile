@@ -4,8 +4,11 @@ import { useAuth } from '@hooks/useAuth';
 import { Box } from '@/components/ui/box';
 
 export default function LoginScreen() {
-  const { isAuthenticated, login, logout /*, accessToken*/ } = useAuth();
+  const { isAuthenticated, login, logout , accessToken } = useAuth();
 
+  console.log(isAuthenticated);
+  console.log(accessToken);
+  
   return (
     <Box
       flex={1}
