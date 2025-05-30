@@ -25,7 +25,6 @@
         "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
       }
-
     },
     "android": {
       "adaptiveIcon": {
@@ -34,14 +33,37 @@
       },
       "package": "com.utcd-forms.mobile"
     },
-    
     "web": {
       "favicon": "./assets/splash-icon-icon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "e21db209-5115-42c9-a985-bf43fffaafbc"
+        "projectId": "73a572e5-bb66-480b-828d-e25e6f5a1f62"
       }
-    }
+    },
+    "experiments": {
+      "typedRoutes": true,
+      "newArchitecture": false,
+      "bridgeless": true
+    },
+
+    "plugins": [
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true,
+          "useSQLCipher": true,
+          "android": {
+            "enableFTS": false,
+            "useSQLCipher": false
+          },
+          "ios": {
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
+          }
+        }
+      ]
+    ]
   }
 }
