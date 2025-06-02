@@ -3,13 +3,15 @@ import './scss/FormBuilder.scss';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
-import { IconButton, Box, Menu, MenuItem,Drawer } from '@mui/material';
+import { IconButton, Box, Menu, MenuItem, Drawer } from '@mui/material';
 import { BoxContainer } from '@components/ui-layout/box-container';
 import FieldSetting from './FieldSetting';
 import { useState, useEffect, useMemo } from 'react';
 import { FormField } from './formField';
 import { FormType } from './FormType';
 import { CustomChip, Button } from '@proyectos-enee/enee_componentes';
+import { useNotification } from '@components/snackbar/use-notification';
+import { useNavigate } from 'react-router-dom';
 import {
   guardarComposDinamicosFormulario,
   obtenerEstructuraFormulario,
@@ -44,11 +46,12 @@ export default function FormBuilder({
     movilidadAsociada: formData.movilidadAsociada,
     unidad: formData.unidad,
   });
-
+  const { error, success } = useNotification();
+  const navigate = useNavigate();
   // Obtener estructura del formulario desde la API
   useEffect(() => {
     const obtenerEstructura = async () => {
-      const response = await obtenerEstructuraFormulario(formData.id) as {
+      const response = (await obtenerEstructuraFormulario(formData.id)) as {
         objeto: FormData;
       };
 
@@ -119,30 +122,73 @@ export default function FormBuilder({
       unidad: dataForm.unidad,
     });
 
+    if (dataForm.formFields.some(field => field.label === '')) {
+      error('No se pueden tener campos con etiquetas vacías');
+      return;
+    }
+
+    const labelCounts = dataForm.formFields.reduce(
+      (counts, field) => {
+        counts[field.label] = (counts[field.label] || 0) + 1;
+        return counts;
+      },
+      {} as Record<string, number>,
+    );
+
+    for (const label in labelCounts) {
+      if (labelCounts[label] > 1) {
+        error(`La etiqueta "${label}" se repite en varios campos`);
+        return;
+      }
+    }
+
     const payload = {
       id: formData.id,
       estructuraFormulario,
     };
 
-    await guardarComposDinamicosFormulario(payload as any);
+    await guardarComposDinamicosFormulario(payload as any).then(() => {
+      success('Formulario guardado correctamente');
+      navigate('/formulario');
+    });
   };
 
   // Memoizar campos para renderizar
   const renderedFields = useMemo(() => {
     return dataForm.formFields.map((field, index) => (
-      <Box className="card-container" key={index}>
+      <Box
+        className={`card-container ${
+          dataForm.formFields.filter(f => f.label === field.label).length > 1 ||
+          field.label.length > 30
+            ? 'error-wrapper'
+            : ''
+        }`}
+        key={index}
+      >
         <Box className="card">
           <FieldSetting
             field={field}
             onFieldChange={updatedField => {
               const updatedFields = dataForm.formFields.map(f =>
-                f.id === updatedField.id ? updatedField : f
+                f.id === updatedField.id ? updatedField : f,
               );
               const updatedForm = { ...dataForm, formFields: updatedFields };
               setDataForm(updatedForm);
               onFormChange?.(updatedForm);
             }}
           />
+          {dataForm.formFields.filter(f => f.label === field.label).length >
+            1 &&
+            field.label !== '' && (
+              <span className="error-message">
+                Campo : {field.label} ya existe
+              </span>
+            )}
+          {field.label.length > 30 && (
+            <span className="error-message">
+              El campo no puede contener más de 30 caracteres
+            </span>
+          )}
         </Box>
         <Box className="options">
           {dataForm.formFields.length > 1 && (
@@ -195,7 +241,9 @@ export default function FormBuilder({
     console.log('Seleccionaste versión:', version);
     setAnchorChip(null);
   };
-  const [formularioSeleccionadoId, setFormularioSeleccionadoId] = useState<string | null>(null);
+  const [formularioSeleccionadoId, setFormularioSeleccionadoId] = useState<
+    string | null
+  >(null);
   const abrirModalVersiones = (id: string) => {
     setFormularioSeleccionadoId(id);
     setOpenModalVersiones(true);
@@ -210,7 +258,6 @@ export default function FormBuilder({
       <Box className="form-builder">
         <h1>{dataForm.nombreTecnico}</h1>
         <CustomChip label={dataForm.movilidadAsociada} variant="filled" />
-       
 
         <Menu
           anchorEl={anchorChip}
@@ -229,13 +276,24 @@ export default function FormBuilder({
           }}
         >
           {versiones.map((version, index) => (
-            <MenuItem key={index} onClick={() => handleSeleccionVersion(version)}>
+            <MenuItem
+              key={index}
+              onClick={() => handleSeleccionVersion(version)}
+            >
               Versión {version}
             </MenuItem>
           ))}
         </Menu>
 
-        <div style={{ position: 'absolute', bottom: 50, right: 10, display: 'flex', gap: '10px' }}>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 50,
+            right: 10,
+            display: 'flex',
+            gap: '10px',
+          }}
+        >
           <Button
             onClick={() => abrirModalVersiones(formData.id)}
             variant="contained"
@@ -261,24 +319,26 @@ export default function FormBuilder({
         slotProps={{
           backdrop: {
             sx: {
-              backgroundColor: 'rgba(0, 0, 0, 0.2)' 
-            }
-          }
+              backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            },
+          },
         }}
       >
-      <Box p={0}>
-        <MainCard
-          title={traducciones.REGISTROVERSIONES}
-          secondary={
-        <IconButton onClick={cerrarModalVersiones}>
-          <CloseIcon />
-        </IconButton>
-      }
-    >
-      {formularioSeleccionadoId && <Pagina id={formularioSeleccionadoId} />}
-    </MainCard>
-    </Box>
-    </Drawer>
-  </BoxContainer>
+        <Box p={0}>
+          <MainCard
+            title={traducciones.REGISTROVERSIONES}
+            secondary={
+              <IconButton onClick={cerrarModalVersiones}>
+                <CloseIcon />
+              </IconButton>
+            }
+          >
+            {formularioSeleccionadoId && (
+              <Pagina id={formularioSeleccionadoId} />
+            )}
+          </MainCard>
+        </Box>
+      </Drawer>
+    </BoxContainer>
   );
 }

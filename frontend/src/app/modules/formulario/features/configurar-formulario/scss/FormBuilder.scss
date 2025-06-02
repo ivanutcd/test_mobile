@@ -68,3 +68,16 @@
     transform: scale(1.5);
   }
 }
+
+.error-message {
+  color: #fff;
+  background-color: #fc5e5e;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 5px;
+ float: left;
+}
+.error-wrapper {
+  border: 1px solid #fc5e5e;
+}
