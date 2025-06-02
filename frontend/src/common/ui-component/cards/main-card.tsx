@@ -1,7 +1,7 @@
 import { forwardRef, ReactNode } from 'react';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // material-ui
-import { useTheme, Theme } from '@mui/material';
+import { useTheme, Theme, IconButton, Box } from '@mui/material';
 import {
   Card,
   CardContent,
@@ -46,6 +46,7 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
       darkTitle,
       secondary,
       shadow,
+      backButton,
       sx = {},
       title,
       divider = true,
@@ -70,7 +71,6 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
           ...sx,
         }}
       >
-        {/* card header and action */}
         {title && (
           <CardHeader
             sx={headerSX}
@@ -80,10 +80,28 @@ const MainCard = forwardRef<HTMLDivElement, MainCardProps>(
                   variant="h3"
                   sx={{ fontSize: '20px', fontWeight: 'bold' }}
                 >
-                  {title}
+                  <Box
+                    sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+                  >
+                    {backButton && (
+                      <IconButton sx={headerSX} onClick={backButton}>
+                        <ArrowBackIcon color="primary" />
+                      </IconButton>
+                    )}
+                    {title}
+                  </Box>
                 </Typography>
               ) : (
-                title
+                <Box
+                  sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+                >
+                  {backButton && (
+                    <IconButton sx={headerSX} onClick={backButton}>
+                      <ArrowBackIcon color="primary" />
+                    </IconButton>
+                  )}
+                  {title}
+                </Box>
               )
             }
             action={secondary as ReactNode}

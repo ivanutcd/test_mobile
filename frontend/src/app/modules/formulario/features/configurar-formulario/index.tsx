@@ -3,18 +3,21 @@ import MainCard from '@common/ui-component/cards/main-card.tsx';
 import FormBuilder from './FormBuilder';
 import FormRender from './formRender';
 import { FormType } from './FormType';
-// import { GridContainer,Col } from '@proyectos-enee/enee_componentes';
 import { GridContainer } from '@components/ui-layout/grid-container';
 import { Col } from '@components/ui-layout/col';
+import { useConfirmDialog } from '@components/dialog/confirm-dialog.tsx';
 import { FormField } from './formField';
 import { useParams } from 'react-router-dom';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
+import { useNavigate } from 'react-router-dom';
 
 const ConfigurarFormulario = () => {
   const { id } = useParams();
   const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
   console.log(formulario);
+  const confirm = useConfirmDialog();
 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<{
     formFields: FormField[];
     estado: string;
@@ -29,9 +32,21 @@ const ConfigurarFormulario = () => {
     descripcion: formulario?.descripcion ?? '',
   });
 
+  const handleBackCancel = async () => {
+    const result = await confirm({
+      title: '¿Estás seguro de querer salir?',
+      description: 'Se perderán los cambios realizados',
+      confirmationText: 'Salir',
+      cancellationText: 'Cancelar',
+    });
+    if (result) {
+      navigate('/formularios', { replace: true });
+    }
+  };
   return (
     <MainCard
       title={`Configurar ${formulario?.nombreTecnico ?? ''}`}
+      backButton={handleBackCancel}
       sx={{ minHeight: 'calc(100vh - 210px)' }}
     >
       {formulario && (
