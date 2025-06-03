@@ -10,12 +10,12 @@
 
     <ItemGroup>
       <PackageReference Include="Ardalis.EFCore.Extensions" />
-      <PackageReference Include="Enee.Core.Data"  />
+      <PackageReference Include="Enee.Core.Data" />
       <PackageReference Include="Enee.Core.Infraestructure" />
       <PackageReference Include="Enee.Core.Migrations" />
       <PackageReference Include="Enee.IoC.Architecture" />
       <PackageReference Include="FluentMigrator" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational"/>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     </ItemGroup>
 
     <ItemGroup>

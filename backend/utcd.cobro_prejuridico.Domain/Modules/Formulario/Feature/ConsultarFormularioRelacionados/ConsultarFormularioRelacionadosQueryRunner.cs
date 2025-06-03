@@ -8,7 +8,6 @@ using Enee.Core.Domain.Repository;
 using Enee.Core.Domain.Specs;
 using Enee.Core.Domain;
 using utcd.cobro_prejuridico.Domain.Common;
-using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 using Ardalis.Specification;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularioRelacionados
