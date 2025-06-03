@@ -141,6 +141,18 @@ export default function FormBuilder({
         return;
       }
     }
+    if (dataForm.formFields.some(field => field.label.length > 50)) {
+      error('El campo no puede contener más de 50 caracteres');
+      return;
+    }
+    if (
+      dataForm.formFields.some(field =>
+        /[!@#$%^&*(),.?":{}|<>]/g.test(field.label),
+      )
+    ) {
+      error('El campo no puede contener caracteres especiales');
+      return;
+    }
 
     const payload = {
       id: formData.id,
@@ -149,7 +161,7 @@ export default function FormBuilder({
 
     await guardarComposDinamicosFormulario(payload as any).then(() => {
       success('Formulario guardado correctamente');
-      navigate('/formulario');
+      navigate('/formularios');
     });
   };
 
@@ -159,7 +171,8 @@ export default function FormBuilder({
       <Box
         className={`card-container ${
           dataForm.formFields.filter(f => f.label === field.label).length > 1 ||
-          field.label.length > 30
+          field.label.length > 50 ||
+          /[!@#$%^&*(),.?":{}|<>]/g.test(field.label)
             ? 'error-wrapper'
             : ''
         }`}
@@ -184,9 +197,14 @@ export default function FormBuilder({
                 Campo : {field.label} ya existe
               </span>
             )}
-          {field.label.length > 30 && (
+          {field.label.length > 50 && (
             <span className="error-message">
-              El campo no puede contener más de 30 caracteres
+              El campo no puede contener más de 50 caracteres
+            </span>
+          )}
+          {/[!@#$%^&*(),.?":{}|<>]/g.test(field.label) && (
+            <span className="error-message">
+              El campo no puede contener caracteres especiales
             </span>
           )}
         </Box>
