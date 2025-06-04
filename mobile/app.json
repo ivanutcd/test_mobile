@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "UTCD Forms",
-    "slug": "utcd-forms",
-    "owner": "utcd-forms",
+    "name": "UTCDForms",
+    "slug": "utcdforms",
+    "owner": "devutcd",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "utcd-forms",
@@ -38,7 +38,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "73a572e5-bb66-480b-828d-e25e6f5a1f62"
+        "projectId": "f6ff5fb7-c3ae-4d64-b59e-7e3b0094a71c"
       }
     },
     "experiments": {
@@ -46,7 +46,6 @@
       "newArchitecture": false,
       "bridgeless": true
     },
-
     "plugins": [
       [
         "expo-sqlite",
@@ -64,6 +63,12 @@
           }
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f6ff5fb7-c3ae-4d64-b59e-7e3b0094a71c"
+    }
   }
 }
