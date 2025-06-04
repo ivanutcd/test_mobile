@@ -118,8 +118,6 @@ jobs:
 
   mobile:
     runs-on: ubuntu-latest
-    env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -129,39 +127,36 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
       - name: Install dependencies
         run: |
           cd mobile
           npm ci
+          npx expo install
 
       - name: Install EAS CLI
-        run: |
-          npm install -g eas-cli
-          eas --version
+        run: npm install -g eas-cli
 
-      - name: Build Android APK with EAS
+      - name: Accept Android licenses
+        run: |
+          yes | sudo sdkmanager --licenses || true
+
+      - name: Build APK locally with EAS
         working-directory: mobile
         run: |
-          eas build --platform android --profile preview --non-interactive --json > build-result.json
-
-      - name: Get APK download URL
-        id: get_apk
-        working-directory: mobile
-        run: |
-          APK_URL=$(jq -r '.artifacts.buildUrl' build-result.json)
-          echo "APK_URL=$APK_URL" >> $GITHUB_OUTPUT
-
-      - name: Download APK
-        id: download_apk
-        run: |
-          mkdir -p mobile/build
-          curl -L "${{ steps.get_apk.outputs.APK_URL }}" -o mobile/build/app-release.apk
+          eas build --platform android --profile preview --local --non-interactive --output=./app-release.apk
 
       - name: Rename APK with version tag
         id: rename_apk
         run: |
           VERSION=${{ github.ref_name }}
-          mv mobile/build/app-release.apk mobile/build/UTCDForms-${VERSION}.apk
+          mkdir -p mobile/build
+          mv mobile/app-release.apk mobile/build/UTCDForms-${VERSION}.apk
           echo "APK_FINAL_PATH=mobile/build/UTCDForms-${VERSION}.apk" >> $GITHUB_OUTPUT
 
       - name: Upload APK to GitHub Release
