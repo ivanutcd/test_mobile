@@ -118,6 +118,8 @@ jobs:
 
   mobile:
     runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -132,31 +134,21 @@ jobs:
           cd mobile
           npm ci
 
-      - name: Install Expo CLI
+      - name: Install EAS CLI
         run: |
-          npm install -g @expo/cli
-          npx expo --version
+          npm install -g eas-cli
+          eas --version
 
-      - name: Log in to Expo
-        env:
-          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
+      - name: Build Android APK with EAS
+        working-directory: mobile
         run: |
-          npx expo login --token $EXPO_TOKEN
+          eas build --platform android --profile preview --non-interactive --output=build-url.txt
 
-      - name: Build Android APK
-        env:
-          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
-        run: |
-          cd mobile
-          expo build:android -t apk --non-interactive --no-wait
-
-      - name: Wait for Expo build to finish and download APK
+      - name: Get APK download URL
         id: get_apk
-        env:
-          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
+        working-directory: mobile
         run: |
-          cd mobile
-          BUILD_URL=$(expo build:status --json | jq -r '.artifacts.apk')
+          BUILD_URL=$(cat build-url.txt)
           echo "APK_URL=$BUILD_URL" >> $GITHUB_OUTPUT
 
       - name: Download APK
