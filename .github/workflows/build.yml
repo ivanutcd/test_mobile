@@ -133,13 +133,15 @@ jobs:
           npm ci
 
       - name: Install Expo CLI
-        run: npm install -g expo-cli
+        run: |
+          npm install -g @expo/cli
+          npx expo --version
 
       - name: Log in to Expo
         env:
           EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
         run: |
-          expo login --token $EXPO_TOKEN
+          npx expo login --token $EXPO_TOKEN
 
       - name: Build Android APK
         env:
