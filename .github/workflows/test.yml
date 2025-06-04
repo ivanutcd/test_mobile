@@ -2,7 +2,7 @@ name: Testing
 
 on:
   pull_request:
-    types: [ edited, reopened, ready_for_review, synchronize, opened ]
+    types: [edited, reopened, ready_for_review, synchronize, opened]
 
 env:
   ORGANIZATION: proyectos-enee
@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Definir DOTNET_ROOT y agregarlo al PATH
         run: |
           echo "DOTNET_ROOT=$HOME/.dotnet" >> $GITHUB_ENV
@@ -65,7 +65,7 @@ jobs:
 
       - name: Runing building test
         env:
-          DB__CONEXION: "Server=localhost;Database=enee;User Id=postgres; Password=P@ssword1234;Enlist=true;"
+          DB__CONEXION: 'Server=localhost;Database=enee;User Id=postgres; Password=P@ssword1234;Enlist=true;'
           DB__SCHEMA_EVENTS: cobro_prejuridico_events
           DB__SCHEMA_DOCS: cobro_prejuridico_docs
           DB__SCHEMA_TABLES: cobro_prejuridico_enee
@@ -85,3 +85,25 @@ jobs:
           dotnet restore utcd.cobro_prejuridico.Api.csproj
           dotnet run -- codegen write
           dotnet build "utcd.cobro_prejuridico.Api.csproj" -c Release
+
+  testing-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Running build and test
+        run: |
+          cd mobile
+          pnpm install
+          pnpm exec expo export
