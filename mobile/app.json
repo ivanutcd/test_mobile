@@ -31,7 +31,7 @@
         "foregroundImage": "./assets/splash-icon-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.utcd-forms.mobile"
+      "package": "com.utcdforms.mobile"
     },
     "web": {
       "favicon": "./assets/splash-icon-icon.png"
