@@ -142,14 +142,14 @@ jobs:
       - name: Build Android APK with EAS
         working-directory: mobile
         run: |
-          eas build --platform android --profile preview --non-interactive --output=build-url.txt
+          eas build --platform android --profile preview --non-interactive --json > build-result.json
 
       - name: Get APK download URL
         id: get_apk
         working-directory: mobile
         run: |
-          BUILD_URL=$(cat build-url.txt)
-          echo "APK_URL=$BUILD_URL" >> $GITHUB_OUTPUT
+          APK_URL=$(jq -r '.artifacts.buildUrl' build-result.json)
+          echo "APK_URL=$APK_URL" >> $GITHUB_OUTPUT
 
       - name: Download APK
         id: download_apk
