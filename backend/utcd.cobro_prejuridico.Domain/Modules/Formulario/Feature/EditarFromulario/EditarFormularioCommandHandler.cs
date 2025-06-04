@@ -23,14 +23,14 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
 
         public async Task Handle(EditarFormularioCommand command)
         {
-            FormularioRoot sucursalRoot = await Store.Find(command.Id);
-            sucursalRoot.Editar(
+            FormularioRoot root = await Store.Find(command.Id);
+            root.Editar(
                 command.NombreTecnico,
                 command.Descripcion,
                 command.MovilidadAsociada,
                 command.Estado
             );
-            await Store.Update(sucursalRoot);
+            await Store.Update(root);
         }
     }
 }

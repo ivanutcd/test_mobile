@@ -19,7 +19,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string VersionFormulario { get; set; }
         public string? EstructuraFormulario { get; set; }
         public Guid? FormularioBaseId { get; set; }
-
+        public Guid? IdUsuario { get; set; }
 
 
         public FormularioRoot() { }
@@ -77,7 +77,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
 
             Apply(NewChange(editar));
         }
-
+       
         private void Apply(FormularioEditarEvent @event)
         {
             Id = @event.AggregateId;
