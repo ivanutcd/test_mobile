@@ -34,7 +34,7 @@ namespace utcd.cobro_prejuridico.Data.Migrations.CargaTrabajoDetalle
 
             Create.ForeignKey($"FK_{TableName}_CargaTrabajo")
                 .FromTable(TableName).InSchema(schema).ForeignColumn("CargaTrabajoId")
-                .ToTable("CargaTrabajo").InSchema(schema).PrimaryColumn("CargaTrabajoId");
+                .ToTable("CargaTrabajo").InSchema(schema).PrimaryColumn("Id");
         }
 
         public override void Down()
