@@ -115,3 +115,66 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd mobile
+          npm ci
+
+      - name: Install Expo CLI
+        run: |
+          npm install -g @expo/cli
+          npx expo --version
+
+      - name: Log in to Expo
+        env:
+          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
+        run: |
+          npx expo login --token $EXPO_TOKEN
+
+      - name: Build Android APK
+        env:
+          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
+        run: |
+          cd mobile
+          expo build:android -t apk --non-interactive --no-wait
+
+      - name: Wait for Expo build to finish and download APK
+        id: get_apk
+        env:
+          EXPO_TOKEN: ${{ vars.EXPO_TOKEN }}
+        run: |
+          cd mobile
+          BUILD_URL=$(expo build:status --json | jq -r '.artifacts.apk')
+          echo "APK_URL=$BUILD_URL" >> $GITHUB_OUTPUT
+
+      - name: Download APK
+        id: download_apk
+        run: |
+          mkdir -p mobile/build
+          curl -L "${{ steps.get_apk.outputs.APK_URL }}" -o mobile/build/app-release.apk
+
+      - name: Rename APK with version tag
+        id: rename_apk
+        run: |
+          VERSION=${{ github.ref_name }}
+          mv mobile/build/app-release.apk mobile/build/UTCDForms-${VERSION}.apk
+          echo "APK_FINAL_PATH=mobile/build/UTCDForms-${VERSION}.apk" >> $GITHUB_OUTPUT
+
+      - name: Upload APK to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.rename_apk.outputs.APK_FINAL_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
