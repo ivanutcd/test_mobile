@@ -127,60 +127,61 @@ jobs:
           path: mobile
 
       - name: Setup Node.js
+        working-directory: mobile
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-        working-directory: ./mobile
 
       - name: Setup Java
+        working-directory: mobile
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 17
-        working-directory: ./mobile
 
       - name: Install pnpm
+        working-directory: mobile
         run: npm install -g pnpm
-        working-directory: ./mobile
 
       - name: Install dependencies
+        working-directory: mobile
         run: pnpm install
-        working-directory: ./mobile
 
       - name: Install expo-dev-client
+        working-directory: mobile
         run: npx expo install expo-dev-client
-        working-directory: ./mobile
 
       - name: Install jq
+        working-directory: mobile
         run: sudo apt-get update && sudo apt-get install -y jq
-        working-directory: ./mobile
 
       - name: Install EAS CLI
+        working-directory: mobile
         run: npm install -g eas-cli
-        working-directory: ./mobile
 
       - name: Build APK locally with EAS
+        working-directory: mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           eas build --platform android --profile development --local --non-interactive --output=./app-release.apk
-        working-directory: ./mobile
 
       - name: Rename APK with version tag
+        working-directory: mobile
         id: rename_apk
         run: |
           VERSION=${{ github.ref_name }}
           NEW_NAME=UTCDForms-${VERSION}.apk
           mv app-release.apk $NEW_NAME
           echo "APK_FINAL_PATH=${NEW_NAME}" >> $GITHUB_OUTPUT
-        working-directory: ./mobile
 
       - name: Check that APK file exists
+        working-directory: mobile
         run: ls -lh ${{ steps.rename_apk.outputs.APK_FINAL_PATH }}
-        working-directory: ./mobile
 
         # Upload APK to GitHub Release
       - name: Upload APK to existing GitHub Release using gh CLI
+        working-directory: mobile
         if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -195,4 +196,3 @@ jobs:
             echo "APK not found: $APK_FILE"
             exit 1
           fi
-        working-directory: ./mobile
