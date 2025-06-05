@@ -123,8 +123,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: mobile
 
       - name: Setup Node.js
         working-directory: mobile
