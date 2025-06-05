@@ -118,6 +118,9 @@ jobs:
 
   mobile:
     runs-on: ubuntu-latest
+    working-directory: ./mobile
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -133,22 +136,22 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
-        run: |
-          cd mobile
-          npm install
-          npm ci
-          npx expo install
+        run: pnpm install
+
+      - name: Install expo-dev-client
+        run: npx expo install expo-dev-client
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Accept Android licenses
-        run: |
-          yes | sudo sdkmanager --licenses || true
-
       - name: Build APK locally with EAS
-        working-directory: mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
@@ -158,13 +161,26 @@ jobs:
         id: rename_apk
         run: |
           VERSION=${{ github.ref_name }}
-          mkdir -p mobile/build
-          mv mobile/app-release.apk mobile/build/UTCDForms-${VERSION}.apk
-          echo "APK_FINAL_PATH=mobile/build/UTCDForms-${VERSION}.apk" >> $GITHUB_OUTPUT
+          NEW_NAME=UTCDForms-${VERSION}.apk
+          mv app-release.apk $NEW_NAME
+          echo "APK_FINAL_PATH=${NEW_NAME}" >> $GITHUB_OUTPUT
 
-      - name: Upload APK to GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ${{ steps.rename_apk.outputs.APK_FINAL_PATH }}
+      - name: Check that APK file exists
+        run: ls -lh ${{ steps.rename_apk.outputs.APK_FINAL_PATH }}
+
+        # Upload APK to GitHub Release
+      - name: Upload APK to existing GitHub Release using gh CLI
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${GITHUB_REF##*/}
+          APK_FILE="UTCDForms-${VERSION}.apk"
+
+          if [ -f "$APK_FILE" ]; then
+            echo "Uploading $APK_FILE to release $VERSION..."
+            gh release upload "$VERSION" "$APK_FILE" --clobber
+          else
+            echo "APK not found: $APK_FILE"
+            exit 1
+          fi
