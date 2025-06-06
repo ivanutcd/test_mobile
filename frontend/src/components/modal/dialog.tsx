@@ -1,4 +1,3 @@
-
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,12 +7,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import { BoxContainer } from '@components/ui-layout/box-container.tsx';
 import React from 'react';
 
-
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '.MuiDialogContent-root': {
-    padding: theme.spacing(0),
-  }
-  
+    padding: theme.spacing(5),
+  },
 }));
 
 export interface DialogProps {
@@ -30,7 +27,7 @@ interface ActionButtonProps {
   onClick: () => void;
   variant: 'text' | 'outlined' | 'contained';
   color: string;
-  type:string;
+  type: string;
 }
 
 const CustomModal = ({
@@ -40,7 +37,6 @@ const CustomModal = ({
   open,
   handleClose,
 }: DialogProps) => {
-
   const emitHandleClose = () => {
     handleClose();
   };
@@ -73,10 +69,14 @@ const CustomModal = ({
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent dividers > 
-          <BoxContainer display="flex"  flexDirection="column" gap={2} padding={2}>
+        <DialogContent dividers>
+          <BoxContainer
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            padding={2}
+          >
             {children}
-           
           </BoxContainer>
         </DialogContent>
       </BootstrapDialog>

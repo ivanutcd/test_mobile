@@ -1,7 +1,7 @@
 import { FormularioInterface } from '../../interfaces/formulario';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { editarFormulario } from './api';
-import {  Button } from '@proyectos-enee/enee_componentes';
+import { Button } from '@proyectos-enee/enee_componentes';
 import { Box } from '@mui/material';
 import { useNotification } from '@components/snackbar/use-notification';
 import { traducciones } from '../../common/translations';
@@ -75,15 +75,16 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
 
   return (
     <>
-      {' '}
-      <FormularioBase
-        defaultValues={initialValues}
-        onSubmit={guardar}
-        loading={isLoading}
-        nameForm={nameForm}
-        catalogs={catalogs}
-        mode={'edit'}
-      />
+      <Box sx={{ width: '500px' }}>
+        <FormularioBase
+          defaultValues={initialValues}
+          onSubmit={guardar}
+          loading={isLoading}
+          nameForm={nameForm}
+          catalogs={catalogs}
+          mode={'edit'}
+        />
+      </Box>
       <Box display="flex" justifyContent="flex-end" gap={2}>
         <Button
           variant="contained"

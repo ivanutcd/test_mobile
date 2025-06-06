@@ -8,13 +8,13 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import './scss/form-render.scss';
 import { Button } from '@proyectos-enee/enee_componentes';
 import {
   HookForm,
   InputText,
   InputNumber,
-  DatePicker,
   Textarea,
 } from '@proyectos-enee/enee_componentes';
 
@@ -56,7 +56,6 @@ export default function FormRender({ formData }: { formData: any }) {
           {formData.descripcion}
         </p>
       </div>
-   
 
       <HookForm
         initialValues={formValues}
@@ -114,11 +113,13 @@ export default function FormRender({ formData }: { formData: any }) {
                           console.log(field.value);
                         }}
                       >
-                        {field.options?.map((option: string, optionIndex: number) => (
-                          <MenuItem key={option + optionIndex} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
+                        {field.options?.map(
+                          (option: string, optionIndex: number) => (
+                            <MenuItem key={option + optionIndex} value={option}>
+                              {option}
+                            </MenuItem>
+                          ),
+                        )}
                       </Select>
                     </FormControl>
                   ),
@@ -126,20 +127,22 @@ export default function FormRender({ formData }: { formData: any }) {
                     <FormControl key={field.id}>
                       <FormLabel component="legend">{field.label}</FormLabel>
                       <FormGroup>
-                        {field.options?.map((option: string, optionIndex: number) => (
-                          <FormControlLabel
-                            key={option + optionIndex}
-                            control={
-                              <Checkbox
-                                onChange={() => {
-                                  console.log(option);
-                                }}
-                                name={option}
-                              />
-                            }
-                            label={option}
-                          />
-                        ))}
+                        {field.options?.map(
+                          (option: string, optionIndex: number) => (
+                            <FormControlLabel
+                              key={option + optionIndex}
+                              control={
+                                <Checkbox
+                                  onChange={() => {
+                                    console.log(option);
+                                  }}
+                                  name={option}
+                                />
+                              }
+                              label={option}
+                            />
+                          ),
+                        )}
                       </FormGroup>
                     </FormControl>
                   ),
@@ -153,21 +156,24 @@ export default function FormRender({ formData }: { formData: any }) {
                         defaultValue="female"
                         name="radio-buttons-group"
                       >
-                        {field.options?.map((option: string, optionIndex: number) => (
-                          <FormControlLabel
-                            key={option + optionIndex}
-                            value={option}
-                            control={<Radio />}
-                            label={option}
-                          />
-                        ))}
+                        {field.options?.map(
+                          (option: string, optionIndex: number) => (
+                            <FormControlLabel
+                              key={option + optionIndex}
+                              value={option}
+                              control={<Radio />}
+                              label={option}
+                            />
+                          ),
+                        )}
                       </RadioGroup>
                     </FormControl>
                   ),
                   date: (
-                    <DatePicker   
+                    <DatePicker
                       key={field.id}
                       label={field.label}
+                      required={field.required}
                       name={field.id}
                     />
                   ),
@@ -194,7 +200,9 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                 };
 
-                return renderField[field.type as keyof typeof renderField] || null;
+                return (
+                  renderField[field.type as keyof typeof renderField] || null
+                );
               })}
 
               <div className="form-render-footer">

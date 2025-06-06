@@ -12,6 +12,8 @@ export const LoadingOverlay = ({ message }: Props) => {
       <Backdrop
         sx={{
           color: '#fff',
+          backgroundColor: 'rgba(2, 106, 191, 0.11)',
+          backdropFilter: 'blur(3px)',
           zIndex: theme => theme.zIndex.drawer + 1,
           display: 'flex',
           flexDirection: 'column', // Esto asegura que los elementos hijos se apilen verticalmente

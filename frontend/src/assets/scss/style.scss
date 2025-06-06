@@ -28,8 +28,16 @@
   border: 1px solid #EFF0F8 !important;
 }
 .MuiDialogContent-root {
-  padding: 0px !important;
+  padding: 8px !important;
   border-radius: 0px !important;
+}
+.MuiDialog-root{
+  background: rgba(2, 106, 191, 0.037) !important;
+  backdrop-filter: blur(3px) !important;
+}
+.MuiModal-backdrop{
+  background: rgba(2, 106, 191, 0.037) !important;
+  backdrop-filter: blur(3px) !important;
 }
 .MuiDialogTitle-root {
   font-size: 20px !important;
