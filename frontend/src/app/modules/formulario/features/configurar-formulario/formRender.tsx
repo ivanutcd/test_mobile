@@ -173,8 +173,10 @@ export default function FormRender({ formData }: { formData: any }) {
                     <DatePicker
                       key={field.id}
                       label={field.label}
-                      required={field.required}
-                      name={field.id}
+                      value={field.value}
+                      onChange={() => {
+                        console.log(field.value);
+                      }}
                     />
                   ),
                   file: (
