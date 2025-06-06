@@ -20,15 +20,10 @@
       "buildNumber": "1.0.0",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show you the nearest forms."
-      },
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/splash-icon.png",
-        "backgroundColor": "#ffffff"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splash-icon-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.utcdforms.mobile"
@@ -42,9 +37,7 @@
       }
     },
     "experiments": {
-      "typedRoutes": true,
-      "newArchitecture": false,
-      "bridgeless": true
+      "typedRoutes": true
     },
     "plugins": [
       [
@@ -62,7 +55,9 @@
             ]
           }
         }
-      ]
+      ],
+      "expo-router",
+      "expo-secure-store"
     ],
     "runtimeVersion": {
       "policy": "appVersion"
