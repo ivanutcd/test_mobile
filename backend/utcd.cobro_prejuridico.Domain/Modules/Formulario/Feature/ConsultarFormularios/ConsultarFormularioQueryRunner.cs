@@ -29,10 +29,13 @@ public class ConsultarFormularioQueryRunner: IQueryRunner<ConsultarFormularioQue
         spec.Query.Where(x => x.Estado == query.Request.Estado,
             !string.IsNullOrWhiteSpace(query.Request.Estado));
         spec.Query.Where(x => x.NombreTecnico.Contains(query.Request.GeneralSearch) ||
-                      x.MovilidadAsociada.Contains(query.Request.GeneralSearch) ||
-                      x.Estado.Contains(query.Request.GeneralSearch),
-    !string.IsNullOrWhiteSpace(query.Request.GeneralSearch));
-        spec.Query.OrderBy(x => x.CreatedDate);
+                              x.MovilidadAsociada.Contains(query.Request.GeneralSearch) ||
+                              x.Estado.Contains(query.Request.GeneralSearch),
+            !string.IsNullOrWhiteSpace(query.Request.GeneralSearch));
+        spec.Query
+            .OrderByDescending(x => x.UpdatedDate)
+            .ThenByDescending(x => x.CreatedDate);
+
 
         IPaginated<Projections.FormularioTable.Formulario> paginatedFormulario = await Repository.Paginate(query.Request.Page, query.Request.PageSize, spec);
         return this.Mapper.Map<IPaginated<FormularioResponse>>(paginatedFormulario);
