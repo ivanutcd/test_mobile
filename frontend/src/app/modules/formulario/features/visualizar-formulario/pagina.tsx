@@ -3,7 +3,7 @@ import { FormularioProps } from '../../common/types';
 import FormularioBase from '../../components/FormularioBase';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler';
 import { useNavigate } from 'react-router-dom';
-import { EstadosFormularios, EstadosFormulariosEnum } from '../../utils/estado-formularios';
+import { EstadosFormulariosEnum } from '../../utils/estado-formularios';
 
 interface VisualizarFormularioProps extends FormularioProps {
   nameForm: string;

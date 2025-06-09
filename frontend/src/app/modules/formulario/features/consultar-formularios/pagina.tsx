@@ -38,15 +38,10 @@ import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
-import { useNotification } from '@components/snackbar/use-notification.ts';
 
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
-
-
-  
-  
 
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
@@ -56,7 +51,6 @@ const Pagina = () => {
   const [openModalEditar, setOpenModalEditar] = useState(false);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
-  const {error} = useNotification();
   const handleSuccess = () => {
     setOpenModal(false);
     recargar();

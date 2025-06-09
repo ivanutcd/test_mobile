@@ -14,7 +14,6 @@ import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { FormularioData } from '../../models/formulario.models';
 import CrearFormulario from '../crear-formulario';
 import VisualizarFormulario from '../visualizar-formulario';
-import { EstadosFormulariosEnum } from '../../utils/estado-formularios';
 
 interface GestionarFormularioProps extends FormularioProps {
   mode: ModeFormulario;
@@ -26,7 +25,6 @@ const Pagina = ({
   onSuccess,
   id,
   mode,
-  ocultarAcciones = false,
 }: GestionarFormularioProps) => {
   const [initialValues, setInitialValues] = useState(FormularioDataEmpty);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,11 +64,6 @@ const Pagina = ({
     catalogs?.tipo_movilidad,
   ]);
 
-  let publicarFormularioFn: (id: string) => void;
-  const setPublicarFormularioFunction = (fn: (id: string) => void) => {
-    publicarFormularioFn = fn;
-  };
-
   return (
     <BoxContainer
       sx={{
@@ -97,7 +90,6 @@ const Pagina = ({
             catalogs={catalogs}
             initialValues={initialValues}
             isLoading={isLoading}
-            onPublicarFormulario={setPublicarFormularioFunction}
             ocultarAcciones = {false} 
           />
         )}
