@@ -70,11 +70,6 @@ const Pagina = ({
   const setPublicarFormularioFunction = (fn: (id: string) => void) => {
     publicarFormularioFn = fn;
   };
-  const ejecutarPublicar = () => {
-    if (publicarFormularioFn) {
-      publicarFormularioFn(id ?? '');
-    }
-  };
 
   return (
     <BoxContainer
@@ -133,15 +128,14 @@ const Pagina = ({
             Guardar
           </Button>
         )}
-
-        {!ocultarAcciones && mode === 'view' && initialValues.estado !== EstadosFormulariosEnum.Publicado && (
+        {mode === 'view' && (
           <Button
             variant="contained"
             color="primary"
-            onClick={ejecutarPublicar}
-        
+            type="submit"
+            form={nameForm}
           >
-            Publicar formulario
+            Ver configuración
           </Button>
         )}
       </BoxContainer>

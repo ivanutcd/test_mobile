@@ -33,9 +33,11 @@ interface FormData {
 export default function FormBuilder({
   onFormChange,
   formData,
+  disabled,
 }: {
   onFormChange?: (form: FormData) => void;
   formData: FormType;
+  disabled?: boolean;
 }) {
   const [dataForm, setDataForm] = useState<FormData>({
     nombreTecnico: formData.nombreTecnico,
@@ -216,6 +218,7 @@ export default function FormBuilder({
                 aria-label="delete"
                 size="small"
                 color="primary"
+                disabled={disabled}
                 onClick={() => deleteField(field.id)}
               >
                 <DeleteIcon />
@@ -229,6 +232,7 @@ export default function FormBuilder({
               aria-label="add"
               size="small"
               color="primary"
+              disabled={disabled}
               onClick={() => addField(field.position)}
             >
               <AddIcon />
@@ -323,6 +327,7 @@ export default function FormBuilder({
             onClick={guardarComposDinamicos}
             variant="contained"
             color="primary"
+            disabled={disabled}
           >
             Guardar formulario
           </Button>

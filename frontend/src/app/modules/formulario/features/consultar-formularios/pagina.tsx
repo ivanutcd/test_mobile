@@ -137,7 +137,7 @@ const Pagina = () => {
         navigate(`/formularios/${params.id}/configurar`);
         }
         else {
-          error('No se puede configurar un formulario que no esté en estado borrador');
+          navigate(`/formularios/${params.id}/ver/configurar`);
         }
       },
     },
