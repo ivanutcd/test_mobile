@@ -30,7 +30,7 @@ const useNetworkStatus = () => {
     });
 
     return () => {
-      subscription.remove(); // Limpieza del listener
+      subscription.remove(); // Limpiear el listener
     };
   }, []);
 

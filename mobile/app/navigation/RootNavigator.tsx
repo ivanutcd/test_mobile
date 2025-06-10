@@ -9,14 +9,18 @@ import LoginScreen from '../screens/LoginScreen';
 import GetFormScreen from '../screens/GetFormScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ItemModal from '../modal';
+import { Pressable } from 'react-native';
 import { Box, Text, View, VStack } from '@gluestack-ui/themed';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
+import { MaterialIcons } from '@expo/vector-icons';
+import { config as themeConfig } from '../../gluestack-style.config';
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
+  const theme = themeConfig.themes.light.colors;
   const networkStatus = useNetworkStatus();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
   const header = useCallback(
     () => (
@@ -24,24 +28,39 @@ const RootNavigator = () => {
         <SafeAreaView>
           <VStack>
             <Box style={styles.headerBox}>
+              <MaterialIcons
+                name="account-circle"
+                size={32}
+                color={theme.primary}
+              />
               <Image
                 source={require('../../assets/images/logoEnee.png')}
                 style={styles.logo}
               />
+              <Pressable onPress={() => logout()}>
+                <MaterialIcons name="logout" size={24} color={theme.primary} />
+              </Pressable>
             </Box>
+
             <Box
               style={[
                 styles.networkBox,
                 {
                   backgroundColor: networkStatus.isConnected
                     ? '#8BFE95'
-                    : '#FF0000',
+                    : '#FF8F9B',
                 },
               ]}
             >
               <Text color="black" fontSize={12}>
                 {networkStatus.isConnected ? 'En Linea' : 'Sin Conexión'}
               </Text>
+              <MaterialIcons
+                name={networkStatus.isConnected ? 'wifi' : 'wifi-off'}
+                size={14}
+                color="black"
+                style={{ marginLeft: 5 }}
+              />
             </Box>
           </VStack>
         </SafeAreaView>
@@ -103,6 +122,12 @@ const styles = StyleSheet.create({
   headerBox: {
     height: 60,
     transform: [{ translateY: -10 }],
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    gap: 10,
   },
   networkBox: {
     position: 'relative',
@@ -111,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 30,
+    height: 24,
   },
 });
 
