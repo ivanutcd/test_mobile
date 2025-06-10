@@ -14,6 +14,9 @@ importers:
       '@gluestack-style/react':
         specifier: ^1.0.57
         version: 1.0.57
+      '@gluestack-ui/alert':
+        specifier: ^0.1.16
+        version: 0.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@gluestack-ui/button':
         specifier: ^1.0.14
         version: 1.0.14(react-dom@18.3.1(react@18.3.1))(react-native@0.76.9(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(@types/react@18.3.23)(react@18.3.1))(react@18.3.1)

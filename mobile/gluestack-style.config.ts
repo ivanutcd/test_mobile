@@ -5,12 +5,14 @@ export const config = {
     borderRadius: 10,
     colors: {
       primary: '#5FD0DF',
+      background: '#FFFFFF',
     },
   },
   themes: {
     light: {
       colors: {
         primary: '#5FD0DF',
+        background: '#FFFFFF',
       },
       borderRadius: 10,
     },
