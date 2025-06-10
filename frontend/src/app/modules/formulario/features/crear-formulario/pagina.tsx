@@ -5,6 +5,8 @@ import { FormularioDataEmpty, FormularioProps } from '../../common/types';
 import { FormularioData } from '../../models/formulario.models';
 import { crearFormulario } from './api';
 import { EstadosFormularios } from '../../utils/estado-formularios';
+import { useNavigate } from 'react-router';
+
 
 // Validaciones
 const schema = yup.object({
@@ -36,14 +38,17 @@ interface CrearFormularioProps extends FormularioProps {
 
 const Pagina = ({ onSuccess, nameForm, catalogs }: CrearFormularioProps) => {
   const { success } = useNotification();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormularioData) => {
-    await crearFormulario(data);
+   const result :any = await crearFormulario(data);
     success(`Formulario ${data.nombreTecnico} creado exitosamente.`);
-
+    console.log(result);
+    
     setTimeout(() => {
       onSuccess();
     }, 1000);
+    navigate(`/formularios/${result?.id}/configurar`);
   };
 
   const initialValues = FormularioDataEmpty;
