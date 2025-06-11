@@ -14,6 +14,7 @@ import {
   ModeFormulario,
 } from '../../common/types';
 import { FormularioData } from '../../models/formulario.models';
+import { useNavigate } from 'react-router';
 
 interface Props extends FormularioProps {
   mode: ModeFormulario;
@@ -29,6 +30,7 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
   );
   const nameForm = `${mode ?? 'skeleton'}Formulario`;
   const [{ data: response, loading }] = useObtenerFormularioById(id ?? '');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id && response) {
@@ -70,6 +72,7 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
       success('Formulario editado correctamente');
       onSuccess();
       onCancel();
+        navigate(`/formularios/${values.id}/configurar`);
     });
   };
 

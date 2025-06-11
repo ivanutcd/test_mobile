@@ -11,7 +11,11 @@ import { useParams } from 'react-router-dom';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { useNavigate } from 'react-router-dom';
 
-const ConfigurarFormulario = () => {
+interface ConfigurarFormularioProps {
+  disabled?: boolean;
+}
+
+const ConfigurarFormulario = ({ disabled }: ConfigurarFormularioProps) => {
   const { id } = useParams();
   const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
   console.log(formulario);
@@ -55,6 +59,7 @@ const ConfigurarFormulario = () => {
             <FormBuilder
               onFormChange={setFormData}
               formData={formulario as FormType}
+              disabled={disabled}
             />
           </Col>
           <Col xs={12} md={4}>

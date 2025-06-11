@@ -35,6 +35,15 @@ export const FormularioMenu: Menu = {
           breadcrumbs: true,
           access: [],
         },
+        {
+          id: 'configurar-formulario',
+          title: 'Configurar Formulario',
+          type: 'item',
+          url: '/formularios/:id/ver/configurar',
+          icon: IconList,
+          breadcrumbs: true,
+          access: [],
+        },
       ],
     }
    
