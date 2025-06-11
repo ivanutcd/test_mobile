@@ -342,7 +342,8 @@ export default function FormBuilder({
         slotProps={{
           backdrop: {
             sx: {
-              backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              background: 'rgba(2, 106, 191, 0.037)',
+              backdropFilter: 'blur(3px)',
             },
           },
         }}

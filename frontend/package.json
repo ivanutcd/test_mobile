@@ -21,7 +21,7 @@
     "@mui/x-charts": "^6.19.4",
     "@mui/x-data-grid": "6.18.6",
     "@mui/x-date-pickers": "6.18.2",
-    "@proyectos-enee/enee_componentes": "^1.0.15",
+    "@proyectos-enee/enee_componentes": "^1.0.16",
     "@tabler/icons-react": "2.45.0",
     "axios": "1.6.3",
     "axios-hooks": "5.0.2",

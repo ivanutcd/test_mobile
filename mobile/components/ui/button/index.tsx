@@ -37,7 +37,7 @@ cssInterop(PrimitiveIcon, {
 });
 
 const buttonStyle = tva({
-  base: 'group/button rounded bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2',
+  base: 'group/button rounded bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 h-40 data-[disabled=true]:opacity-40 gap-2',
   variants: {
     action: {
       primary:
@@ -202,7 +202,8 @@ const buttonIconStyle = tva({
   parentVariants: {
     variant: {
       link: 'data-[hover=true]:underline data-[active=true]:underline',
-      outline: '',
+      outline:
+        'text-typography-800 data-[hover=true]:text-typography-600 data-[active=true]:text-typography-700 flex-row items-center justify-center border-radius-full',
       solid:
         'text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
     },
@@ -257,11 +258,11 @@ const buttonGroupStyle = tva({
   base: '',
   variants: {
     space: {
-      'xs': 'gap-1',
-      'sm': 'gap-2',
-      'md': 'gap-3',
-      'lg': 'gap-4',
-      'xl': 'gap-5',
+      xs: 'gap-1',
+      sm: 'gap-2',
+      md: 'gap-3',
+      lg: 'gap-4',
+      xl: 'gap-5',
       '2xl': 'gap-6',
       '3xl': 'gap-7',
       '4xl': 'gap-8',
@@ -270,8 +271,8 @@ const buttonGroupStyle = tva({
       true: 'gap-0',
     },
     flexDirection: {
-      'row': 'flex-row',
-      'column': 'flex-col',
+      row: 'flex-row',
+      column: 'flex-col',
       'row-reverse': 'flex-row-reverse',
       'column-reverse': 'flex-col-reverse',
     },
@@ -289,11 +290,18 @@ const Button = React.forwardRef<
   IButtonProps
 >(function Button(
   { className, variant = 'solid', size = 'md', action = 'primary', ...props },
-  ref
+  ref,
 ) {
   return (
     <UIButton
       ref={ref}
+      style={{
+        height: 40,
+        borderRadius: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
       {...props}
       className={buttonStyle({ variant, size, action, class: className })}
       context={{ variant, size, action }}
@@ -318,6 +326,7 @@ const ButtonText = React.forwardRef<
     <UIButton.Text
       ref={ref}
       {...props}
+      style={{ fontSize: 16 }}
       className={buttonTextStyle({
         parentVariants: {
           variant: parentVariant,
@@ -405,7 +414,7 @@ const ButtonGroup = React.forwardRef<
     flexDirection = 'column',
     ...props
   },
-  ref
+  ref,
 ) {
   return (
     <UIButton.Group
