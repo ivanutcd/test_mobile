@@ -64,7 +64,3 @@ mermaid-filter.err
 /backend/.vs/utcd.cobro_prejuridico/v17/DocumentLayout.json
 .vs/
 .vs
-/frontend/pnpm-lock.yaml
-/frontend/package-lock.json
-/mobile/pnpm-lock.yaml
-/mobile/package-lock.json
