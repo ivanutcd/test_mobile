@@ -117,6 +117,7 @@ export default function FieldSetting({
     <div className="field-setting">
       <GridContainer>
         <Col xs={4} md={4}>
+         <Tooltip title="Este es el nombre visible del campo" placement="top">
           <TextField
             placeholder={field.label}
 
@@ -124,9 +125,11 @@ export default function FieldSetting({
             label={`${field.label || 'Nombre del campo'}`}
             onChange={e => onFieldChange({ ...field, label: e.target.value })}
           />
+           </Tooltip>
         </Col>
 
         <Col xs={2} md={2}>
+        <Tooltip title="Aquí puedes cambiar el tipo de campo" placement="top">
           <Button
             id="demo-positioned-button"
             aria-controls={open ? 'demo-positioned-menu' : undefined}
@@ -141,7 +144,7 @@ export default function FieldSetting({
           >
             {fieldType != null ? icon : 'Seleccionar tipo de campo'}
           </Button>
-
+        </Tooltip>
           <Menu
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
@@ -197,6 +200,7 @@ export default function FieldSetting({
           </Menu>
         </Col>
         <Col xs={2} md={2}>
+        <Tooltip title="Marca si este campo es obligatorio" placement="top">
           <div className="switch-container">
             <Switch
               checked={field.required}
@@ -206,7 +210,58 @@ export default function FieldSetting({
             />
             Obligatorio
           </div>
+           </Tooltip>
         </Col>
+     <Col xs={3} md={1.50}>
+  <Tooltip title="Longitud mínima (caracteres)" placement="top">
+    <TextField
+      placeholder="Longitud mínima"
+      type="number"
+      value={field.min ?? ''}
+      required
+      inputProps={{ min: 0, step: 1 }}
+      onChange={e =>
+        onFieldChange({ ...field, min: Number(e.target.value) || 0 })
+      }
+      variant="outlined"
+      fullWidth
+    />
+  </Tooltip>
+</Col>
+
+<Col xs={3} md={1.50}>
+  <Tooltip title="Longitud máxima (caracteres)" placement="top">
+    <TextField
+      placeholder="Longitud máxima"
+      type="number"
+      value={field.max ?? ''}
+      required
+      inputProps={{ min: 1, step: 1 }}
+      onChange={e =>
+        onFieldChange({ ...field, max: Number(e.target.value) || 1 })
+      }
+      variant="outlined"
+      fullWidth
+    />
+  </Tooltip>
+</Col>
+
+<Col xs={3} md={1.20}>
+  <Tooltip title="Orden del campo (número entero)" placement="top">
+    <TextField
+      placeholder="Orden"
+      type="number"
+      value={field.position}
+      required
+      inputProps={{ min: 1, step: 1 }}
+      onChange={e =>
+        onFieldChange({ ...field, position: Number(e.target.value) || 1 })
+      }
+      variant="outlined"
+      fullWidth
+    />
+  </Tooltip>
+</Col>
         <Col
           xs={4}
           md={4}
