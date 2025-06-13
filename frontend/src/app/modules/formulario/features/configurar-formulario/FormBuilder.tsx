@@ -87,7 +87,7 @@ export default function FormBuilder({
       step: 0,
       minDate: '',
       maxDate: '',
-      formlabel:`Campo ${dataForm.formFields.length + 1}`
+      imputLabel:`Campo ${dataForm.formFields.length + 1}`
     };
 
     const updatedFields = [...dataForm.formFields];
@@ -260,13 +260,13 @@ export default function FormBuilder({
         {field.position !== undefined && field.position < 1 && (
           <span className="error-message">El campo orden debe ser mayor o igual a 1.</span>
         )}
-        {field.formlabel === '' && (
+        {field.imputLabel === '' && (
           <span className="error-message">
           El nombre visible del campo es obligatorio.
          </span>
         )}
 
-        {field.formlabel.length > 200 && (
+        {field.imputLabel.length > 200 && (
           <span className="error-message">
            El nombre visible del campo no puede exceder los 200 caracteres.
          </span>

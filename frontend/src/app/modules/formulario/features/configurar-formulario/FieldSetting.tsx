@@ -248,11 +248,11 @@ export default function FieldSetting({
   <Col xs={4} md={4}>
          <Tooltip title="Este es el nombre visible en el formulario" placement="top">
           <TextField
-            placeholder={field.formlabel}
+            placeholder={field.imputLabel}
 
             fullWidth
-            label={`${field.formlabel || 'Nombre del campo en formulario'}`}
-            onChange={e => onFieldChange({ ...field, formlabel: e.target.value })}
+            label={`${field.imputLabel || 'Nombre del campo en formulario'}`}
+            onChange={e => onFieldChange({ ...field, imputLabel: e.target.value })}
           />
            </Tooltip>
         </Col>

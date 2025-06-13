@@ -33,7 +33,7 @@ interface FormField {
   id: string;
   type: FieldType;
   label: string;
-  formlabel: string;
+  imputLabel: string;
   required?: boolean;
   placeholder?: string;
   defaultValue?: string;
@@ -73,7 +73,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     <InputText
                       key={field.id}
                       name={field.id}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       required={field.required}
                       placeholder={field.placeholder}
                       defaultValue={field.defaultValue}
@@ -84,7 +84,7 @@ export default function FormRender({ formData }: { formData: any }) {
                       key={field.id}
                       id={field.id}
                       name={field.id}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       required={field.required}
                       placeholder={field.placeholder}
                       defaultValue={field.defaultValue}
@@ -96,7 +96,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     <InputNumber
                       key={field.id}
                       name={field.id}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       type="number"
                       required={field.required}
                       placeholder={field.placeholder}
@@ -105,10 +105,10 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                   select: (
                     <FormControl fullWidth key={field.id}>
-                      <InputLabel>{field.formlabel}</InputLabel>
+                      <InputLabel>{field.imputLabel}</InputLabel>
                       <Select
                         value={field.value}
-                        label={field.formlabel}
+                        label={field.imputLabel}
                         onChange={event => {
                           field.value = event.target.value;
                           console.log(field.value);
@@ -126,7 +126,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   ),
                   checkbox: (
                     <FormControl key={field.id}>
-                      <FormLabel component="legend">{field.formlabel}</FormLabel>
+                      <FormLabel component="legend">{field.imputLabel}</FormLabel>
                       <FormGroup>
                         {field.options?.map(
                           (option: string, optionIndex: number) => (
@@ -150,7 +150,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   radio: (
                     <FormControl key={field.id}>
                       <FormLabel id="demo-radio-buttons-group-label">
-                        {field.formlabel}
+                        {field.imputLabel}
                       </FormLabel>
                       <RadioGroup
                         aria-labelledby="demo-radio-buttons-group-label"
@@ -173,7 +173,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   date: (
                     <DatePicker
                       key={field.id}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       value={field.value}
                       onChange={() => {
                         console.log(field.value);
@@ -183,7 +183,7 @@ export default function FormRender({ formData }: { formData: any }) {
                   file: (
                     <FileUpload
                       key={field.id}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       multiple={true}
                       onChange={() => {
                         console.log(field.value);
@@ -195,7 +195,7 @@ export default function FormRender({ formData }: { formData: any }) {
                       key={field.id}
                       type="image"
                       multiple={true}
-                      label={field.formlabel}
+                      label={field.imputLabel}
                       onChange={() => {
                         console.log(field.value);
                       }}
