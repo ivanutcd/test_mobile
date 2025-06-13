@@ -31,7 +31,7 @@ public class DuplicarFormularioCommandHandler : ICommandHandler<DuplicarFormular
         spec.Query.Where(x => x.Id == command.Id);
 
         Projections.FormularioTable.Formulario result = await _repository.FirstOrDefault(spec);
-        const string texto = "copia de ";
+        const string texto = "copia_de_";
         var nuevoId = Guid.NewGuid();
         var nuevoFormulario = new FormularioRoot(
             nuevoId,
