@@ -24,7 +24,7 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
-
+  const isEditable = mode === 'create' || (mode === 'edit' && defaultValues?.nombreTecnico.startsWith('copia_de_'));
   return (
     <>
       <HookForm
@@ -42,7 +42,7 @@ const FormularioBase = ({
                 <InputText
                   label="Nombre Técnico"
                   name="nombreTecnico"
-                  readOnly={isViewMode}
+                  readOnly={!isEditable}
                 />
               </Grid>
 

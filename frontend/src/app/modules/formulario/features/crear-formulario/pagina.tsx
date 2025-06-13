@@ -14,7 +14,7 @@ const schema = yup.object({
     .string()
     .required('Este campo es requerido')
     .max(200, 'Máximo 200 caracteres')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'No se permiten caracteres especiales'),
+    .matches(/^[a-zA-Z0-9]+$/, 'Solo se permiten letras y números, sin espacios'),
   descripcion: yup
     .string()
     .required('Este campo es requerido')
