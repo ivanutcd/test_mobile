@@ -117,12 +117,12 @@ export default function FieldSetting({
     <div className="field-setting">
       <GridContainer>
         <Col xs={4} md={4}>
-         <Tooltip title="Este es el nombre visible del campo" placement="top">
+         <Tooltip title="Este es el nombre visible en la base de datos" placement="top">
           <TextField
             placeholder={field.label}
 
             fullWidth
-            label={`${field.label || 'Nombre del campo'}`}
+            label={`${field.label || 'Nombre del campo técnico'}`}
             onChange={e => onFieldChange({ ...field, label: e.target.value })}
           />
            </Tooltip>
@@ -245,7 +245,17 @@ export default function FieldSetting({
     />
   </Tooltip>
 </Col>
+  <Col xs={4} md={4}>
+         <Tooltip title="Este es el nombre visible en el formulario" placement="top">
+          <TextField
+            placeholder={field.formlabel}
 
+            fullWidth
+            label={`${field.formlabel || 'Nombre del campo en formulario'}`}
+            onChange={e => onFieldChange({ ...field, formlabel: e.target.value })}
+          />
+           </Tooltip>
+        </Col>
 <Col xs={3} md={1.20}>
   <Tooltip title="Orden del campo (número entero)" placement="top">
     <TextField
@@ -262,6 +272,7 @@ export default function FieldSetting({
     />
   </Tooltip>
 </Col>
+      
         <Col
           xs={4}
           md={4}

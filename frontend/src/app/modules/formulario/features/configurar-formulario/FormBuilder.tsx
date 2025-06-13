@@ -51,7 +51,7 @@ export default function FormBuilder({
   });
   const { error, success } = useNotification();
   const navigate = useNavigate();
-  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, Partial<Record<keyof FormField, boolean>>>>({});
   // Obtener estructura del formulario desde la API
   useEffect(() => {
     const obtenerEstructura = async () => {
@@ -87,6 +87,7 @@ export default function FormBuilder({
       step: 0,
       minDate: '',
       maxDate: '',
+      formlabel:`Campo ${dataForm.formFields.length + 1}`
     };
 
     const updatedFields = [...dataForm.formFields];
@@ -192,10 +193,17 @@ export default function FormBuilder({
               const updatedForm = { ...dataForm, formFields: updatedFields };
               setDataForm(updatedForm);
               onFormChange?.(updatedForm);
-              setTouchedFields(prev => ({
-              ...prev,
-               [updatedField.id]: true,
-              }));
+              const originalField = dataForm.formFields.find(f => f.id === updatedField.id);
+
+              const labelChanged = originalField?.label !== updatedField.label;
+
+               setTouchedFields(prev => ({
+                 ...prev,
+                [updatedField.id]: {
+                ...prev[updatedField.id],
+                label: labelChanged ? true : prev[updatedField.id]?.label,
+              },
+            }));
             }}
           />
           {dataForm.formFields.filter(f => f.label === field.label).length >
@@ -211,7 +219,7 @@ export default function FormBuilder({
             </span>
           )}
 
-         {touchedFields[field.id] && field.label.trim() !== '' && !(/^[a-z][a-z0-9_]*$/.test(field.label))  && (
+         {touchedFields[field.id]?.label && field.label.trim() !== '' && !(/^[a-z][a-z0-9_]*$/.test(field.label))  && (
             <span className="error-message">
               Debe iniciar con letra. Solo minúsculas, números y _ sin espacios ni tildes.
             </span>
@@ -222,37 +230,47 @@ export default function FormBuilder({
           </span>
           )}
           {touchedFields[field.id] && (field.min === undefined || field.min === null) && (
-  <span className="error-message">La longitud mínima es obligatoria.</span>
-)}
+          <span className="error-message">La longitud mínima es obligatoria.</span>
+          )}
 
-{ field.min !== undefined && field.min < 0 && (
-  <span className="error-message">La longitud mínima no puede ser negativa.</span>
-)}
+          { field.min !== undefined && field.min < 0 && (
+           <span className="error-message">La longitud mínima no puede ser negativa.</span>
+          )}
 
-{ (field.max === undefined || field.max === null) && (
-  <span className="error-message">La longitud máxima es obligatoria.</span>
-)}
+          { (field.max === undefined || field.max === null) && (
+          <span className="error-message">La longitud máxima es obligatoria.</span>
+          )}
 
-{field.max !== undefined && field.max > 200 && (
-  <span className="error-message">La longitud máxima no puede superar 200 caracteres.</span>
-)}
+          {field.max !== undefined && field.max > 200 && (
+            <span className="error-message">La longitud máxima no puede superar 200 caracteres.</span>
+        )}
 
-{field.min !== undefined && field.max !== undefined && field.min > field.max && (
+        {field.min !== undefined && field.max !== undefined && field.min > field.max && (
   <span className="error-message">La longitud mínima no puede ser mayor que la máxima.</span>
-)}
+        )}
 
+        { (field.position === undefined || field.position === null) && (
+         <span className="error-message">El campo orden es obligatorio.</span>
+        )}
 
-{ (field.position === undefined || field.position === null) && (
-  <span className="error-message">El campo orden es obligatorio.</span>
-)}
+        {!Number.isInteger(field.position) && (
+          <span className="error-message">El campo orden debe ser un número entero.</span>
+        )}
 
-{ !Number.isInteger(field.position) && (
-  <span className="error-message">El campo orden debe ser un número entero.</span>
-)}
+        {field.position !== undefined && field.position < 1 && (
+          <span className="error-message">El campo orden debe ser mayor o igual a 1.</span>
+        )}
+        {field.formlabel === '' && (
+          <span className="error-message">
+          El nombre visible del campo es obligatorio.
+         </span>
+        )}
 
-{field.position !== undefined && field.position < 1 && (
-  <span className="error-message">El campo orden debe ser mayor o igual a 1.</span>
-)}
+        {field.formlabel.length > 200 && (
+          <span className="error-message">
+           El nombre visible del campo no puede exceder los 200 caracteres.
+         </span>
+        )}
         </Box>
         <Box className="options">
           {dataForm.formFields.length > 1 && (
