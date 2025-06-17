@@ -14,7 +14,7 @@ const schema = yup.object({
     .string()
     .required('Este campo es requerido')
     .max(200, 'Máximo 200 caracteres')
-    .matches(/^[a-zA-Z0-9]+$/, 'Solo se permiten letras y números, sin espacios'),
+    .matches(/^[a-zA-Z0-9_]+$/, 'Solo se permiten letras y números, sin espacios'),
   descripcion: yup
     .string()
     .required('Este campo es requerido')
@@ -42,7 +42,7 @@ const Pagina = ({ onSuccess, nameForm, catalogs }: CrearFormularioProps) => {
 
   const onSubmit = async (data: FormularioData) => {
    const result :any = await crearFormulario(data);
-    success(`Formulario ${data.nombreTecnico} creado exitosamente.`);
+    success(`¡Formulario ${data.nombreTecnico} creado exitosamente!`);
     console.log(result);
     
     setTimeout(() => {

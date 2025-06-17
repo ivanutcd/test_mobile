@@ -19,7 +19,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
             RuleFor(x => x.NombreTecnico)
                 .NotEmpty()
                 .NotNull()
-                .Matches("^[a-zA-Z0-9 ]*$")
+                .Matches("^[a-zA-Z0-9_]*$")
                 .WithMessage("{PropertyName} no debe contener caracteres especiales.")
                 .Must(
                     (request, nombreTecnico) =>
