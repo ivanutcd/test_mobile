@@ -70,7 +70,7 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
     };
 
     editarFormulario(values.id, values).then(() => {
-      success('Formulario editado correctamente');
+      success('¡Formulario editado correctamente!');
       onSuccess();
       onCancel();
         navigate(`/formularios/${values.id}/configurar`);

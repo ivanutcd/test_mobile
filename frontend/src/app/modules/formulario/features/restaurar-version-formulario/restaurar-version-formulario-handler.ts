@@ -24,7 +24,7 @@ export function useRestaurarVersionFormularioHandler() {
 
     if (result) {
       await restaurarVersionFormulario(id);
-      await success(`Formulario restaurado exitosamente.`);
+      await success(`¡Formulario restaurado exitosamente!`);
       onComplete?.();
     } else {
       onCancel?.();
