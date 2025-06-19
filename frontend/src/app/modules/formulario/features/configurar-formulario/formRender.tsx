@@ -40,6 +40,9 @@ interface FormField {
   value?: string;
   options?: string[];
   rows?: number;
+  min?: number;
+  max?: number;
+  position?: number;
 }
 const nameForm = 'FormularioRender';
 const formValues = {};
@@ -67,7 +70,9 @@ export default function FormRender({ formData }: { formData: any }) {
         {() => {
           return (
             <div className="form-render-container">
-              {formData.formFields.map((field: FormField | any) => {
+              {formData.formFields.sort((a: FormField, b: FormField) => (a.position ?? 0) - (b.position ?? 0))
+
+.map((field: FormField | any) => {
                 const renderField = {
                   text: (
                     <InputText
@@ -77,6 +82,10 @@ export default function FormRender({ formData }: { formData: any }) {
                       required={field.required}
                       placeholder={field.placeholder}
                       defaultValue={field.defaultValue}
+                      inputProps={{
+                        maxLength: field.max,
+                        minLength: field.min
+                      }}
                     />
                   ),
                   textarea: (
@@ -90,6 +99,10 @@ export default function FormRender({ formData }: { formData: any }) {
                       defaultValue={field.defaultValue}
                       style={{ borderRadius: '10px' }}
                       rows={field.rows}
+                      inputProps={{
+                        maxLength: field.max,
+                        minLength: field.min
+                      }}
                     />
                   ),
                   number: (
@@ -101,7 +114,20 @@ export default function FormRender({ formData }: { formData: any }) {
                       required={field.required}
                       placeholder={field.placeholder}
                       defaultValue={field.defaultValue}
-                    />
+                      onInput={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      let raw = target.value.replace(/\D/g, ""); 
+                      if (raw.length > field.max) {
+                      raw = raw.slice(0, field.max); 
+                    }
+                    target.value = raw;
+                    }}
+                    inputProps={{
+                    min: field.min,
+                    max: field.max
+                    }}
+                  />
+
                   ),
                   select: (
                     <FormControl fullWidth key={field.id}>
