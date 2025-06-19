@@ -165,6 +165,26 @@ export default function FormBuilder({
     };
 
     await guardarComposDinamicosFormulario(payload as any).then(() => {
+        const hayErrores = dataForm.formFields.some(field => {
+    return (
+      field.label === '' ||
+      dataForm.formFields.filter(f => f.label === field.label).length > 1 ||
+      field.label.length > 50 ||
+      /[!@#$%^&*(),.?":{}|<>]/g.test(field.label) ||
+      !/^[a-z][a-z0-9_]*$/.test(field.label.trim()) ||
+      reservedWords.includes(field.label.trim().toLowerCase()) ||
+      field.min === undefined || field.min === null || field.min < 0 ||
+      field.max === undefined || field.max === null || field.max > 200 ||
+      field.min > field.max ||
+      field.position === undefined || !Number.isInteger(field.position) || field.position < 1 ||
+      field.imputLabel === '' || field.imputLabel.length > 200
+    );
+  });
+
+  if (hayErrores) {
+    error('Corrige los errores del formulario antes de guardar.');
+    return;
+  }
       success('Formulario guardado correctamente');
       navigate('/formularios');
     });
