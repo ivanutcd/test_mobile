@@ -7,7 +7,7 @@ export const traducciones = {
   GESTIONAR: 'Gestión de formulario',
   NOMBRE_TECNICO: 'Nombre técnico',
   MOVILIDAD_ASOCIADA: 'Movilidad asociada',
-  VERSION: 'Version',
+  VERSION: 'Versión',
   ESTADO: 'Estado',
   BOTON_CREAR: 'Crear',
   VISUALIZAR: 'Visualizar',
