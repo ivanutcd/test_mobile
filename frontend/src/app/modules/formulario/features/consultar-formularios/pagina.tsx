@@ -38,7 +38,7 @@ import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
-
+import Tooltip from '@mui/material/Tooltip';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -194,11 +194,36 @@ const Pagina = () => {
       headerName: traducciones.MOVILIDAD_ASOCIADA,
       field: 'movilidadAsociada',
     },
-    {
-      colId: 'versionFormulario',
-      headerName: traducciones.VERSION,
-      field: 'versionFormulario',
-    },
+{
+  colId: 'versionFormulario',
+  headerName: traducciones.VERSION,
+  field: 'versionFormulario',
+  renderCell: (params: any) => {
+    const data = params?.row ?? params;
+
+    if (!data) return null;
+
+    const mostrarIcono = !!data.formularioPublicadoId;
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span>{data.versionFormulario}</span>
+        {mostrarIcono && (
+          <Tooltip title="Ver última versión publicada"  placement="top" arrow>
+            <RocketIcon
+              color="primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setFormularioId(data.formularioPublicadoId);
+                handleOpenModal('view');
+              }}
+            />
+          </Tooltip>
+        )}
+      </div>
+    );
+  },
+},
     {
       colId: 'estado',
       headerName: traducciones.ESTADO,
