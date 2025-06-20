@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Box, Divider, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import FormRender from '../features/configurar-formulario/formRender';
 import { useObtenerFormularioById } from '../hooks/useObtenerFormulario';
-import { FormType } from '../features/configurar-formulario/FormType';
-import VerFormulario from './verFormulario';
+import traducciones from '../common/translations';
+import { obtenerEstructuraFormulario } from '../features/configurar-formulario/api';
+import { Button } from '@proyectos-enee/enee_componentes';
+import { usePublicarFormularioHandler } from '../features/publicar-formulario/publicar-formulario-handler';
 
 interface DetalleFormularioProps {
   id: string;
   mode: string;
+  handleClose: () => void;
 }
 type FieldType =
   | 'text'
@@ -34,41 +37,88 @@ interface FormField {
   rows?: number;
 }
 
-const DetalleFormulario = ({id,mode}: DetalleFormularioProps) => {
-  const [{ data: formulario, loading }] = useObtenerFormularioById(id);
+const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
+  const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
+  const { publicar } = usePublicarFormularioHandler();
   const [formData, setFormData] = useState<{
     formFields: FormField[];
     estado: string;
     movilidadAsociada: string;
     nombreTecnico: string;
     descripcion: string;
+    version?: string;
   }>();
 
+  
   useEffect(() => {
-    console.log('Formulario data:', formulario);
-    
-    if (formulario) {
+    if (!id) return;
+    const obtenerEstructura = async () => {
+      const response = (await obtenerEstructuraFormulario(id)) as {
+        objeto: {
+          formFields: FormField[];
+        };
+      };
+
       setFormData({
-        formFields: (formulario as FormType)?.formFields ?? [],
-        estado: formulario.estado ?? '',
+        formFields: response.objeto.formFields ?? [],
+        estado: formulario?.estado ?? '',
         movilidadAsociada: formulario?.movilidadAsociada ?? '',
-        nombreTecnico: formulario.nombreTecnico ?? '',
-        descripcion: formulario.descripcion ?? '',
+        nombreTecnico: formulario?.nombreTecnico ?? '',
+        descripcion: formulario?.descripcion ?? '',
+        version: formulario?.versionFormulario ?? '',
       });
     }
-  }, [formulario]);
 
-  if (loading || !formulario || !formData) return <CircularProgress />;
+    obtenerEstructura();
+  }, [id, formulario]);
+
+
+
+  if (!formulario || !formData) return <CircularProgress />;
 
   return (
-    <Box sx={{width: '100%',mx: 'auto'}}>
-      <VerFormulario
-            mode={mode}
-            id={id}
-          />
-      <Divider sx={{ my: 3 }} />
+    <Box sx={{ width: '950px', height: '80vh', display: 'flex', flexDirection: 'column' }}>
+      <Box
+        border={1}
+        sx={{
+          p: 2,
+          mb: 2,
+          borderRadius: 2,
+          borderColor: 'grey.300',
+          backgroundColor: 'background.paper',
+        }}
+      >
+        <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2, color: 'GrayText' }}>
+          Detalle de formulario
+        </Typography>
 
-      <Typography variant="h2" gutterBottom>
+        {[
+          { label: traducciones.NOMBRE_TECNICO, value: formData.nombreTecnico },
+          { label: traducciones.DESCRIPCION, value: formData.descripcion },
+          { label: traducciones.MOVILIDAD_ASOCIADA, value: formData.movilidadAsociada },
+          { label: traducciones.ESTADO, value: formData.estado },
+          { label: traducciones.VERSION, value: formData.version },
+        ].map(({ label, value }) => (
+          <Box
+            key={label}
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              py: 1,
+              borderBottom: '1px solid #eee',
+            }}
+          >
+            <Typography variant="body1" color="GrayText">
+              {label}
+            </Typography>
+            <Typography variant="body1" color="GrayText">
+              {value || '-'}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      <Typography variant="body1" color={"GrayText"} fontWeight={"bold"} gutterBottom>
         Configuración del formulario movil
       </Typography>
 
@@ -83,6 +133,43 @@ const DetalleFormulario = ({id,mode}: DetalleFormularioProps) => {
       >
         <FormRender formData={formData} />
       </Box>
+      {formulario && formData && id &&(
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        gap={2}
+        sx={{
+          py: 3,
+          px: 2,
+          borderTop: '2px solid #eee',
+          backgroundColor: 'white',
+          position: 'sticky',
+          bottom: -8,
+          zIndex: 2,
+        }}
+      >
+        <Button
+          variant="contained"
+          color="inherit"
+          onClick={handleClose}
+        >
+          Rechazar
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            publicar(id, {
+              onComplete: handleClose,
+              onCancel: handleClose,
+            });
+          }}
+        >
+          {traducciones.PUBLICAR}
+        </Button>
+      </Box>
+      )}
     </Box>
   );
 };

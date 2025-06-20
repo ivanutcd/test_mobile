@@ -75,7 +75,7 @@ export default function FormBuilder({
   const addField = (position: number) => {
     const newField: FormField = {
       id: String(dataForm.formFields.length + 1),
-      label: `Campo ${dataForm.formFields.length + 1}`,
+      label: `campo_${dataForm.formFields.length + 1}`,
       type: 'text',
       required: true,
       options: [],
@@ -87,7 +87,7 @@ export default function FormBuilder({
       step: 0,
       minDate: '',
       maxDate: '',
-      imputLabel:`Campo ${dataForm.formFields.length + 1}`
+      imputLabel:`campo_${dataForm.formFields.length + 1}`
     };
 
     const updatedFields = [...dataForm.formFields];

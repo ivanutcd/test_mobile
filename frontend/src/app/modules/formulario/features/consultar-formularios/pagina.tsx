@@ -35,7 +35,6 @@ import FormularioEditar from '../Editar-formulario/index.tsx';
 import { Formulario } from '../../models/formulario.models.ts';
 import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
-import { usePublicarFormularioHandler } from '../publicar-formulario/publicar-formulario-handler.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
@@ -46,7 +45,6 @@ const Pagina = () => {
 
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
-  const { publicar } = usePublicarFormularioHandler();
   const { versionar } = useVersionarFormulario();
   const [openModal, setOpenModal] = useState(false);
   const [openPublicarModal, setOpenPublicarModal] = useState(false);
@@ -85,7 +83,7 @@ const Pagina = () => {
       recargar();
     }
   };
-const handleClosePublicarModal = () => {
+  const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
   };
   const handleCloseModal = () => {
@@ -103,7 +101,7 @@ const handleClosePublicarModal = () => {
     setMode(newMode);
     setOpenModalEditar(true);
   };
-  const handleOpenModalPublicar = (nombreTecnico:string) => {
+  const handleOpenModalPublicar = (nombreTecnico: string) => {
     setNombreTecnico(nombreTecnico);
     setOpenPublicarModal(true);
   };
@@ -274,13 +272,13 @@ const handleClosePublicarModal = () => {
             onSuccess={handleSuccess}
           />
         </CustomModal>
+
         <CustomModal
           open={openPublicarModal}
-          fullScreen={true}
           handleClose={handleClosePublicarModal}
-          modalTitle={"Aprobación de proyecto: "+nombreTecnico}
+          modalTitle={"Aprobación de proyecto: " + nombreTecnico}
         >
-          <DetalleFormulario id={formularioId} mode='view'/>
+          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} />
         </CustomModal>
 
       </MainCard>
