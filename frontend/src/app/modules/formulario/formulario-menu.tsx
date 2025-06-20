@@ -3,7 +3,7 @@ import { Menu } from '../../../common/menu-items/models/menu.ts';
 
 export const FormularioMenu: Menu = {
   id: 'parametrizacion',
-  title: 'Parametrizacion',
+  title: 'Parametrización',
   type: 'group',
   access: [],
   breadcrumbs: true,
