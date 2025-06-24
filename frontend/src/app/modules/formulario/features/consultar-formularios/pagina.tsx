@@ -37,6 +37,8 @@ import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+import { Tooltip } from '@mui/material';
+import DetalleFormulario from '../../components/detalleFormulario.tsx';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -68,7 +70,7 @@ const Pagina = () => {
       recargar();
     }
   }
-
+const [esVistaVersion, setEsVistaVersion] = useState(false);
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
       title: `Eliminar ${params.nombreTecnico}`,
@@ -83,6 +85,7 @@ const Pagina = () => {
   };
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
+    setEsVistaVersion(false);
   };
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -216,10 +219,25 @@ const Pagina = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 setFormularioId(data.formularioPublicadoId);
-                handleOpenModal('view');
+                setEsVistaVersion(true);
+                setOpenPublicarModal(true)
+                
               }}
             />
           </Tooltip>
+           <Tooltip title="Cancelar acción" placement="top" arrow>
+              <Button
+                variant="outlined"
+                size="small"
+                color="error"
+                onClick={() => {
+                  console.log('Cancelado para ID:', data.formularioPublicadoId);
+                  // Aquí puedes limpiar algún estado, mostrar confirmación, etc.
+                }}
+              >
+                Cancelar
+              </Button>
+            </Tooltip>
         )}
       </div>
     );
@@ -301,7 +319,7 @@ const Pagina = () => {
           handleClose={handleClosePublicarModal}
           modalTitle={"Aprobación de proyecto: " + nombreTecnico}
         >
-          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} />
+          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} hidePublishButton={esVistaVersion}/>
         </CustomModal>
 
       </MainCard>
