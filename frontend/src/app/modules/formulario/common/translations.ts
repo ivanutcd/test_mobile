@@ -1,12 +1,13 @@
 export const traducciones = {
   LISTADO: 'Listado de formularios',
+  DESCRIPCION: 'Descripción',
   CREACION: 'Crear nuevo formulario',
   EDICION: 'Editar formulario',
   DETALLE: 'Detalle de formulario',
   GESTIONAR: 'Gestión de formulario',
-  NOMBRE_TECNICO: 'Nombre Tecnico',
-  MOVILIDAD_ASOCIADA: 'Movilidad Asociada',
-  VERSION: 'Version',
+  NOMBRE_TECNICO: 'Nombre técnico',
+  MOVILIDAD_ASOCIADA: 'Movilidad asociada',
+  VERSION: 'Versión',
   ESTADO: 'Estado',
   BOTON_CREAR: 'Crear',
   VISUALIZAR: 'Visualizar',
@@ -21,7 +22,7 @@ export const traducciones = {
   NUMEROVERSION: 'número de versión',
   AUTOR: 'Autor',
   REGISTROVERSIONES: 'Registro de versiones del formulario',
-  RESTAURAR: 'Restaurar Formulario',
+  RESTAURAR: 'Restaurar formulario',
 };
 
 export default traducciones;

@@ -24,7 +24,7 @@ export function useVersionarFormulario() {
     if (result) {
       const request : VersionarFormularioData ={id};
       await versionarFormulario(request);
-      await success(`Formulario versionado exitosamente.`);
+      await success(`¡Formulario versionado exitosamente!`);
       onComplete?.();
     } else {
       onCancel?.();
