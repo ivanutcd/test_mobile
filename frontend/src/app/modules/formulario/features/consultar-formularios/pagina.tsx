@@ -225,19 +225,7 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
               }}
             />
           </Tooltip>
-           <Tooltip title="Cancelar acción" placement="top" arrow>
-              <Button
-                variant="outlined"
-                size="small"
-                color="error"
-                onClick={() => {
-                  console.log('Cancelado para ID:', data.formularioPublicadoId);
-                  // Aquí puedes limpiar algún estado, mostrar confirmación, etc.
-                }}
-              >
-                Cancelar
-              </Button>
-            </Tooltip>
+          
         )}
       </div>
     );
@@ -264,7 +252,7 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
   ];
 
   return (
-    <>
+    <div>
       <MainCard title={traducciones.LISTADO}>
         <BoxContainer display="flex" flexDirection="row" gap={2}>
           <SearchComponent<SearchProps>
@@ -323,7 +311,7 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
         </CustomModal>
 
       </MainCard>
-    </>
+    </div>
   );
 };
 export default Pagina;
