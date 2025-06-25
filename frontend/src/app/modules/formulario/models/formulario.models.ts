@@ -24,6 +24,7 @@ export interface FormularioData extends Auditable {
   estadoItem?: CatalogoItem;
   estado: string;
   estadoNombre?: string;
+  esEditable?: boolean;
 }
 export interface VersionarFormularioData {
   id: string;

@@ -119,7 +119,7 @@ const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
       </Box>
 
       <Typography variant="body1" color={"GrayText"} fontWeight={"bold"} gutterBottom>
-        Configuración del formulario movil
+        Configuración del formulario móvil
       </Typography>
 
       <Box

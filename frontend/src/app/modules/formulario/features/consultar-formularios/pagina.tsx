@@ -38,6 +38,7 @@ import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
+import { esES } from '@mui/x-data-grid';
 
 
 const Pagina = () => {
@@ -60,7 +61,7 @@ const Pagina = () => {
   const handleOpenConfirmationDuplicate = async (params: Formulario) => {
     const result = await confirm({
       title: `Duplicar ${params.nombreTecnico}`,
-      description: '¿Estás seguro de querer duplicar este formulario?',
+      description: '¿Está seguro de querer duplicar este formulario?',
       confirmationText: 'Duplicar',
       cancellationText: 'Cancelar',
     });
@@ -74,7 +75,7 @@ const Pagina = () => {
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
       title: `Eliminar ${params.nombreTecnico}`,
-      description: '¿Estás seguro de querer eliminar este formulario?',
+      description: '¿Está seguro de querer eliminar este formulario?',
       confirmationText: 'Eliminar',
       cancellationText: 'Cancelar',
     });
@@ -85,6 +86,7 @@ const Pagina = () => {
   };
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
+    recargar();
   };
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -242,6 +244,7 @@ const Pagina = () => {
           <PaginableGrid
             paginable={data as PaginateResult<any>}
             columnDefs={columns}
+            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             sortModel={[{ field: 'createdDate', sort: 'desc' }]}
 
           />

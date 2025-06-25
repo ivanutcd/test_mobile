@@ -32,6 +32,7 @@ public class VisualizarFormularioQueryRunner
                 MovilidadAsociada = result.Result.MovilidadAsociada,
                 Estado = result.Result.Estado,
                 VersionFormulario = result.Result.VersionFormulario,
+                EsEditable = result.Result.EsEditable,
             }
             : null;
     }

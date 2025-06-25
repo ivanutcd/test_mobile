@@ -4,6 +4,7 @@ import { ComboBox, HookForm, InputText } from '@components/form';
 import { ModeFormulario } from '../common/types';
 import { UseFormReturn } from 'react-hook-form';
 import traducciones from '../common/translations';
+import { useMemo } from 'react';
 
 export interface FormularioBaseProps {
   loading: boolean;
@@ -25,7 +26,21 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
-  const isEditable = mode === 'create' || (mode === 'edit' && defaultValues?.nombreTecnico.startsWith('copia_de_'));
+  const isEditable = useMemo(() => {
+  if (mode === 'create') return true;
+    console.log(defaultValues?.esEditable);
+    
+  if (
+    mode === 'edit' &&
+    defaultValues?.nombreTecnico &&
+    defaultValues?.updatedDate !== undefined
+  ) {
+    return defaultValues.nombreTecnico.startsWith('copia_de_') && defaultValues?.esEditable;
+  }
+
+  return false;
+}, [mode, defaultValues]);
+
   return (
     <>
       <HookForm
