@@ -262,40 +262,35 @@ const handleCloseLogsModal = () => {
   ];
 
   return (
-<<<<<<< feature/egli.nunez/2025-6/visualizacion-logs-web
-    <>
-      <MainCard   title={
-       <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
-        <span>{traducciones.LISTADO}</span>
-        <Button
-            variant="contained"
-            color="inherit"
-          onClick={handleOpenLogsModal}
-          startIcon={<HistoryIcon />}
-        >
-        {traducciones.Logs}
-        </Button>
-      </BoxContainer>
-     }>
-=======
     <div>
-      <MainCard title={traducciones.LISTADO}>
->>>>>>> main
-        <BoxContainer display="flex" flexDirection="row" gap={2}>
-          <SearchComponent<SearchProps>
-            includeToolbar={false}
-            ChildComponent={SearchForm}
-            save={buscar}
-            extraProps={{ handleRecargar: recargar }}
-          />
-          <Button size="large" onClick={() => handleOpenModal('create')}>
-            <AddIcon style={{ marginRight: 10 }} />
-            {traducciones.BOTON_CREAR}
-          </Button>
-           
-        </BoxContainer>
+    <MainCard
+  title={
+    <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
+      <span>{traducciones.LISTADO}</span>
+      <Button
+        variant="contained"
+        color="inherit"
+        onClick={handleOpenLogsModal}
+        startIcon={<HistoryIcon />}
+      >
+        {traducciones.Logs}
+      </Button>
+    </BoxContainer>
+  }
+>
+  <BoxContainer display="flex" flexDirection="row" gap={2}>
+    <SearchComponent<SearchProps>
+      includeToolbar={false}
+      ChildComponent={SearchForm}
+      save={buscar}
+      extraProps={{ handleRecargar: recargar }}
+    />
+    <Button size="large" onClick={() => handleOpenModal('create')}>
+      <AddIcon style={{ marginRight: 10 }} />
+      {traducciones.BOTON_CREAR}
+    </Button>
+  </BoxContainer>
 
-        
 
         {!loading && data && (
           <PaginableGrid
