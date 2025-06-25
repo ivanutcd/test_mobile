@@ -15,6 +15,7 @@ import {
 } from '../../common/types';
 import { FormularioData } from '../../models/formulario.models';
 import { useNavigate } from 'react-router';
+import * as yup from 'yup';
 
 interface Props extends FormularioProps {
   mode: ModeFormulario;
@@ -69,12 +70,34 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
     };
 
     editarFormulario(values.id, values).then(() => {
-      success('Formulario editado correctamente');
+      success('¡Formulario editado correctamente!');
       onSuccess();
       onCancel();
         navigate(`/formularios/${values.id}/configurar`);
     });
   };
+  // Validaciones
+  const schema = yup.object({
+    nombreTecnico: yup
+      .string()
+      .required('Este campo es requerido')
+      .max(200, 'Máximo 200 caracteres')
+      .matches(/^[a-zA-Z0-9_]+$/, 'Solo se permiten letras y números, sin espacios'),
+    descripcion: yup
+      .string()
+      .required('Este campo es requerido')
+      .max(2000, 'Máximo 2000 caracteres'),
+    estadoItem: yup
+      .object()
+      .test('estado-valido', 'Este campo es requerido', function () {
+        return this.parent.estado ? true : false;
+      }),
+    movilidadAsociadaItem: yup
+      .object()
+      .test('movilidad-valido', 'Este campo es requerido', function () {
+        return this.parent.movilidadAsociada ? true : false;
+      }),
+  });
 
   return (
     <>
@@ -85,6 +108,7 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
           loading={isLoading}
           nameForm={nameForm}
           catalogs={catalogs}
+          validations={schema}
           mode={'edit'}
         />
       </Box>

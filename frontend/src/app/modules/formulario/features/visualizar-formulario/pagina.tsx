@@ -20,12 +20,14 @@ const VerFormulario = ({
 }: VisualizarFormularioProps) => {
   const { publicar } = usePublicarFormularioHandler();
   const navigate = useNavigate();
+
   const verConfiguracion = () => {
     if (initialValues?.estado !== EstadosFormulariosEnum.Borrador) {
-      navigate(`/formularios/${initialValues?.id}/ver/configurar`)
+      navigate(`/formularios/${initialValues?.id}/ver/configurar`,{replace: true});
     } else {
-      navigate(`/formularios/${initialValues?.id}/configurar`);
+      navigate(`/formularios/${initialValues?.id}/configurar`,{replace: true});
     }
+    navigate(0)
   };
   const publicarFormularioFn = (id: string) => {
     if (id) {

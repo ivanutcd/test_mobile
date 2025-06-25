@@ -3,6 +3,7 @@ import { FormularioData } from '../models/formulario.models';
 import { ComboBox, HookForm, InputText } from '@components/form';
 import { ModeFormulario } from '../common/types';
 import { UseFormReturn } from 'react-hook-form';
+import traducciones from '../common/translations';
 
 export interface FormularioBaseProps {
   loading: boolean;
@@ -24,7 +25,7 @@ const FormularioBase = ({
   mode,
 }: FormularioBaseProps) => {
   const isViewMode = mode === 'view';
-
+  const isEditable = mode === 'create' || (mode === 'edit' && defaultValues?.nombreTecnico.startsWith('copia_de_'));
   return (
     <>
       <HookForm
@@ -40,16 +41,16 @@ const FormularioBase = ({
               {/* Campo nombreTecnico */}
               <Grid item xs={12}>
                 <InputText
-                  label="Nombre Técnico"
+                  label={traducciones.NOMBRE_TECNICO}
                   name="nombreTecnico"
-                  readOnly={isViewMode}
+                  readOnly={!isEditable}
                 />
               </Grid>
 
               {/* Campo descripcion */}
               <Grid item xs={12}>
                 <InputText
-                  label="Descripción"
+                  label={traducciones.DESCRIPCION}
                   name="descripcion"
                   readOnly={isViewMode}
                   multiline
@@ -62,7 +63,7 @@ const FormularioBase = ({
                 <Grid item xs={12}>
                   {isViewMode ? (
                     <InputText
-                      label="Movilidad Asociada"
+                      label={traducciones.MOVILIDAD_ASOCIADA}
                       name="movilidadAsociadaNombre"
                       readOnly={isViewMode}
                     />
@@ -71,7 +72,7 @@ const FormularioBase = ({
                       disableVariant
                       valueField="id"
                       labelField="nombre"
-                      label="Movilidad Asociada"
+                      label={traducciones.MOVILIDAD_ASOCIADA}
                       name="movilidadAsociadaItem"
                       items={catalogs?.tipo_movilidad ?? []}
                       whenChange={selectedItem => {
@@ -87,7 +88,7 @@ const FormularioBase = ({
               <Grid item xs={12}>
                 {isViewMode ? (
                   <InputText
-                    label="Estado"
+                    label={traducciones.ESTADO}
                     name="estadoNombre"
                     readOnly={true}
                   />
@@ -96,7 +97,7 @@ const FormularioBase = ({
                     disableVariant
                     valueField="id"
                     labelField="nombre"
-                    label="Estado"
+                    label={traducciones.ESTADO}
                     name="estadoItem"
                     items={catalogs?.estado_formulario ?? []}
                     whenChange={selectedItem => {
@@ -109,7 +110,7 @@ const FormularioBase = ({
               </Grid>
               <Grid item xs={12}>
                 <InputText
-                  label="Versión del formulario"
+                  label={traducciones.VERSION}
                   name="versionFormulario"
                   readOnly={true}
                   value={defaultValues?.versionFormulario}

@@ -1,4 +1,4 @@
-﻿namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
+namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarFormularios;
 
 public record FormularioResponse
 {
@@ -9,4 +9,5 @@ public record FormularioResponse
     public string VersionFormulario { get; init; }
     public DateTime? CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
+    public Guid? FormularioPublicadoId { get; set; }
 }

@@ -9,6 +9,7 @@ export interface Formulario extends Auditable {
   estado: string;
   createdDate: Date;
   updatedDate: Date;
+  formularioPublicadoId: string;
 }
 
 export interface FormularioData extends Auditable {
