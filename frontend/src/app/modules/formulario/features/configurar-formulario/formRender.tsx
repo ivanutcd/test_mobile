@@ -19,6 +19,7 @@ import {
 } from '@proyectos-enee/enee_componentes';
 
 import { FileUpload } from '@proyectos-enee/enee_componentes';
+import { useCatalogoItems } from '../../hooks/useCatalogoItems';
 type FieldType =
   | 'text'
   | 'number'
@@ -52,6 +53,16 @@ const guardar = (values: any) => {
 };
 
 export default function FormRender({ formData }: { formData: any }) {
+  interface FormFieldConCatalogo extends FormField {
+    catalogoKey?: string;
+  }
+  const catalogoKeys = formData.formFields
+    .filter((f: FormFieldConCatalogo) => f.catalogoKey)
+    .map((f: FormFieldConCatalogo) => f.catalogoKey!);
+
+  const { data: catalogoItems } = useCatalogoItems(...catalogoKeys || formData.formFields);
+  console.log('Catalogo Items:', catalogoItems);
+
   return (
     <div className="form-render">
       <div className="form-header">
@@ -72,167 +83,172 @@ export default function FormRender({ formData }: { formData: any }) {
             <div className="form-render-container">
               {formData.formFields.sort((a: FormField, b: FormField) => (a.position ?? 0) - (b.position ?? 0))
 
-.map((field: FormField | any) => {
-                const renderField = {
-                  text: (
-                    <InputText
-                      key={field.id}
-                      name={field.id}
-                      label={field.imputLabel}
-                      required={field.required}
-                      placeholder={field.placeholder}
-                      defaultValue={field.defaultValue}
-                      inputProps={{
-                        maxLength: field.max,
-                        minLength: field.min
-                      }}
-                    />
-                  ),
-                  textarea: (
-                    <Textarea
-                      key={field.id}
-                      id={field.id}
-                      name={field.id}
-                      label={field.imputLabel}
-                      required={field.required}
-                      placeholder={field.placeholder}
-                      defaultValue={field.defaultValue}
-                      style={{ borderRadius: '10px' }}
-                      rows={field.rows}
-                      inputProps={{
-                        maxLength: field.max,
-                        minLength: field.min
-                      }}
-                    />
-                  ),
-                  number: (
-                    <InputNumber
-                      key={field.id}
-                      name={field.id}
-                      label={field.imputLabel}
-                      type="number"
-                      required={field.required}
-                      placeholder={field.placeholder}
-                      defaultValue={field.defaultValue}
-                      onInput={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      let raw = target.value.replace(/\D/g, ""); 
-                      if (raw.length > field.max) {
-                      raw = raw.slice(0, field.max); 
-                    }
-                    target.value = raw;
-                    }}
-                    inputProps={{
-                    min: field.min,
-                    max: field.max
-                    }}
-                  />
-
-                  ),
-                  select: (
-                    <FormControl fullWidth key={field.id}>
-                      <InputLabel>{field.imputLabel}</InputLabel>
-                      <Select
-                        value={field.value}
+                .map((field: FormField | any) => {
+                  const renderField = {
+                    text: (
+                      <InputText
+                        key={field.id}
+                        name={field.id}
                         label={field.imputLabel}
-                        onChange={event => {
-                          field.value = event.target.value;
+                        required={field.required}
+                        placeholder={field.placeholder}
+                        defaultValue={field.defaultValue}
+                        inputProps={{
+                          maxLength: field.max,
+                          minLength: field.min
+                        }}
+                      />
+                    ),
+                    textarea: (
+                      <Textarea
+                        key={field.id}
+                        id={field.id}
+                        name={field.id}
+                        label={field.imputLabel}
+                        required={field.required}
+                        placeholder={field.placeholder}
+                        defaultValue={field.defaultValue}
+                        style={{ borderRadius: '10px' }}
+                        rows={field.rows}
+                        inputProps={{
+                          maxLength: field.max,
+                          minLength: field.min
+                        }}
+                      />
+                    ),
+                    number: (
+                      <InputNumber
+                        key={field.id}
+                        name={field.id}
+                        label={field.imputLabel}
+                        type="number"
+                        required={field.required}
+                        placeholder={field.placeholder}
+                        defaultValue={field.defaultValue}
+                        onInput={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          let raw = target.value.replace(/\D/g, "");
+                          if (raw.length > field.max) {
+                            raw = raw.slice(0, field.max);
+                          }
+                          target.value = raw;
+                        }}
+                        inputProps={{
+                          min: field.min,
+                          max: field.max
+                        }}
+                      />
+
+                    ),
+                    select: (
+
+                      <FormControl fullWidth key={field.id}>
+                        <InputLabel>{field.imputLabel}</InputLabel>
+                        <Select
+                          value={field.value || ''}
+                          label={field.imputLabel}
+                          onChange={(event) => {
+                            field.value = event.target.value; 
+                          }
+                          }
+                        >
+                          {field.catalogoKey && catalogoItems[field.catalogoKey]
+                            ? catalogoItems[field.catalogoKey].map(option => (
+                              <MenuItem key={option.id} value={option.id}>
+                                {option?.nombre}
+                              </MenuItem>
+                            ))
+                            : (field.options || []).map((option: string, optionIndex: number) => (
+                              <MenuItem key={option + optionIndex} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    ),
+                    checkbox: (
+                      <FormControl key={field.id}>
+                        <FormLabel component="legend">{field.imputLabel}</FormLabel>
+                        <FormGroup>
+                          {field.options?.map(
+                            (option: string, optionIndex: number) => (
+                              <FormControlLabel
+                                key={option + optionIndex}
+                                control={
+                                  <Checkbox
+                                    onChange={() => {
+                                      console.log(option);
+                                    }}
+                                    name={option}
+                                  />
+                                }
+                                label={option}
+                              />
+                            ),
+                          )}
+                        </FormGroup>
+                      </FormControl>
+                    ),
+                    radio: (
+                      <FormControl key={field.id}>
+                        <FormLabel id="demo-radio-buttons-group-label">
+                          {field.imputLabel}
+                        </FormLabel>
+                        <RadioGroup
+                          aria-labelledby="demo-radio-buttons-group-label"
+                          defaultValue="female"
+                          name="radio-buttons-group"
+                        >
+                          {field.options?.map(
+                            (option: string, optionIndex: number) => (
+                              <FormControlLabel
+                                key={option + optionIndex}
+                                value={option}
+                                control={<Radio />}
+                                label={option}
+                              />
+                            ),
+                          )}
+                        </RadioGroup>
+                      </FormControl>
+                    ),
+                    date: (
+                      <DatePicker
+                        key={field.id}
+                        label={field.imputLabel}
+                        value={field.value}
+                        onChange={() => {
                           console.log(field.value);
                         }}
-                      >
-                        {field.options?.map(
-                          (option: string, optionIndex: number) => (
-                            <MenuItem key={option + optionIndex} value={option}>
-                              {option}
-                            </MenuItem>
-                          ),
-                        )}
-                      </Select>
-                    </FormControl>
-                  ),
-                  checkbox: (
-                    <FormControl key={field.id}>
-                      <FormLabel component="legend">{field.imputLabel}</FormLabel>
-                      <FormGroup>
-                        {field.options?.map(
-                          (option: string, optionIndex: number) => (
-                            <FormControlLabel
-                              key={option + optionIndex}
-                              control={
-                                <Checkbox
-                                  onChange={() => {
-                                    console.log(option);
-                                  }}
-                                  name={option}
-                                />
-                              }
-                              label={option}
-                            />
-                          ),
-                        )}
-                      </FormGroup>
-                    </FormControl>
-                  ),
-                  radio: (
-                    <FormControl key={field.id}>
-                      <FormLabel id="demo-radio-buttons-group-label">
-                        {field.imputLabel}
-                      </FormLabel>
-                      <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue="female"
-                        name="radio-buttons-group"
-                      >
-                        {field.options?.map(
-                          (option: string, optionIndex: number) => (
-                            <FormControlLabel
-                              key={option + optionIndex}
-                              value={option}
-                              control={<Radio />}
-                              label={option}
-                            />
-                          ),
-                        )}
-                      </RadioGroup>
-                    </FormControl>
-                  ),
-                  date: (
-                    <DatePicker
-                      key={field.id}
-                      label={field.imputLabel}
-                      value={field.value}
-                      onChange={() => {
-                        console.log(field.value);
-                      }}
-                    />
-                  ),
-                  file: (
-                    <FileUpload
-                      key={field.id}
-                      label={field.imputLabel}
-                      multiple={true}
-                      onChange={() => {
-                        console.log(field.value);
-                      }}
-                    />
-                  ),
-                  image: (
-                    <FileUpload
-                      key={field.id}
-                      type="image"
-                      multiple={true}
-                      label={field.imputLabel}
-                      onChange={() => {
-                        console.log(field.value);
-                      }}
-                    />
-                  ),
-                };
+                      />
+                    ),
+                    file: (
+                      <FileUpload
+                        key={field.id}
+                        label={field.imputLabel}
+                        multiple={true}
+                        onChange={() => {
+                          console.log(field.value);
+                        }}
+                      />
+                    ),
+                    image: (
+                      <FileUpload
+                        key={field.id}
+                        type="image"
+                        multiple={true}
+                        label={field.imputLabel}
+                        onChange={() => {
+                          console.log(field.value);
+                        }}
+                      />
+                    ),
+                  };
 
-                return (
-                  renderField[field.type as keyof typeof renderField] || null
-                );
-              })}
+                  return (
+                    renderField[field.type as keyof typeof renderField] || null
+                  );
+                })}
 
               <div className="form-render-footer">
                 <Button
