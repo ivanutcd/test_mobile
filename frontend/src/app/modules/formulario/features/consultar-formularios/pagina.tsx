@@ -11,6 +11,7 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
   AddCircleOutline as AddIcon,
+  History as HistoryIcon,
   FileCopy as DuplicateIcon,
   Settings as SettingsIcon,
   Rocket as RocketIcon,
@@ -39,6 +40,7 @@ import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import { Tooltip } from '@mui/material';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
+import TablaLogsFormulario from '../../components/LogsEventos.tsx';
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -46,6 +48,7 @@ const Pagina = () => {
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { versionar } = useVersionarFormulario();
+  const [openLogsModal, setOpenLogsModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openPublicarModal, setOpenPublicarModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
@@ -83,6 +86,13 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
       recargar();
     }
   };
+  const handleOpenLogsModal = () => {
+  setOpenLogsModal(true);
+};
+
+const handleCloseLogsModal = () => {
+  setOpenLogsModal(false);
+};
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
     setEsVistaVersion(false);
@@ -253,19 +263,34 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
 
   return (
     <div>
-      <MainCard title={traducciones.LISTADO}>
-        <BoxContainer display="flex" flexDirection="row" gap={2}>
-          <SearchComponent<SearchProps>
-            includeToolbar={false}
-            ChildComponent={SearchForm}
-            save={buscar}
-            extraProps={{ handleRecargar: recargar }}
-          />
-          <Button size="large" onClick={() => handleOpenModal('create')}>
-            <AddIcon style={{ marginRight: 10 }} />
-            {traducciones.BOTON_CREAR}
-          </Button>
-        </BoxContainer>
+    <MainCard
+  title={
+    <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
+      <span>{traducciones.LISTADO}</span>
+      <Button
+        variant="contained"
+        color="inherit"
+        onClick={handleOpenLogsModal}
+        startIcon={<HistoryIcon />}
+      >
+        {traducciones.Logs}
+      </Button>
+    </BoxContainer>
+  }
+>
+  <BoxContainer display="flex" flexDirection="row" gap={2}>
+    <SearchComponent<SearchProps>
+      includeToolbar={false}
+      ChildComponent={SearchForm}
+      save={buscar}
+      extraProps={{ handleRecargar: recargar }}
+    />
+    <Button size="large" onClick={() => handleOpenModal('create')}>
+      <AddIcon style={{ marginRight: 10 }} />
+      {traducciones.BOTON_CREAR}
+    </Button>
+  </BoxContainer>
+
 
         {!loading && data && (
           <PaginableGrid
@@ -309,7 +334,13 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
         >
           <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} hidePublishButton={esVistaVersion}/>
         </CustomModal>
-
+        <CustomModal
+        open={openLogsModal}
+        handleClose={handleCloseLogsModal}
+        modalTitle={traducciones.HISTORICODEEVENTOS}
+          >
+        <TablaLogsFormulario onCancel={handleCloseLogsModal} />
+        </CustomModal>
       </MainCard>
     </div>
   );
