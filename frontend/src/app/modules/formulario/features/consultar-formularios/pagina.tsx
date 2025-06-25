@@ -37,9 +37,9 @@ import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+import { Tooltip } from '@mui/material';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
 import { esES } from '@mui/x-data-grid';
-
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -71,7 +71,7 @@ const Pagina = () => {
       recargar();
     }
   }
-
+const [esVistaVersion, setEsVistaVersion] = useState(false);
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
       title: `Eliminar ${params.nombreTecnico}`,
@@ -86,6 +86,7 @@ const Pagina = () => {
   };
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
+    setEsVistaVersion(false);
     recargar();
   };
   const handleCloseModal = () => {
@@ -199,11 +200,39 @@ const Pagina = () => {
       headerName: traducciones.MOVILIDAD_ASOCIADA,
       field: 'movilidadAsociada',
     },
-    {
-      colId: 'versionFormulario',
-      headerName: traducciones.VERSION,
-      field: 'versionFormulario',
-    },
+{
+  colId: 'versionFormulario',
+  headerName: traducciones.VERSION,
+  field: 'versionFormulario',
+  renderCell: (params: any) => {
+    const data = params?.row ?? params;
+
+    if (!data) return null;
+
+    const mostrarIcono = !!data.formularioPublicadoId;
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span>{data.versionFormulario}</span>
+        {mostrarIcono && (
+          <Tooltip title="Ver última versión publicada"  placement="top" arrow>
+            <RocketIcon
+              color="primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setFormularioId(data.formularioPublicadoId);
+                setEsVistaVersion(true);
+                setOpenPublicarModal(true)
+                
+              }}
+            />
+          </Tooltip>
+          
+        )}
+      </div>
+    );
+  },
+},
     {
       colId: 'estado',
       headerName: traducciones.ESTADO,
@@ -225,7 +254,7 @@ const Pagina = () => {
   ];
 
   return (
-    <>
+    <div>
       <MainCard title={traducciones.LISTADO}>
         <BoxContainer display="flex" flexDirection="row" gap={2}>
           <SearchComponent<SearchProps>
@@ -281,11 +310,11 @@ const Pagina = () => {
           handleClose={handleClosePublicarModal}
           modalTitle={"Aprobación de proyecto: " + nombreTecnico}
         >
-          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} />
+          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} hidePublishButton={esVistaVersion}/>
         </CustomModal>
 
       </MainCard>
-    </>
+    </div>
   );
 };
 export default Pagina;
