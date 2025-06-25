@@ -71,9 +71,6 @@ public static class ConfigureServices
                     .As<IModelBuildingStrategy>();
                 //registro de mapeo de excepciones
                 containerBuilder.RegisterType<DefaultDomainExceptionMap>().As<IMapException>();
-                containerBuilder.RegisterModule(new RegisterByInterfaces(typeof(ConsultarLogsFormularioQueryRunner).Assembly, typeof(IQueryRunner<,>)));
-                containerBuilder.RegisterModule(new RegisterByInterfaces(domainAssembly, typeof(IDocumentProjector<>)));
-                containerBuilder.RegisterModule(new RegisterByInterfaces(typeof(BitacoraFormulario).Assembly, typeof(IDocumentProjector<>)));
             }
         );
 

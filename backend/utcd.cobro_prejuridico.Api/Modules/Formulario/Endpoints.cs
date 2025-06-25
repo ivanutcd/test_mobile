@@ -3,7 +3,6 @@ using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarCampoDinami
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarFormularioRelacionados;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarFormulariosPublicados;
-using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.ConsultarLogFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.CrearFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.DuplicarFormulario;
 using utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario;
@@ -39,7 +38,5 @@ public class Endpoints : CarterModule
         app.ConsultarFormulariosRelacionados();
         app.ConsultarFormulariosPublicados();
         app.RestaurarFormulario();
-        app.ConsultarLogFormularios();
-        app.EventLogQueryPaginated();
     }
 }

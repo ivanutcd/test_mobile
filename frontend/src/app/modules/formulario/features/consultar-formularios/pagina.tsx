@@ -11,6 +11,7 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
   AddCircleOutline as AddIcon,
+  History as HistoryIcon,
   FileCopy as DuplicateIcon,
   Settings as SettingsIcon,
   Rocket as RocketIcon,
@@ -38,6 +39,7 @@ import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
+import TablaLogsFormulario from '../../components/LogsEventos.tsx';
 
 
 const Pagina = () => {
@@ -46,6 +48,7 @@ const Pagina = () => {
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { versionar } = useVersionarFormulario();
+  const [openLogsModal, setOpenLogsModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openPublicarModal, setOpenPublicarModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
@@ -83,6 +86,13 @@ const Pagina = () => {
       recargar();
     }
   };
+  const handleOpenLogsModal = () => {
+  setOpenLogsModal(true);
+};
+
+const handleCloseLogsModal = () => {
+  setOpenLogsModal(false);
+};
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
   };
@@ -224,7 +234,19 @@ const Pagina = () => {
 
   return (
     <>
-      <MainCard title={traducciones.LISTADO}>
+      <MainCard   title={
+       <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
+        <span>{traducciones.LISTADO}</span>
+        <Button
+            variant="contained"
+            color="inherit"
+          onClick={handleOpenLogsModal}
+          startIcon={<HistoryIcon />}
+        >
+        {traducciones.Logs}
+        </Button>
+      </BoxContainer>
+     }>
         <BoxContainer display="flex" flexDirection="row" gap={2}>
           <SearchComponent<SearchProps>
             includeToolbar={false}
@@ -236,7 +258,10 @@ const Pagina = () => {
             <AddIcon style={{ marginRight: 10 }} />
             {traducciones.BOTON_CREAR}
           </Button>
+           
         </BoxContainer>
+
+        
 
         {!loading && data && (
           <PaginableGrid
@@ -280,7 +305,13 @@ const Pagina = () => {
         >
           <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} />
         </CustomModal>
-
+        <CustomModal
+        open={openLogsModal}
+        handleClose={handleCloseLogsModal}
+        modalTitle={traducciones.HISTORICODEEVENTOS}
+          >
+        <TablaLogsFormulario onCancel={handleCloseLogsModal} />
+        </CustomModal>
       </MainCard>
     </>
   );

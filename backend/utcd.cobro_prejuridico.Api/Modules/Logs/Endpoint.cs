@@ -1,5 +1,5 @@
-﻿using Carter;
-using Enee.IoC.Architecture.Endpoints.TrackingEvent;
+using Carter;
+using utcd.cobro_prejuridico.Api.Modules.Logs.ConsultarLogFormulario;
 
 namespace utcd.cobro_prejuridico.Api.Modules.Logs;
 
@@ -13,6 +13,6 @@ public class Endpoints : CarterModule
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.EventLogQueryPaginated();
+        app.ConsultarLogFormularios();
     }
 }

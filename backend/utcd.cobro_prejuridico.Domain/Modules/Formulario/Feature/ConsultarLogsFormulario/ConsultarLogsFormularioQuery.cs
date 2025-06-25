@@ -4,7 +4,7 @@ using utcd.cobro_prejuridico.Domain.Query;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarLogsFormulario;
 
-public class ConsultarLogsFormularioQuery : IQuery<IPaginated<EventLog>>
+public class ConsultarLogsFormularioQuery : IQuery<IPaginated<LogFormularioResponse>>
 {
     public string Description { get; } = "Obtener logs de eventos de forma paginada";
     public int? PageSize { get; set; }
