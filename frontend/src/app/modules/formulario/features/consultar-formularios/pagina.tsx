@@ -97,6 +97,8 @@ const handleCloseLogsModal = () => {
 };
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
+    setEsVistaVersion(false);
+    recargar();
   };
   const handleCloseModal = () => {
     setOpenModal(false);
