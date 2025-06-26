@@ -10,7 +10,12 @@ import { FormField } from './formField';
 import { useParams } from 'react-router-dom';
 import { useObtenerFormularioById } from '../../hooks/useObtenerFormulario';
 import { useNavigate } from 'react-router-dom';
-
+import {
+  History as HistoryIcon,
+} from '@mui/icons-material';
+import { BoxContainer, Button, CustomModal } from '@proyectos-enee/enee_componentes';
+import traducciones from '../../common/translations';
+import TablaLogsFormulario from '../../components/LogsEventos';
 interface ConfigurarFormularioProps {
   disabled?: boolean;
 }
@@ -21,6 +26,7 @@ const ConfigurarFormulario = ({ disabled }: ConfigurarFormularioProps) => {
   console.log(formulario);
   const confirm = useConfirmDialog();
 
+  const [openLogsModal, setOpenLogsModal] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState<{
     formFields: FormField[];
@@ -35,7 +41,13 @@ const ConfigurarFormulario = ({ disabled }: ConfigurarFormularioProps) => {
     nombreTecnico: formulario?.nombreTecnico ?? '',
     descripcion: formulario?.descripcion ?? '',
   });
+  const handleOpenLogsModal = () => {
+  setOpenLogsModal(true);
+};
 
+const handleCloseLogsModal = () => {
+  setOpenLogsModal(false);
+};
   const handleBackCancel = async () => {
     const result = await confirm({
       title: '¿Estás seguro de querer salir?',
@@ -48,10 +60,22 @@ const ConfigurarFormulario = ({ disabled }: ConfigurarFormularioProps) => {
     }
   };
   return (
-    <MainCard
-      title={`Configurar ${formulario?.nombreTecnico ?? ''}`}
-      backButton={handleBackCancel}
-      sx={{ minHeight: 'calc(100vh - 210px)' }}
+     <MainCard
+    title={
+      <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
+        <span>{`Configurar ${formulario?.nombreTecnico ?? ''}`}</span>
+        <Button
+            variant="contained"
+            color="inherit"
+          startIcon={<HistoryIcon />}
+          onClick={handleOpenLogsModal}
+        >
+          {traducciones.Logs}
+        </Button>
+      </BoxContainer>
+    }
+    backButton={handleBackCancel}
+    sx={{ minHeight: 'calc(100vh - 210px)' }}
     >
       {formulario && (
         <GridContainer>
@@ -69,7 +93,15 @@ const ConfigurarFormulario = ({ disabled }: ConfigurarFormularioProps) => {
           </Col>
         </GridContainer>
       )}
+        <CustomModal
+        open={openLogsModal}
+        handleClose={handleCloseLogsModal}
+        modalTitle={traducciones.HISTORICODEEVENTOS}
+          >
+        <TablaLogsFormulario  onCancel={handleCloseLogsModal} />
+        </CustomModal>
     </MainCard>
+    
   );
 };
 

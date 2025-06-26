@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using Autofac;
 using Carter;
@@ -16,6 +16,11 @@ using Oakton;
 using utcd.cobro_prejuridico.Domain.Common;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Projections.FormularioTable;
 using UtcdRefacturacion.Infraestructure.Modules.Common;
+using Enee.Core.CQRS.Query;
+using Enee.Core.Infraestructure.TrackingEvent.GetEventLog;
+using Enee.IoC.Autofac;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.ConsultarLogsFormulario;
+using TestApp.Domain.LogDeEventos.Projectors;
 
 namespace utcd.cobro_prejuridico.Api.Plumbing.Config;
 

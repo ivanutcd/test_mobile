@@ -12,7 +12,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
             string estado,
             string versionFormulario,
             string? estructuraFormulario,
-            Guid? formularioBaseId
+            Guid? formularioBaseId,
+            bool? esEditable
 
         )
             : base(aggregateId)
@@ -24,7 +25,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
             VersionFormulario = versionFormulario;
             EstructuraFormulario = estructuraFormulario;
             FormularioBaseId = formularioBaseId;
-
+            EsEditable = esEditable;
         }
 
         public string NombreTecnico { get; }
@@ -34,5 +35,6 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
         public string VersionFormulario { get; }
         public string? EstructuraFormulario { get; set; }
         public Guid? FormularioBaseId { get; set; }
+        public bool? EsEditable { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Enee.Core.Domain.Repository;
 using Enee.Core.Domain.Specs;
 using utcd.cobro_prejuridico.Domain.Common;
 using utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates;
+using utcd.cobro_prejuridico.Domain.Modules.Formulario.Common;
 
 namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.DuplicarFormulario;
 
@@ -29,19 +30,20 @@ public class DuplicarFormularioCommandHandler : ICommandHandler<DuplicarFormular
     {
         var spec = new SpecificationGeneric<Projections.FormularioTable.Formulario>();
         spec.Query.Where(x => x.Id == command.Id);
-
+        const string versionDefault = "1.0.0";
         Projections.FormularioTable.Formulario result = await _repository.FirstOrDefault(spec);
-        const string texto = "copia de ";
+        const string texto = "copia_de_";
         var nuevoId = Guid.NewGuid();
         var nuevoFormulario = new FormularioRoot(
             nuevoId,
             texto + result.NombreTecnico,
             result.Descripcion,
             result.MovilidadAsociada,
-            result.Estado,
-            result.VersionFormulario,
+            FormularioEstado.Borrador.Value,
+            versionDefault,
             result.EstructuraFormulario,
-            command.Id
+            command.Id,
+            true
         );
         await WritableEventStore.Create(nuevoFormulario);
     }

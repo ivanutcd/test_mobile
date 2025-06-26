@@ -9,6 +9,7 @@ export interface Formulario extends Auditable {
   estado: string;
   createdDate: Date;
   updatedDate: Date;
+  formularioPublicadoId: string;
 }
 
 export interface FormularioData extends Auditable {
@@ -24,6 +25,7 @@ export interface FormularioData extends Auditable {
   estadoItem?: CatalogoItem;
   estado: string;
   estadoNombre?: string;
+  esEditable?: boolean;
 }
 export interface VersionarFormularioData {
   id: string;

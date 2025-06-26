@@ -22,7 +22,7 @@ export function usePublicarFormularioHandler() {
 
     if (result) {
       await publicarFormulario(id);
-      await success(`Formulario publicado exitosamente.`);
+      await success(`¡Formulario publicado exitosamente!`);
       onComplete?.();
     } else {
       onCancel?.();

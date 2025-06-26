@@ -14,7 +14,8 @@ export type FormFieldType =
 export interface FormField {
   position: number;
   id: string; // identificador único del campo
-  label: string; // etiqueta que se muestra en el formulario
+  label: string; // etiqueta que se registrara en la bd
+  imputLabel: string; // etiqueta que se muestra en el formulario
   type: FormFieldType; // tipo de campo
   required?: boolean; // si es obligatorio o no
   options?: string[]; // opciones para select, radio, checkbox
@@ -28,4 +29,5 @@ export interface FormField {
   maxDate?: string; // fecha máxima para date
   minTime?: string; // hora mínima para date
   maxTime?: string; // hora máxima para date
+  catalogoKey?: string; // clave del catálogo para select
 }

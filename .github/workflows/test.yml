@@ -9,7 +9,7 @@ env:
 
 jobs:
   testing-frontend:
-    runs-on: utcd-dev-infra1
+    runs-on: UTCD-RUNNER-LINUX
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,11 +27,15 @@ jobs:
       - name: Runing building test
         run: |
           cd frontend
-          pnpm install
+          for i in 1 2 3; do
+            pnpm install && break
+            echo "pnpm install failed... retrying in 10s ($i/3)"
+            sleep 10
+          done
           pnpm run build
 
   testing-backend:
-    runs-on: utcd-dev-infra1
+    runs-on: UTCD-RUNNER-LINUX
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -87,7 +91,7 @@ jobs:
           dotnet build "utcd.cobro_prejuridico.Api.csproj" -c Release
 
   testing-mobile:
-    runs-on: ubuntu-latest
+    runs-on: UTCD-RUNNER-LINUX
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -105,5 +109,21 @@ jobs:
       - name: Running build and test
         run: |
           cd mobile
-          pnpm install
+          for i in 1 2 3; do
+            pnpm install && break
+            echo "pnpm install failed... retrying in 10s ($i/3)"
+            sleep 10
+          done
           pnpm exec expo export
+
+  cleaning:
+    runs-on: UTCD-RUNNER-LINUX
+    needs: [testing-backend, testing-frontend, testing-mobile]
+    steps:
+      - name: Limpiar imagenes no utilizadas
+        run: |
+          docker image prune -f -a
+
+      - name: Limpiar builder cache de docker
+        run: |
+          docker builder prune -f -a
