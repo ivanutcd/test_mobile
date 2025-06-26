@@ -41,6 +41,8 @@ import { duplicarFormulario } from '../duplicar-formulario/api.ts';
 import { Tooltip } from '@mui/material';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
 import TablaLogsFormulario from '../../components/LogsEventos.tsx';
+import { esES } from '@mui/x-data-grid';
+
 
 const Pagina = () => {
   const { data, loading, buscar, recargar } = usePaginadoFormularios();
@@ -63,7 +65,7 @@ const Pagina = () => {
   const handleOpenConfirmationDuplicate = async (params: Formulario) => {
     const result = await confirm({
       title: `Duplicar ${params.nombreTecnico}`,
-      description: '¿Estás seguro de querer duplicar este formulario?',
+      description: '¿Está seguro de querer duplicar este formulario?',
       confirmationText: 'Duplicar',
       cancellationText: 'Cancelar',
     });
@@ -77,7 +79,7 @@ const [esVistaVersion, setEsVistaVersion] = useState(false);
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
       title: `Eliminar ${params.nombreTecnico}`,
-      description: '¿Estás seguro de querer eliminar este formulario?',
+      description: '¿Está seguro de querer eliminar este formulario?',
       confirmationText: 'Eliminar',
       cancellationText: 'Cancelar',
     });
@@ -96,6 +98,7 @@ const handleCloseLogsModal = () => {
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
     setEsVistaVersion(false);
+    recargar();
   };
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -296,6 +299,7 @@ const handleCloseLogsModal = () => {
           <PaginableGrid
             paginable={data as PaginateResult<any>}
             columnDefs={columns}
+            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             sortModel={[{ field: 'createdDate', sort: 'desc' }]}
 
           />

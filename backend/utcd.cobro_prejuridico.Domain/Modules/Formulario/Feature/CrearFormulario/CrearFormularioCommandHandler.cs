@@ -35,9 +35,11 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.CrearFormular
                 command.Estado,
                 version,
                 null,
+                null,
                 null
-            );
-            await WritableEventStore.Create(model);
+        );
+
+        await WritableEventStore.Create(model);
         }
     }
 }

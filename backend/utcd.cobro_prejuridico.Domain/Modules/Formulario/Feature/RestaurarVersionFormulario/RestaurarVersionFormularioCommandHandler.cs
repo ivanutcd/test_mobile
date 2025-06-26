@@ -40,7 +40,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.RestaurarVers
                 FormularioEstado.Borrador.Value,
                 version,
                 formularioBase.EstructuraFormulario,
-                command.Id
+                command.Id,
+                null
             );
 
             await WritableEventStore.Create(model);
