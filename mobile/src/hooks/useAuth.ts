@@ -2,13 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { login } from '@services/auth';
 import { logoutAndRedirectToSSOLogin } from '@services/authLogout';
-
+import { insertarLogEvento } from '../utils/dbLogger';
+import { useSQLiteContext } from 'expo-sqlite';
 interface AuthData {
   accessToken: string | null;
   isAuthenticated: boolean;
 }
 
 export function useAuth() {
+  const db = useSQLiteContext();
   const [auth, setAuth] = useState<AuthData>({
     accessToken: null,
     isAuthenticated: false,
@@ -32,6 +34,7 @@ export function useAuth() {
         accessToken: result.access_token,
         isAuthenticated: true,
       });
+      await insertarLogEvento(db, result.id, 'Login', 'Inicio de sesión exitoso', 'El usuario accedió correctamente');
     }
   }, []);
 
@@ -41,6 +44,7 @@ export function useAuth() {
       accessToken: null,
       isAuthenticated: false,
     });
+    await insertarLogEvento(db, "", 'Logout', 'Cierre de sesión', 'El usuario cerró sesión');
   }, []);
 
   return {
