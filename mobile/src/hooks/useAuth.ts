@@ -8,8 +8,9 @@ interface AuthData {
   accessToken: string | null;
   isAuthenticated: boolean;
 }
-const db = useSQLiteContext();
+
 export function useAuth() {
+  const db = useSQLiteContext();
   const [auth, setAuth] = useState<AuthData>({
     accessToken: null,
     isAuthenticated: false,
