@@ -11,6 +11,7 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
   AddCircleOutline as AddIcon,
+  History as HistoryIcon,
   FileCopy as DuplicateIcon,
   Settings as SettingsIcon,
   Rocket as RocketIcon,
@@ -37,7 +38,9 @@ import { eliminarFormulario } from '../eliminar-formulario/api.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
 import { useVersionarFormulario } from '../Versionar/versionar-formulario.ts';
 import { duplicarFormulario } from '../duplicar-formulario/api.ts';
+import { Tooltip } from '@mui/material';
 import DetalleFormulario from '../../components/detalleFormulario.tsx';
+import TablaLogsFormulario from '../../components/LogsEventos.tsx';
 import { esES } from '@mui/x-data-grid';
 
 
@@ -47,6 +50,7 @@ const Pagina = () => {
   const navigate = useNavigate();
   const confirm = useConfirmDialog();
   const { versionar } = useVersionarFormulario();
+  const [openLogsModal, setOpenLogsModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openPublicarModal, setOpenPublicarModal] = useState(false);
   const [openModalEditar, setOpenModalEditar] = useState(false);
@@ -71,7 +75,7 @@ const Pagina = () => {
       recargar();
     }
   }
-
+const [esVistaVersion, setEsVistaVersion] = useState(false);
   const handleOpenConfirmationDelete = async (params: Formulario) => {
     const result = await confirm({
       title: `Eliminar ${params.nombreTecnico}`,
@@ -84,9 +88,15 @@ const Pagina = () => {
       recargar();
     }
   };
+  const handleOpenLogsModal = () => {
+  setOpenLogsModal(true);
+};
+
+const handleCloseLogsModal = () => {
+  setOpenLogsModal(false);
+};
   const handleClosePublicarModal = () => {
     setOpenPublicarModal(false);
-    recargar();
   };
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -199,11 +209,39 @@ const Pagina = () => {
       headerName: traducciones.MOVILIDAD_ASOCIADA,
       field: 'movilidadAsociada',
     },
-    {
-      colId: 'versionFormulario',
-      headerName: traducciones.VERSION,
-      field: 'versionFormulario',
-    },
+{
+  colId: 'versionFormulario',
+  headerName: traducciones.VERSION,
+  field: 'versionFormulario',
+  renderCell: (params: any) => {
+    const data = params?.row ?? params;
+
+    if (!data) return null;
+
+    const mostrarIcono = !!data.formularioPublicadoId;
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span>{data.versionFormulario}</span>
+        {mostrarIcono && (
+          <Tooltip title="Ver última versión publicada"  placement="top" arrow>
+            <RocketIcon
+              color="primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setFormularioId(data.formularioPublicadoId);
+                setEsVistaVersion(true);
+                setOpenPublicarModal(true)
+                
+              }}
+            />
+          </Tooltip>
+          
+        )}
+      </div>
+    );
+  },
+},
     {
       colId: 'estado',
       headerName: traducciones.ESTADO,
@@ -225,20 +263,35 @@ const Pagina = () => {
   ];
 
   return (
-    <>
-      <MainCard title={traducciones.LISTADO}>
-        <BoxContainer display="flex" flexDirection="row" gap={2}>
-          <SearchComponent<SearchProps>
-            includeToolbar={false}
-            ChildComponent={SearchForm}
-            save={buscar}
-            extraProps={{ handleRecargar: recargar }}
-          />
-          <Button size="large" onClick={() => handleOpenModal('create')}>
-            <AddIcon style={{ marginRight: 10 }} />
-            {traducciones.BOTON_CREAR}
-          </Button>
-        </BoxContainer>
+    <div>
+    <MainCard
+  title={
+    <BoxContainer display="flex" justifyContent="space-between" alignItems="center" width="100%">
+      <span>{traducciones.LISTADO}</span>
+      <Button
+        variant="contained"
+        color="inherit"
+        onClick={handleOpenLogsModal}
+        startIcon={<HistoryIcon />}
+      >
+        {traducciones.Logs}
+      </Button>
+    </BoxContainer>
+  }
+>
+  <BoxContainer display="flex" flexDirection="row" gap={2}>
+    <SearchComponent<SearchProps>
+      includeToolbar={false}
+      ChildComponent={SearchForm}
+      save={buscar}
+      extraProps={{ handleRecargar: recargar }}
+    />
+    <Button size="large" onClick={() => handleOpenModal('create')}>
+      <AddIcon style={{ marginRight: 10 }} />
+      {traducciones.BOTON_CREAR}
+    </Button>
+  </BoxContainer>
+
 
         {!loading && data && (
           <PaginableGrid
@@ -281,11 +334,17 @@ const Pagina = () => {
           handleClose={handleClosePublicarModal}
           modalTitle={"Aprobación de proyecto: " + nombreTecnico}
         >
-          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} />
+          <DetalleFormulario id={formularioId} mode='view' handleClose={handleClosePublicarModal} hidePublishButton={esVistaVersion}/>
         </CustomModal>
-
+        <CustomModal
+        open={openLogsModal}
+        handleClose={handleCloseLogsModal}
+        modalTitle={traducciones.HISTORICODEEVENTOS}
+          >
+        <TablaLogsFormulario onCancel={handleCloseLogsModal} />
+        </CustomModal>
       </MainCard>
-    </>
+    </div>
   );
 };
 export default Pagina;

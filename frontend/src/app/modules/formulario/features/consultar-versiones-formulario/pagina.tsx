@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { traducciones } from '../../common/translations';
 
 import {
+  BoxContainer,
   CustomModal,
 } from '@proyectos-enee/enee_componentes';
 import { ModeFormulario, TitleFormulario } from '../../common/types.ts';
@@ -16,21 +17,34 @@ import {
 
 import GestionarFormulario from '../gestionar-formulario/index.ts';
 import { SearchProps } from './propos.ts';
-import {Stack, Typography, Box, Divider,IconButton, Tooltip } from '@mui/material';
+import {Stack, Typography, Box, Divider,IconButton, Tooltip, Button } from '@mui/material';
 import Chip from '@components/chip/chip.tsx';
 import { useRestaurarVersionFormularioHandler } from '../restaurar-version-formulario/restaurar-version-formulario-handler.ts';
 import { EstadosFormulariosEnum } from '../../utils/estado-formularios.ts';
+import {
+  History as HistoryIcon,
+} from '@mui/icons-material';
+import TablaLogsFormulario from '../../components/LogsEventos.tsx';
 const Pagina = ({ id }: SearchProps) => {
   const { data, loading, recargar } = usePaginadoFormulariosRelacionados(id ?? undefined);
   const [formularioId, setFormularioId] = useState('');
   const [mode, setMode] = useState<ModeFormulario>(null);
   const [openModal, setOpenModal] = useState(false);
-
+ const [openLogsModal, setOpenLogsModal] = useState(false);
+ const [formularioSeleccionadoId, setFormularioSeleccionadoId] = useState<string | null>(null);
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  
+
+const handleOpenLogsModal = (id?: string) => {
+  if (!id) return;
+  setFormularioSeleccionadoId(id);
+  setOpenLogsModal(true);
+};
+const handleCloseLogsModal = () => {
+  setOpenLogsModal(false);
+};
   const handleOpenModal = (newMode: ModeFormulario) => {
     setMode(newMode);
     setOpenModal(true);
@@ -107,7 +121,27 @@ const Pagina = ({ id }: SearchProps) => {
 
   return (
     <>
-      <MainCard>
+      <MainCard >
+        <BoxContainer display="flex" justifyContent="flex-end">
+        <Button
+         variant="contained"
+         color="inherit"
+        startIcon={<HistoryIcon />}
+        disabled={!id}
+       onClick={() => handleOpenLogsModal(id)}
+       sx={{
+    boxShadow: 'none',
+    color: 'black', 
+    '&:hover': {
+      boxShadow: 'none',
+      backgroundColor: '#e0e0e0', 
+    }
+  }}
+
+      >
+      {traducciones.Logs}
+      </Button>
+      </BoxContainer>
         {!loading && data && (
           <Box>
             <Stack spacing={1}>
@@ -147,7 +181,13 @@ const Pagina = ({ id }: SearchProps) => {
           />
         </CustomModal>
 
-     
+      <CustomModal
+        open={openLogsModal}
+        handleClose={handleCloseLogsModal}
+        modalTitle={traducciones.HISTORICODEEVENTOS}
+          >
+       {formularioSeleccionadoId && <TablaLogsFormulario relatedId={formularioSeleccionadoId}   onCancel={handleCloseLogsModal}/>}
+        </CustomModal>
       </MainCard>
     </>
   );
