@@ -40,7 +40,7 @@ export const useConfirmDialog = () => {
         cancellationText: options?.cancellationText ?? 'No',
         content: (
           <DefaultContent
-            title={options?.title ?? '¿Estás Seguro?'}
+            title={options?.title ?? '¿Está seguro?'}
             description={options?.description}
           />
         ),

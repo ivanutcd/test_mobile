@@ -7,5 +7,6 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario
         public string Descripcion { get; set; }
         public string MovilidadAsociada { get; set; }
         public string Estado { get; set; }
+        public string VersionFormulario { get; set; }
     }
 }

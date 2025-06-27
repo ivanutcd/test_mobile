@@ -23,6 +23,10 @@ export const traducciones = {
   AUTOR: 'Autor',
   REGISTROVERSIONES: 'Registro de versiones del formulario',
   RESTAURAR: 'Restaurar formulario',
+  Logs: 'Logs Eventos',
+  FECHAEVENTO: 'Fecha Evento',
+  EVENTO: 'Evento',
+  HISTORICODEEVENTOS: 'Historial de Eventos'
 };
 
 export default traducciones;

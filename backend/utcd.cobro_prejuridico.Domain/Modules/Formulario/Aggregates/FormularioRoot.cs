@@ -20,6 +20,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string? EstructuraFormulario { get; set; }
         public Guid? FormularioBaseId { get; set; }
         public Guid? IdUsuario { get; set; }
+        public bool? EsEditable  { get; set; }
 
 
         public FormularioRoot() { }
@@ -32,7 +33,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             string estado,
             string versionFormulario,
             string? estructuraFormulario,
-            Guid? formularioBaseId
+            Guid? formularioBaseId,
+            bool? esEditable
         )
         {
             Apply(
@@ -45,8 +47,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
                         estado,
                         versionFormulario,
                         estructuraFormulario,
-                        formularioBaseId
-
+                        formularioBaseId,
+                        esEditable
                     )
                 )
             );
@@ -62,6 +64,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             VersionFormulario = @event.VersionFormulario;
             EstructuraFormulario = @event.EstructuraFormulario;
             FormularioBaseId = @event.FormularioBaseId;
+            EsEditable = @event.EsEditable;
             Version++;
         }
 
@@ -69,15 +72,17 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             string nombreTecnico,
             string descripcion,
             string movilidadAsociada,
-            string estado
+            string estado,
+            string versionFormulario,
+            bool esEditable
         )
         {
             FormularioEditarEvent editar =
-                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado);
+                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado,versionFormulario, esEditable);
 
             Apply(NewChange(editar));
         }
-       
+
         private void Apply(FormularioEditarEvent @event)
         {
             Id = @event.AggregateId;
@@ -85,6 +90,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Descripcion = @event.Descripcion;
             MovilidadAsociada = @event.MovilidadAsociada;
             Estado = @event.Estado;
+            EsEditable = @event.EsEditado;
             Version++;
         }
 

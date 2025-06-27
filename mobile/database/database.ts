@@ -29,7 +29,17 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
       CREATE TABLE IF NOT EXISTS configuraciones (
         clave TEXT PRIMARY KEY NOT NULL,
         valor TEXT
-      );`,
+      );
+
+   CREATE TABLE IF NOT EXISTS logs_eventos (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          idUsuario TEXT,
+          modulo TEXT,
+          accion TEXT,
+          detalle TEXT,
+          sincronizado INTEGER DEFAULT 0,
+          fechaUltIntentoSincronizacion TEXT
+        );`,
     );
 
     console.log(

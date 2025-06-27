@@ -26,7 +26,9 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario
                             input.NombreTecnico,
                             input.Descripcion,
                             input.MovilidadAsociada,
-                            input.Estado
+                            input.Estado,
+                            input.VersionFormulario,
+                            false
                         );
 
                         Either<OK, List<MessageValidation>> result = await dispatcher.Dispatch(

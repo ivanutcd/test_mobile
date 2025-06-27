@@ -11,6 +11,7 @@ interface DetalleFormularioProps {
   id: string;
   mode: string;
   handleClose: () => void;
+  hidePublishButton?: boolean; 
 }
 type FieldType =
   | 'text'
@@ -37,7 +38,7 @@ interface FormField {
   rows?: number;
 }
 
-const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
+const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormularioProps) => {
   const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
   const { publicar } = usePublicarFormularioHandler();
   const [formData, setFormData] = useState<{
@@ -119,7 +120,7 @@ const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
       </Box>
 
       <Typography variant="body1" color={"GrayText"} fontWeight={"bold"} gutterBottom>
-        Configuración del formulario movil
+        Configuración del formulario móvil
       </Typography>
 
       <Box
@@ -133,7 +134,7 @@ const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
       >
         <FormRender formData={formData} />
       </Box>
-      {formulario && formData && id &&(
+      {formulario && formData && id && !hidePublishButton &&(
       <Box
         display="flex"
         justifyContent="flex-end"
@@ -170,6 +171,29 @@ const DetalleFormulario = ({ id, handleClose }: DetalleFormularioProps) => {
         </Button>
       </Box>
       )}
+      {formulario && formData && id && hidePublishButton && (
+  <Box
+    display="flex"
+    justifyContent="flex-end"
+    sx={{
+      py: 3,
+      px: 2,
+      borderTop: '2px solid #eee',
+      backgroundColor: 'white',
+      position: 'sticky',
+      bottom: -8,
+      zIndex: 2,
+    }}
+  >
+    <Button
+      variant="contained"
+      color="inherit"
+      onClick={handleClose}
+    >
+      Cancelar
+    </Button>
+  </Box>
+)}
     </Box>
   );
 };

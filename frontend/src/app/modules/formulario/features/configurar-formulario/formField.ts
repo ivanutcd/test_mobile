@@ -29,4 +29,5 @@ export interface FormField {
   maxDate?: string; // fecha máxima para date
   minTime?: string; // hora mínima para date
   maxTime?: string; // hora máxima para date
+  catalogoKey?: string; // clave del catálogo para select
 }

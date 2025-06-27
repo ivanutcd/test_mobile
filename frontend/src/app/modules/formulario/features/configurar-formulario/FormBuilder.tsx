@@ -403,7 +403,7 @@ export default function FormBuilder({
             variant="contained"
             color="inherit"
           >
-            Ver Versiones
+            Ver versiones
           </Button>
           <Button
             onClick={guardarComposDinamicos}

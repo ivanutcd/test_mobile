@@ -7,6 +7,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
         string NombreTecnico,
         string Descripcion,
         string MovilidadAsociada,
-        string Estado
+        string Estado,
+        string VersionFormulario,
+        bool esEditable
     ) : ICommand;
 }
