@@ -15,11 +15,121 @@ import { useAuth } from '@hooks/useAuth';
 import { Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
+import { useEffect } from 'react';
+import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+type FormularioExistente = {
+  versionFormulario: string;
+};
+const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
+  try {
+    const response = await fetch(
+      `https://localhost:7090/api/v1/formulario/publicados?IdUsuario=${userId}`
+    );
+    const { data: formularios } = await response.json();
 
+    for (const f of formularios) {
+      const estructura = f.estructuraFormulario
+        ? JSON.parse(f.estructuraFormulario)
+        : null;
+
+      const formFields = estructura?.formFields || [];
+
+      const existente = await db.getFirstAsync<FormularioExistente>(
+        'SELECT versionFormulario FROM formularios WHERE id = ?',
+        [f.id]
+      );
+
+      if (!existente) {
+        await db.runAsync(
+          `INSERT INTO formularios 
+            (id, nombreTecnico, descripcion, formFields, estado, versionFormulario, movilidadAsociada, unidad, fechaActualizacion) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
+          [
+            f.id,
+            estructura?.nombreTecnico || '',
+            estructura?.descripcion || '',
+            JSON.stringify(formFields),
+            'publicado',
+            f.versionFormulario,
+            estructura?.movilidadAsociada || '',
+            estructura?.unidad || '',
+          ]
+        );
+      } else if (existente?.versionFormulario !== f.versionFormulario) {
+        await db.runAsync(
+          `UPDATE formularios 
+            SET nombreTecnico = ?, descripcion = ?, formFields = ?, estado = ?, versionFormulario = ?, movilidadAsociada = ?, unidad = ?, fechaActualizacion = datetime('now') 
+            WHERE id = ?`,
+          [
+            estructura?.nombreTecnico || '',
+            estructura?.descripcion || '',
+            JSON.stringify(formFields),
+            'publicado',
+            f.versionFormulario,
+            estructura?.movilidadAsociada || '',
+            estructura?.unidad || '',
+            f.id,
+          ]
+        );
+      }
+    }
+
+    await db.runAsync(
+      `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
+      ['formularios', 1, null]
+    );
+
+    console.log('Sincronización completada');
+  } catch (err) {
+    let mensajeError = 'Error desconocido';
+  if (err instanceof Error) {
+    mensajeError = err.message;
+  }
+
+  console.error('Error en sincronización:', mensajeError);
+
+  // Registrar error
+  await db.runAsync(
+    `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
+    ['formularios', 0, mensajeError]
+  );
+}
+};
+type SincronizacionError = {
+  id: number;
+  tipo: string;
+  fecha: string;
+  exito: number;
+  errorMensaje: string;
+};
+const fetchErroresSincronizacion = async (db: SQLiteDatabase): Promise<SincronizacionError[]> => {
+  return await db.getAllAsync(
+    `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`
+  );
+};
 export default function HomeScreen() {
   const theme = themeConfig.themes.light.colors;
+   const db = useSQLiteContext();
+  const { isAuthenticated} = useAuth(); 
 
-  const { isAuthenticated, login, logout, accessToken } = useAuth();
+  useEffect(() => {
+    const sincronizar = async () => {
+      
+        await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
+      
+    };
+    sincronizar();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const checkErrores = async () => {
+      const errores = await fetchErroresSincronizacion(db);
+      if (errores.length > 0) {
+        console.warn('⚠️ Error de sincronización:', errores[0].errorMensaje);
+      }
+    };
+    checkErrores();
+  }, []);
   return (
     <View style={styles.container}>
       <Card style={styles.card}>

@@ -12,7 +12,8 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
         estado TEXT,
         versionFormulario TEXT,
         movilidadAsociada TEXT,
-        unidad TEXT
+        unidad TEXT,
+        fechaActualizacion  DATETIME
       );
       CREATE TABLE IF NOT EXISTS respuestas (
         id TEXT PRIMARY KEY NOT NULL,
@@ -39,6 +40,14 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
           detalle TEXT,
           sincronizado INTEGER DEFAULT 0,
           fechaUltIntentoSincronizacion TEXT
+        );
+        
+      CREATE TABLE IF NOT EXISTS sincronizaciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tipo TEXT,
+            fecha DATETIME,
+            exito BOOLEAN,
+            errorMensaje TEXT
         );`,
     );
 
