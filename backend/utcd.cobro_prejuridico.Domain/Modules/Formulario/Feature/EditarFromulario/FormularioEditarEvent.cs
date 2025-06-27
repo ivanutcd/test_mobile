@@ -13,6 +13,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
         public string Descripcion { get; }
         public string MovilidadAsociada { get; }
         public string Estado { get; }
+        public string VersionFormulario { get; }
         public bool EsEditado { get; }
 
         public FormularioEditarEvent(
@@ -21,6 +22,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
             string descripcion,
             string movilidadAsociada,
             string estado,
+            string versionFormulario,
             bool esEditado
         )
             : base(aggregateId)
@@ -29,6 +31,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
             Descripcion = descripcion;
             MovilidadAsociada = movilidadAsociada;
             Estado = estado;
+            VersionFormulario = versionFormulario;
             EsEditado = esEditado;
         }
     }

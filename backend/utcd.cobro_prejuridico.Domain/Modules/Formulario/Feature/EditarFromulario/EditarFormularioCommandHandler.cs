@@ -29,6 +29,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Feature.EditarFromula
                 command.Descripcion,
                 command.MovilidadAsociada,
                 command.Estado,
+                command.VersionFormulario,
                 false
             );
             await Store.Update(root);

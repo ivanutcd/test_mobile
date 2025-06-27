@@ -27,6 +27,7 @@ namespace utcd.cobro_prejuridico.Api.Modules.Formulario.Feature.EditarFormulario
                             input.Descripcion,
                             input.MovilidadAsociada,
                             input.Estado,
+                            input.VersionFormulario,
                             false
                         );
 

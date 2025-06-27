@@ -73,11 +73,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             string descripcion,
             string movilidadAsociada,
             string estado,
+            string versionFormulario,
             bool esEditable
         )
         {
             FormularioEditarEvent editar =
-                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado, esEditable);
+                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado,versionFormulario, esEditable);
 
             Apply(NewChange(editar));
         }

@@ -68,8 +68,10 @@ const EditarFormulario = ({ onCancel, onSuccess, id, mode }: Props) => {
       ...formValues,
       id: id!,
     };
+    console.log(values);
 
     editarFormulario(values.id, values).then(() => {
+      
       success('¡Formulario editado correctamente!');
       onSuccess();
       onCancel();

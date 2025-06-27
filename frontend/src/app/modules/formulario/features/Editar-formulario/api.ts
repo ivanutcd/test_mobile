@@ -7,12 +7,13 @@ export const editarFormulario = async (
   id: string,
   data: FormularioInterface,
 ): Promise<EntityIdResponse> => {
-  const { nombreTecnico, descripcion, movilidadAsociada, estado } = data;
+  const { nombreTecnico, descripcion, movilidadAsociada, estado, versionFormulario } = data;
   const transformedData = {
     nombreTecnico,
     descripcion,
     movilidadAsociada,
     estado: estado,
+    versionFormulario,
   };
   return httpApi.put(`${Formularios_baseUrl}/${id}`, transformedData);
 };
