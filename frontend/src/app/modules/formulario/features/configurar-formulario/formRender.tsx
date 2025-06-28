@@ -20,6 +20,8 @@ import {
 
 import { FileUpload } from '@proyectos-enee/enee_componentes';
 import { useCatalogoItems } from '../../hooks/useCatalogoItems';
+import { useState, useEffect } from 'react';
+
 type FieldType =
   | 'text'
   | 'number'
@@ -34,7 +36,7 @@ interface FormField {
   id: string;
   type: FieldType;
   label: string;
-  imputLabel: string;
+  inputLabel: string;
   required?: boolean;
   placeholder?: string;
   defaultValue?: string;
@@ -45,6 +47,7 @@ interface FormField {
   max?: number;
   position?: number;
 }
+
 const nameForm = 'FormularioRender';
 const formValues = {};
 const validations = {};
@@ -60,8 +63,16 @@ export default function FormRender({ formData }: { formData: any }) {
     .filter((f: FormFieldConCatalogo) => f.catalogoKey)
     .map((f: FormFieldConCatalogo) => f.catalogoKey!);
 
-  const { data: catalogoItems } = useCatalogoItems(...catalogoKeys || formData.formFields);
+  const { data: catalogoItems } = useCatalogoItems(
+    ...(catalogoKeys || formData.formFields),
+  );
   console.log('Catalogo Items:', catalogoItems);
+
+  const [formFields, setFormFields] = useState(formData.formFields);
+
+  useEffect(() => {
+    setFormFields(formData.formFields);
+  }, [formData.formFields]);
 
   return (
     <div className="form-render">
@@ -81,7 +92,11 @@ export default function FormRender({ formData }: { formData: any }) {
         {() => {
           return (
             <div className="form-render-container">
-              {formData.formFields.sort((a: FormField, b: FormField) => (a.position ?? 0) - (b.position ?? 0))
+              {formFields
+                .sort(
+                  (a: FormField, b: FormField) =>
+                    (a.position ?? 0) - (b.position ?? 0),
+                )
 
                 .map((field: FormField | any) => {
                   const renderField = {
@@ -89,13 +104,13 @@ export default function FormRender({ formData }: { formData: any }) {
                       <InputText
                         key={field.id}
                         name={field.id}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         required={field.required}
                         placeholder={field.placeholder}
                         defaultValue={field.defaultValue}
                         inputProps={{
                           maxLength: field.max,
-                          minLength: field.min
+                          minLength: field.min,
                         }}
                       />
                     ),
@@ -104,7 +119,7 @@ export default function FormRender({ formData }: { formData: any }) {
                         key={field.id}
                         id={field.id}
                         name={field.id}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         required={field.required}
                         placeholder={field.placeholder}
                         defaultValue={field.defaultValue}
@@ -112,7 +127,7 @@ export default function FormRender({ formData }: { formData: any }) {
                         rows={field.rows}
                         inputProps={{
                           maxLength: field.max,
-                          minLength: field.min
+                          minLength: field.min,
                         }}
                       />
                     ),
@@ -120,14 +135,14 @@ export default function FormRender({ formData }: { formData: any }) {
                       <InputNumber
                         key={field.id}
                         name={field.id}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         type="number"
                         required={field.required}
                         placeholder={field.placeholder}
                         defaultValue={field.defaultValue}
-                        onInput={(e) => {
+                        onInput={e => {
                           const target = e.target as HTMLInputElement;
-                          let raw = target.value.replace(/\D/g, "");
+                          let raw = target.value.replace(/\D/g, '');
                           if (raw.length > field.max) {
                             raw = raw.slice(0, field.max);
                           }
@@ -135,40 +150,44 @@ export default function FormRender({ formData }: { formData: any }) {
                         }}
                         inputProps={{
                           min: field.min,
-                          max: field.max
+                          max: field.max,
                         }}
                       />
-
                     ),
                     select: (
-
                       <FormControl fullWidth key={field.id}>
-                        <InputLabel>{field.imputLabel}</InputLabel>
+                        <InputLabel>{field.inputLabel}</InputLabel>
                         <Select
                           value={field.value || ''}
-                          label={field.imputLabel}
-                          onChange={(event) => {
-                            field.value = event.target.value; 
-                          }
-                          }
+                          label={field.inputLabel}
+                          onChange={event => {
+                            field.value = event.target.value;
+                          }}
                         >
                           {field.catalogoKey && catalogoItems[field.catalogoKey]
                             ? catalogoItems[field.catalogoKey].map(option => (
-                              <MenuItem key={option.id} value={option.id}>
-                                {option?.nombre}
-                              </MenuItem>
-                            ))
-                            : (field.options || []).map((option: string, optionIndex: number) => (
-                              <MenuItem key={option + optionIndex} value={option}>
-                                {option}
-                              </MenuItem>
-                            ))}
+                                <MenuItem key={option.id} value={option.id}>
+                                  {option?.nombre}
+                                </MenuItem>
+                              ))
+                            : (field.options || []).map(
+                                (option: string, optionIndex: number) => (
+                                  <MenuItem
+                                    key={option + optionIndex}
+                                    value={option}
+                                  >
+                                    {option}
+                                  </MenuItem>
+                                ),
+                              )}
                         </Select>
                       </FormControl>
                     ),
                     checkbox: (
                       <FormControl key={field.id}>
-                        <FormLabel component="legend">{field.imputLabel}</FormLabel>
+                        <FormLabel component="legend">
+                          {field.inputLabel}
+                        </FormLabel>
                         <FormGroup>
                           {field.options?.map(
                             (option: string, optionIndex: number) => (
@@ -192,7 +211,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     radio: (
                       <FormControl key={field.id}>
                         <FormLabel id="demo-radio-buttons-group-label">
-                          {field.imputLabel}
+                          {field.inputLabel}
                         </FormLabel>
                         <RadioGroup
                           aria-labelledby="demo-radio-buttons-group-label"
@@ -215,7 +234,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     date: (
                       <DatePicker
                         key={field.id}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         value={field.value}
                         onChange={() => {
                           console.log(field.value);
@@ -225,7 +244,7 @@ export default function FormRender({ formData }: { formData: any }) {
                     file: (
                       <FileUpload
                         key={field.id}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         multiple={true}
                         onChange={() => {
                           console.log(field.value);
@@ -237,7 +256,7 @@ export default function FormRender({ formData }: { formData: any }) {
                         key={field.id}
                         type="image"
                         multiple={true}
-                        label={field.imputLabel}
+                        label={field.inputLabel}
                         onChange={() => {
                           console.log(field.value);
                         }}

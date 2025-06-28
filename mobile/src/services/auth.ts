@@ -14,9 +14,7 @@ const isWeb = Platform.OS === 'web';
 
 const redirectUri = isWeb
   ? REDIRECT_URI_WEB
-  : AuthSession.makeRedirectUri({
-      native: REDIRECT_URI_MOBILE,
-    });
+  : AuthSession.makeRedirectUri({ native: REDIRECT_URI_MOBILE });
 
 const discovery = {
   authorizationEndpoint: `${AUTH_SERVER}/connect/authorize`,

@@ -2,8 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '@hooks/useAuth';
-import { SQLiteProvider } from 'expo-sqlite';
-import { createDbIfNeeded } from '../../database/database';
+
 import { Image, SafeAreaView, StyleSheet } from 'react-native';
 import LoginScreen from '../screens/LoginScreen';
 import GetFormScreen from '../screens/GetFormScreen';
@@ -95,13 +94,13 @@ const RootNavigator = () => {
   }, [isAuthenticated, header]);
 
   return (
-    <SQLiteProvider databaseName="utcd-forms.db" onInit={createDbIfNeeded}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {screens}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SQLiteProvider>
+    // <SQLiteProvider databaseName="utcd-forms.db" onInit={createDbIfNeeded}>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {screens}
+      </Stack.Navigator>
+    </NavigationContainer>
+    // </SQLiteProvider>
   );
 };
 

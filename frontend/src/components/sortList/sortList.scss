@@ -1,0 +1,10 @@
+.sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dragged-item {
+    opacity: 0.6;
+    cursor: grabbing;
+  }
