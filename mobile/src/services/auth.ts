@@ -10,9 +10,13 @@ import {
 } from '@env';
 
 console.log(AuthSession.makeRedirectUri({ native: 'utcd-forms://redirect' }));
-const redirectUri = AuthSession.makeRedirectUri({
-  native: REDIRECT_URI_MOBILE,
-});
+
+const redirectUri =
+  Platform.OS === 'web'
+    ? REDIRECT_URI_WEB
+    : AuthSession.makeRedirectUri({
+        native: REDIRECT_URI_MOBILE,
+      });
 
 const discovery = {
   authorizationEndpoint: `${AUTH_SERVER}/connect/authorize`,
