@@ -12,7 +12,8 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
         estado TEXT,
         versionFormulario TEXT,
         movilidadAsociada TEXT,
-        unidad TEXT
+        unidad TEXT,
+        fechaActualizacion  DATETIME
       );
       CREATE TABLE IF NOT EXISTS respuestas (
         id TEXT PRIMARY KEY NOT NULL,
@@ -51,6 +52,14 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
           detalle TEXT,
           sincronizado INTEGER DEFAULT 0,
           fechaUltIntentoSincronizacion TEXT
+        );
+        
+      CREATE TABLE IF NOT EXISTS sincronizaciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tipo TEXT,
+            fecha DATETIME,
+            exito BOOLEAN,
+            errorMensaje TEXT
         );`,
     );
 
@@ -61,4 +70,14 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
   } catch (error) {
     console.error('Error creating database:', error);
   }
+  try {
+  await db.runAsync(`ALTER TABLE formularios ADD COLUMN fechaActualizacion DATETIME`);
+  console.log('✅ Columna fechaActualizacion agregada');
+} catch (err) {
+  if (err instanceof Error && err.message.includes('duplicate column name')) {
+    console.log('ℹ️ La columna fechaActualizacion ya existe');
+  } else {
+    console.warn('⚠️ Error al agregar columna fechaActualizacion:', err);
+  }
+}
 };
