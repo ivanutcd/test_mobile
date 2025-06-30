@@ -11,7 +11,7 @@ interface DetalleFormularioProps {
   id: string;
   mode: string;
   handleClose: () => void;
-  hidePublishButton?: boolean; 
+  hidePublishButton?: boolean;
 }
 type FieldType =
   | 'text'
@@ -29,7 +29,7 @@ interface FormField {
   id: string;
   type: FieldType;
   label: string;
-  imputLabel: string;
+  inputLabel: string;
   required?: boolean;
   placeholder?: string;
   defaultValue?: string;
@@ -38,7 +38,11 @@ interface FormField {
   rows?: number;
 }
 
-const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormularioProps) => {
+const DetalleFormulario = ({
+  id,
+  handleClose,
+  hidePublishButton,
+}: DetalleFormularioProps) => {
   const [{ data: formulario }] = useObtenerFormularioById(id ?? '');
   const { publicar } = usePublicarFormularioHandler();
   const [formData, setFormData] = useState<{
@@ -50,7 +54,6 @@ const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormul
     version?: string;
   }>();
 
-  
   useEffect(() => {
     if (!id) return;
     const obtenerEstructura = async () => {
@@ -68,17 +71,22 @@ const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormul
         descripcion: formulario?.descripcion ?? '',
         version: formulario?.versionFormulario ?? '',
       });
-    }
+    };
 
     obtenerEstructura();
   }, [id, formulario]);
 
-
-
   if (!formulario || !formData) return <CircularProgress />;
 
   return (
-    <Box sx={{ width: '950px', height: '80vh', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        width: '950px',
+        height: '80vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Box
         border={1}
         sx={{
@@ -89,14 +97,20 @@ const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormul
           backgroundColor: 'background.paper',
         }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2, color: 'GrayText' }}>
+        <Typography
+          variant="h3"
+          sx={{ fontWeight: 'bold', mb: 2, color: 'GrayText' }}
+        >
           Detalle de formulario
         </Typography>
 
         {[
           { label: traducciones.NOMBRE_TECNICO, value: formData.nombreTecnico },
           { label: traducciones.DESCRIPCION, value: formData.descripcion },
-          { label: traducciones.MOVILIDAD_ASOCIADA, value: formData.movilidadAsociada },
+          {
+            label: traducciones.MOVILIDAD_ASOCIADA,
+            value: formData.movilidadAsociada,
+          },
           { label: traducciones.ESTADO, value: formData.estado },
           { label: traducciones.VERSION, value: formData.version },
         ].map(({ label, value }) => (
@@ -119,7 +133,12 @@ const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormul
         ))}
       </Box>
 
-      <Typography variant="body1" color={"GrayText"} fontWeight={"bold"} gutterBottom>
+      <Typography
+        variant="body1"
+        color={'GrayText'}
+        fontWeight={'bold'}
+        gutterBottom
+      >
         Configuración del formulario móvil
       </Typography>
 
@@ -134,66 +153,58 @@ const DetalleFormulario = ({ id, handleClose ,hidePublishButton }: DetalleFormul
       >
         <FormRender formData={formData} />
       </Box>
-      {formulario && formData && id && !hidePublishButton &&(
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        gap={2}
-        sx={{
-          py: 3,
-          px: 2,
-          borderTop: '2px solid #eee',
-          backgroundColor: 'white',
-          position: 'sticky',
-          bottom: -8,
-          zIndex: 2,
-        }}
-      >
-        <Button
-          variant="contained"
-          color="inherit"
-          onClick={handleClose}
-        >
-          Rechazar
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            publicar(id, {
-              onComplete: handleClose,
-              onCancel: handleClose,
-            });
+      {formulario && formData && id && !hidePublishButton && (
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          gap={2}
+          sx={{
+            py: 3,
+            px: 2,
+            borderTop: '2px solid #eee',
+            backgroundColor: 'white',
+            position: 'sticky',
+            bottom: -8,
+            zIndex: 2,
           }}
         >
-          {traducciones.PUBLICAR}
-        </Button>
-      </Box>
+          <Button variant="contained" color="inherit" onClick={handleClose}>
+            Rechazar
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              publicar(id, {
+                onComplete: handleClose,
+                onCancel: handleClose,
+              });
+            }}
+          >
+            {traducciones.PUBLICAR}
+          </Button>
+        </Box>
       )}
       {formulario && formData && id && hidePublishButton && (
-  <Box
-    display="flex"
-    justifyContent="flex-end"
-    sx={{
-      py: 3,
-      px: 2,
-      borderTop: '2px solid #eee',
-      backgroundColor: 'white',
-      position: 'sticky',
-      bottom: -8,
-      zIndex: 2,
-    }}
-  >
-    <Button
-      variant="contained"
-      color="inherit"
-      onClick={handleClose}
-    >
-      Cancelar
-    </Button>
-  </Box>
-)}
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          sx={{
+            py: 3,
+            px: 2,
+            borderTop: '2px solid #eee',
+            backgroundColor: 'white',
+            position: 'sticky',
+            bottom: -8,
+            zIndex: 2,
+          }}
+        >
+          <Button variant="contained" color="inherit" onClick={handleClose}>
+            Cancelar
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -22,7 +22,12 @@ import { GridContainer } from '@components/ui-layout/grid-container.tsx';
 import './scss/FieldSetting.scss';
 import { useCatalogosTodos } from '../../hooks/useCatalogosTodos';
 import { useMemo, useState } from 'react';
-import { SelectChangeEvent, InputLabel, Select } from '@mui/material';
+import {
+  SelectChangeEvent,
+  InputLabel,
+  Select,
+  FormControl,
+} from '@mui/material';
 
 export default function FieldSetting({
   field,
@@ -104,7 +109,6 @@ export default function FieldSetting({
     return iconMap[fieldType as keyof typeof iconMap];
   }, [fieldType]);
 
-
   const handleRemoveOption = (index: number) => {
     onFieldChange({
       ...field,
@@ -118,20 +122,31 @@ export default function FieldSetting({
     onFieldChange({
       ...field,
       catalogoKey: nuevoCatalogo,
-      options: undefined // Limpiamos options para evitar conflicto
+      options: undefined, // Limpiamos options para evitar conflicto
     });
   };
   return (
     <div className="field-setting">
       <GridContainer>
         <Col xs={4} md={4}>
-          <Tooltip title="Este es el nombre visible en la base de datos" placement="top">
+          <Tooltip
+            title={`Nombre técnico: ${field.nombreTecnico}`}
+            placement="top"
+          >
             <TextField
-              placeholder={field.label}
-
+              placeholder={field.inputLabel}
               fullWidth
-              label={`${field.label || 'Nombre del campo técnico'}`}
-              onChange={e => onFieldChange({ ...field, label: e.target.value })}
+              label={field.inputLabel || 'Nombre del campo en formulario'}
+              value={field.inputLabel}
+              onChange={e =>
+                onFieldChange({
+                  ...field,
+                  inputLabel: e.target.value,
+                  nombreTecnico: e.target.value
+                    .toLowerCase()
+                    .replace(/\s/g, '_'),
+                })
+              }
             />
           </Tooltip>
         </Col>
@@ -220,7 +235,7 @@ export default function FieldSetting({
             </div>
           </Tooltip>
         </Col>
-        <Col xs={3} md={1.50}>
+        <Col xs={3} md={1.5}>
           <Tooltip title="Longitud mínima (caracteres)" placement="top">
             <TextField
               placeholder="Longitud mínima"
@@ -237,7 +252,7 @@ export default function FieldSetting({
           </Tooltip>
         </Col>
 
-        <Col xs={3} md={1.50}>
+        <Col xs={3} md={1.5}>
           <Tooltip title="Longitud máxima (caracteres)" placement="top">
             <TextField
               placeholder="Longitud máxima"
@@ -253,50 +268,14 @@ export default function FieldSetting({
             />
           </Tooltip>
         </Col>
+
         <Col xs={4} md={4}>
-          <Tooltip title="Este es el nombre visible en el formulario" placement="top">
-            <TextField
-              placeholder={field.imputLabel}
-
-              fullWidth
-              label={`${field.imputLabel || 'Nombre del campo en formulario'}`}
-              onChange={e => onFieldChange({ ...field, imputLabel: e.target.value })}
-            />
-          </Tooltip>
-        </Col>
-        <Col xs={3} md={1.20}>
-          <Tooltip title="Orden del campo (número entero)" placement="top">
-            <TextField
-              placeholder="Orden"
-              type="number"
-              value={field.position}
-              required
-              inputProps={{ min: 1, step: 1 }}
-              onChange={e =>
-                onFieldChange({ ...field, position: Number(e.target.value) || 1 })
-              }
-              variant="outlined"
-              fullWidth
-            />
-          </Tooltip>
-        </Col>
-
-        <Col
-          xs={4}
-          md={4}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-          }}
-        >
           {(field.type === 'select' ||
             field.type === 'checkbox' ||
             field.type === 'radio') && (
-              <div className="configurar-container">
-                {(field.options || []).length > 0
-                  ? (field.options || []).map((option, index) => (
+            <div className="">
+              {(field.options || []).length > 0
+                ? (field.options || []).map((option, index) => (
                     <div key={index} className="option-container">
                       <TextField
                         fullWidth
@@ -322,22 +301,25 @@ export default function FieldSetting({
                       </Tooltip>
                     </div>
                   ))
-                  : ''}
-
+                : ''}
+              <FormControl fullWidth style={{ width: '100%' }}>
                 <InputLabel>Catálogo</InputLabel>
                 <Select
                   value={field.catalogoKey || ''}
                   label="Catálogo"
+                  placeholder="Catálogo"
                   onChange={handleCatalogoSeleccionado}
                 >
-                  {Object.keys(catalogosDisponibles).map((catalogoId) => (
+                  {Object.keys(catalogosDisponibles).map(catalogoId => (
                     <MenuItem key={catalogoId} value={catalogoId}>
-                      {catalogosDisponibles[catalogoId][0]?.nombre || catalogoId}
+                      {catalogosDisponibles[catalogoId][0]?.nombre ||
+                        catalogoId}
                     </MenuItem>
                   ))}
                 </Select>
-              </div>
-            )}
+              </FormControl>
+            </div>
+          )}
         </Col>
       </GridContainer>
     </div>

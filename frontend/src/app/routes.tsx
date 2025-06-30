@@ -1,11 +1,10 @@
-import { RouteObject } from 'react-router-dom';
-import HomeModule from './modules/home';
+import { Navigate, RouteObject } from 'react-router-dom';
 import FormularioModule from './modules/formulario';
 
 export const AppRoutes: Array<RouteObject> = [
   {
     path: '/',
-    element: <HomeModule />,
+    element: <Navigate to="/formularios" />,
   },
   {
     path: 'formularios/*',

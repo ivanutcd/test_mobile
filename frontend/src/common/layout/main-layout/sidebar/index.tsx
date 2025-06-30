@@ -33,7 +33,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }: any) => {
         <PerfectScrollbar
           component="div"
           style={{
-            height: !matchUpMd ? 'calc(100vh - 56px)' : 'calc(100vh - 88px)',
+            height: !matchUpMd ? 'calc(100vh - 56px)' : 'calc(100vh - 64px)',
             paddingLeft: '12px',
             paddingRight: '20px',
             paddingTop: '20px',
@@ -46,17 +46,14 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }: any) => {
             direction="row"
             alignItems="flex-end"
             sx={{ paddingTop: '300px' }}
-          >
-
-          </Stack>
+          ></Stack>
         </PerfectScrollbar>
       </BrowserView>
       <MobileView>
         <Box sx={{ px: 2 }}>
           <MenuList />
           {/*<MenuCard />*/}
-          <Stack direction="row" justifyContent="start" sx={{ mb: 2 }}>
-          </Stack>
+          <Stack direction="row" justifyContent="start" sx={{ mb: 2 }}></Stack>
         </Box>
       </MobileView>
     </>
