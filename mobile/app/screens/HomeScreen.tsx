@@ -15,7 +15,7 @@ import { useAuth } from '@hooks/useAuth';
 import { Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
 type FormularioExistente = {
   versionFormulario: string;
@@ -73,6 +73,11 @@ const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
         );
       }
     }
+    // Guardar fecha de sincronización exitosa
+    await db.runAsync(
+      `INSERT OR REPLACE INTO configuraciones (clave, valor) VALUES (?, datetime('now'))`,
+      ['ultima_sincronizacion_formularios']
+    );
 
     await db.runAsync(
       `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
@@ -107,15 +112,26 @@ const fetchErroresSincronizacion = async (db: SQLiteDatabase): Promise<Sincroniz
     `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`
   );
 };
+
+const obtenerUltimaFechaSync = async (db: SQLiteDatabase): Promise<string> => {
+  const res = await db.getFirstAsync<{ valor: string }>(
+    `SELECT valor FROM configuraciones WHERE clave = 'ultima_sincronizacion_formularios'`
+  );
+  return res?.valor || '';
+};
 export default function HomeScreen() {
   const theme = themeConfig.themes.light.colors;
    const db = useSQLiteContext();
   const { isAuthenticated} = useAuth(); 
+  const [ultimaSync, setUltimaSync] = useState('');
+  const [errorSync, setErrorSync] = useState('');
+
+
 
   useEffect(() => {
     const sincronizar = async () => {
-      
-        await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
+      obtenerUltimaFechaSync(db).then(setUltimaSync);
+      await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
       
     };
     sincronizar();
@@ -134,9 +150,9 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Card style={styles.card}>
         <Box>
-          <Text style={styles.title}>Ultima actualización</Text>
+          <Text style={styles.title}>Última actualización</Text>
           <Text color={theme.primary} style={styles.Fecha}>
-            Ult.Act 25/10/25 10:30 A.M.
+            {ultimaSync ? new Date(ultimaSync).toLocaleString() : 'N/D'}
           </Text>
         </Box>
         <MaterialIcons
