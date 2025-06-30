@@ -1,143 +1,58 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from '@hooks/useAuth';
-import { SQLiteProvider } from 'expo-sqlite';
-import { createDbIfNeeded } from '../../database/database';
-import { Image, SafeAreaView, StyleSheet } from 'react-native';
+import { useAuth } from '@/src/hooks/AuthProvider';
 import LoginScreen from '../screens/LoginScreen';
 import GetFormScreen from '../screens/GetFormScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ItemModal from '../modal';
-import { Pressable } from 'react-native';
-import { Box, Text, View, VStack } from '@gluestack-ui/themed';
-import useNetworkStatus from '../../hooks/useNetworkStatus';
-import { MaterialIcons } from '@expo/vector-icons';
-import { config as themeConfig } from '../../gluestack-style.config';
+import Header from './components/Header';
+import { ActivityIndicator, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
+const AuthenticatedStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Home"
+      component={HomeScreen}
+      options={{ header: () => <Header /> }}
+    />
+    <Stack.Screen
+      name="GetForm"
+      component={GetFormScreen}
+      options={{ header: () => <Header /> }}
+    />
+    <Stack.Screen
+      name="modal"
+      component={ItemModal}
+      options={{ presentation: 'modal', header: () => <Header /> }}
+    />
+  </Stack.Navigator>
+);
+
+const UnauthenticatedStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={LoginScreen} />
+  </Stack.Navigator>
+);
+
 const RootNavigator = () => {
-  const theme = themeConfig.themes.light.colors;
-  const networkStatus = useNetworkStatus();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-  const header = useCallback(
-    () => (
-      <View style={styles.header}>
-        <SafeAreaView>
-          <VStack>
-            <Box style={styles.headerBox}>
-              <MaterialIcons
-                name="account-circle"
-                size={32}
-                color={theme.primary}
-              />
-              <Image
-                source={require('../../assets/images/logoEnee.png')}
-                style={styles.logo}
-              />
-              <Pressable onPress={() => logout()}>
-                <MaterialIcons name="logout" size={24} color={theme.primary} />
-              </Pressable>
-            </Box>
-
-            <Box
-              style={[
-                styles.networkBox,
-                {
-                  backgroundColor: networkStatus.isConnected
-                    ? '#8BFE95'
-                    : '#FF8F9B',
-                },
-              ]}
-            >
-              <Text color="black" fontSize={12}>
-                {networkStatus.isConnected ? 'En Linea' : 'Sin Conexión'}
-              </Text>
-              <MaterialIcons
-                name={networkStatus.isConnected ? 'wifi' : 'wifi-off'}
-                size={14}
-                color="black"
-                style={{ marginLeft: 5 }}
-              />
-            </Box>
-          </VStack>
-        </SafeAreaView>
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
       </View>
-    ),
-    [networkStatus],
-  );
-
-  const screens = useMemo(() => {
-    if (isAuthenticated) {
-      return (
-        <>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: true, header }}
-          />
-          <Stack.Screen
-            name="GetForm"
-            component={GetFormScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="modal"
-            component={ItemModal}
-            options={{ presentation: 'modal' }}
-          />
-        </>
-      );
-    }
-    return <Stack.Screen name="Login" component={LoginScreen} />;
-  }, [isAuthenticated, header]);
+    );
+  }
 
   return (
-    <SQLiteProvider databaseName="utcd-forms.db" onInit={createDbIfNeeded}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {screens}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SQLiteProvider>
+    <NavigationContainer>
+      {isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    position: 'relative',
-    backgroundColor: '#FFFFFF',
-  },
-  logo: {
-    width: 139,
-    height: 28.74,
-    position: 'absolute',
-    margin: 'auto',
-    left: '50%',
-    top: '50%',
-    transform: [{ translateX: '-50%' }],
-  },
-  headerBox: {
-    height: 60,
-    transform: [{ translateY: -10 }],
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    gap: 10,
-  },
-  networkBox: {
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: 24,
-  },
-});
 
 export default RootNavigator;
