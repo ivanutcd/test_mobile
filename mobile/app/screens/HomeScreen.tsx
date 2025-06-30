@@ -23,10 +23,10 @@ type FormularioExistente = {
 const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
   try {
     const response = await fetch(
-      `https://localhost:7090/api/v1/formulario/publicados?IdUsuario=${userId}`
+      `http://10.0.2.2:5090/api/v1/formulario/publicados?IdUsuario=${userId}` //sustituir por la base de la url de produccion
+
     );
     const { data: formularios } = await response.json();
-
     for (const f of formularios) {
       const estructura = f.estructuraFormulario
         ? JSON.parse(f.estructuraFormulario)
@@ -160,6 +160,11 @@ export default function HomeScreen() {
           size={34}
           style={styles.refresh}
           color={theme.primary}
+          onPress={async () => {
+            await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f'); //al obtener los datos del usuario, sustituir este codigo en duro.
+            const ultima = await obtenerUltimaFechaSync(db);
+            setUltimaSync(ultima);
+          }}
         />
       </Card>
       <Card style={styles.asignaciones}>

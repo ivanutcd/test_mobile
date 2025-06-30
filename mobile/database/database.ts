@@ -70,4 +70,14 @@ export const createDbIfNeeded = async (db: SQLiteDatabase) => {
   } catch (error) {
     console.error('Error creating database:', error);
   }
+  try {
+  await db.runAsync(`ALTER TABLE formularios ADD COLUMN fechaActualizacion DATETIME`);
+  console.log('✅ Columna fechaActualizacion agregada');
+} catch (err) {
+  if (err instanceof Error && err.message.includes('duplicate column name')) {
+    console.log('ℹ️ La columna fechaActualizacion ya existe');
+  } else {
+    console.warn('⚠️ Error al agregar columna fechaActualizacion:', err);
+  }
+}
 };

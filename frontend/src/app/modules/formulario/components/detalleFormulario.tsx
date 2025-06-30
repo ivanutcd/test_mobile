@@ -169,7 +169,7 @@ const DetalleFormulario = ({
           }}
         >
           <Button variant="contained" color="inherit" onClick={handleClose}>
-            Rechazar
+            Cancelar
           </Button>
           <Button
             type="submit"
