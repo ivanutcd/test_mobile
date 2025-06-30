@@ -137,6 +137,7 @@ export default function FieldSetting({
               placeholder={field.inputLabel}
               fullWidth
               label={field.inputLabel || 'Nombre del campo en formulario'}
+              value={field.inputLabel}
               onChange={e =>
                 onFieldChange({
                   ...field,

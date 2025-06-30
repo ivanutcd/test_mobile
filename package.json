@@ -13,5 +13,8 @@
   },
   "scripts": {
     "preinstall": "dotnet tool restore"
+  },
+  "dependencies": {
+    "expo-dev-client": "^5.2.2"
   }
 }

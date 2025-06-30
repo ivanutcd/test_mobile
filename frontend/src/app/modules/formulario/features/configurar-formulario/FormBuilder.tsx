@@ -23,6 +23,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import MainCard from '@common/ui-component/cards/main-card';
 import { reservedWords } from 'Utils/validacionesFormulario';
 import SortableListComponent from '@components/sortList/sortList';
+import { generateErrorMessages } from './validations.tsx';
 
 interface FormData {
   nombreTecnico: string;
@@ -171,27 +172,51 @@ export default function FormBuilder({
 
     await guardarComposDinamicosFormulario(payload as any).then(() => {
       const hayErrores = dataForm.formFields.some(field => {
-        return (
-          field.nombreTecnico === '' ||
+        const isNombreTecnicoEmpty = field.nombreTecnico === '';
+        const isNombreTecnicoDuplicated =
           dataForm.formFields.filter(
             f => f.nombreTecnico === field.nombreTecnico,
-          ).length > 1 ||
-          field.nombreTecnico.length > 50 ||
-          /[!@#$%^&*(),.?":{}|<>]/g.test(field.nombreTecnico) ||
-          !/^[a-z][a-z0-9_]*$/.test(field.nombreTecnico.trim()) ||
-          reservedWords.includes(field.nombreTecnico.trim().toLowerCase()) ||
-          field.min === undefined ||
-          field.min === null ||
-          field.min < 0 ||
-          field.max === undefined ||
-          field.max === null ||
-          field.max > 200 ||
-          field.min > field.max ||
-          field.position === undefined ||
-          !Number.isInteger(field.position) ||
-          field.position < 1 ||
-          field.inputLabel === '' ||
-          field.inputLabel.length > 200
+          ).length > 1;
+        const isNombreTecnicoTooLong = field.nombreTecnico.length > 50;
+        const hasSpecialCharacters = /[!@#$%^&*(),.?":{}|<>]/g.test(
+          field.nombreTecnico,
+        );
+        const isInvalidNombreTecnico = !/^[a-z][a-z0-9_]*$/.test(
+          field.nombreTecnico.trim(),
+        );
+        const isReservedWord = reservedWords.includes(
+          field.nombreTecnico.trim().toLowerCase(),
+        );
+        const isMinUndefined = field.min === undefined || field.min === null;
+        const isMinNegative = field.min && field.min < 0;
+        const isMaxUndefined = field.max === undefined || field.max === null;
+        const isMaxTooLong = field.max && field.max > 200;
+        const isMinGreaterThanMax =
+          field.min && field.max && field.min > field.max;
+        const isPositionUndefined = field.position === undefined;
+        const isPositionNotInteger = !Number.isInteger(field.position);
+        const isPositionLessThanOne = field.position < 1;
+        const isInputLabelEmpty = field.inputLabel === '';
+        const isInputLabelTooLong =
+          field.inputLabel && field.inputLabel.length > 200;
+
+        return (
+          isNombreTecnicoEmpty ||
+          isNombreTecnicoDuplicated ||
+          isNombreTecnicoTooLong ||
+          hasSpecialCharacters ||
+          isInvalidNombreTecnico ||
+          isReservedWord ||
+          isMinUndefined ||
+          isMinNegative ||
+          isMaxUndefined ||
+          isMaxTooLong ||
+          isMinGreaterThanMax ||
+          isPositionUndefined ||
+          isPositionNotInteger ||
+          isPositionLessThanOne ||
+          isInputLabelEmpty ||
+          isInputLabelTooLong
         );
       });
 
@@ -247,94 +272,7 @@ export default function FormBuilder({
               }));
             }}
           />
-          {dataForm.formFields.filter(
-            f => f.nombreTecnico === field.nombreTecnico,
-          ).length > 1 &&
-            field.nombreTecnico !== '' && (
-              <span className="error-message">
-                Campo : {field.nombreTecnico} ya existe
-              </span>
-            )}
-          {field.nombreTecnico.length > 30 && (
-            <span className="error-message">
-              El campo no puede contener más de 30 caracteres
-            </span>
-          )}
-
-          {touchedFields[field.id]?.nombreTecnico &&
-            field.nombreTecnico.trim() !== '' &&
-            !/^[a-z][a-z0-9_]*$/.test(field.nombreTecnico) && (
-              <span className="error-message">
-                Debe iniciar con letra. Solo minúsculas, números y _ sin
-                espacios ni tildes.
-              </span>
-            )}
-          {reservedWords.includes(field.nombreTecnico.trim().toLowerCase()) && (
-            <span className="error-message">
-              No se permiten palabras reservadas (id, type, class, etc.).
-            </span>
-          )}
-          {touchedFields[field.id] &&
-            (field.min === undefined || field.min === null) && (
-              <span className="error-message">
-                La longitud mínima es obligatoria.
-              </span>
-            )}
-
-          {field.min !== undefined && field.min < 0 && (
-            <span className="error-message">
-              La longitud mínima no puede ser negativa.
-            </span>
-          )}
-
-          {(field.max === undefined || field.max === null) && (
-            <span className="error-message">
-              La longitud máxima es obligatoria.
-            </span>
-          )}
-
-          {field.max !== undefined && field.max > 200 && (
-            <span className="error-message">
-              La longitud máxima no puede superar 200 caracteres.
-            </span>
-          )}
-
-          {field.min !== undefined &&
-            field.max !== undefined &&
-            field.min > field.max && (
-              <span className="error-message">
-                La longitud mínima no puede ser mayor que la máxima.
-              </span>
-            )}
-
-          {(field.position === undefined || field.position === null) && (
-            <span className="error-message">
-              El campo orden es obligatorio.
-            </span>
-          )}
-
-          {!Number.isInteger(field.position) && (
-            <span className="error-message">
-              El campo orden debe ser un número entero.
-            </span>
-          )}
-
-          {field.position !== undefined && field.position < 1 && (
-            <span className="error-message">
-              El campo orden debe ser mayor o igual a 1.
-            </span>
-          )}
-          {field.inputLabel === '' && (
-            <span className="error-message">
-              El nombre visible del campo es obligatorio.
-            </span>
-          )}
-
-          {field.inputLabel.length > 200 && (
-            <span className="error-message">
-              El nombre visible del campo no puede exceder los 200 caracteres.
-            </span>
-          )}
+          {generateErrorMessages(dataForm, field, touchedFields, reservedWords)}
         </Box>
         <Box className="options">
           {dataForm.formFields.length > 1 && (
