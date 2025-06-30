@@ -10,7 +10,7 @@ const SortableListComponent = ({
 }: {
   items: any[];
   setItems: (items: any[]) => void;
-  renderItem: (item: any, index: number) => React.ReactNode;
+  renderItem: (item: any, index: number) => React.ReactElement;
 }) => {
   const onSortEnd = (oldIndex: number, newIndex: number) => {
     const updatedItems = arrayMoveImmutable(items, oldIndex, newIndex);
