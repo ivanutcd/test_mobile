@@ -15,17 +15,145 @@ import {
 import { Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
+import { useEffect, useState } from 'react';
+import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+type FormularioExistente = {
+  versionFormulario: string;
+};
+const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
+  try {
+    const response = await fetch(
+      `http://10.0.2.2:5090/api/v1/formulario/publicados?IdUsuario=${userId}` //sustituir por la base de la url de produccion
 
+    );
+    const { data: formularios } = await response.json();
+    for (const f of formularios) {
+      const estructura = f.estructuraFormulario
+        ? JSON.parse(f.estructuraFormulario)
+        : null;
+
+      const formFields = estructura?.formFields || [];
+
+      const existente = await db.getFirstAsync<FormularioExistente>(
+        'SELECT versionFormulario FROM formularios WHERE id = ?',
+        [f.id]
+      );
+
+      if (!existente) {
+        await db.runAsync(
+          `INSERT INTO formularios 
+            (id, nombreTecnico, descripcion, formFields, estado, versionFormulario, movilidadAsociada, unidad, fechaActualizacion) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
+          [
+            f.id,
+            estructura?.nombreTecnico || '',
+            estructura?.descripcion || '',
+            JSON.stringify(formFields),
+            'publicado',
+            f.versionFormulario,
+            estructura?.movilidadAsociada || '',
+            estructura?.unidad || '',
+          ]
+        );
+      } else if (existente?.versionFormulario !== f.versionFormulario) {
+        await db.runAsync(
+          `UPDATE formularios 
+            SET nombreTecnico = ?, descripcion = ?, formFields = ?, estado = ?, versionFormulario = ?, movilidadAsociada = ?, unidad = ?, fechaActualizacion = datetime('now') 
+            WHERE id = ?`,
+          [
+            estructura?.nombreTecnico || '',
+            estructura?.descripcion || '',
+            JSON.stringify(formFields),
+            'publicado',
+            f.versionFormulario,
+            estructura?.movilidadAsociada || '',
+            estructura?.unidad || '',
+            f.id,
+          ]
+        );
+      }
+    }
+    // Guardar fecha de sincronización exitosa
+    await db.runAsync(
+      `INSERT OR REPLACE INTO configuraciones (clave, valor) VALUES (?, datetime('now'))`,
+      ['ultima_sincronizacion_formularios']
+    );
+
+    await db.runAsync(
+      `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
+      ['formularios', 1, null]
+    );
+
+    console.log('Sincronización completada');
+  } catch (err) {
+    let mensajeError = 'Error desconocido';
+  if (err instanceof Error) {
+    mensajeError = err.message;
+  }
+
+  console.error('Error en sincronización:', mensajeError);
+
+  // Registrar error
+  await db.runAsync(
+    `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
+    ['formularios', 0, mensajeError]
+  );
+}
+};
+type SincronizacionError = {
+  id: number;
+  tipo: string;
+  fecha: string;
+  exito: number;
+  errorMensaje: string;
+};
+const fetchErroresSincronizacion = async (db: SQLiteDatabase): Promise<SincronizacionError[]> => {
+  return await db.getAllAsync(
+    `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`
+  );
+};
+
+const obtenerUltimaFechaSync = async (db: SQLiteDatabase): Promise<string> => {
+  const res = await db.getFirstAsync<{ valor: string }>(
+    `SELECT valor FROM configuraciones WHERE clave = 'ultima_sincronizacion_formularios'`
+  );
+  return res?.valor || '';
+};
 export default function HomeScreen() {
   const theme = themeConfig.themes.light.colors;
+   const db = useSQLiteContext();
+  const { isAuthenticated} = useAuth(); 
+  const [ultimaSync, setUltimaSync] = useState('');
+  const [errorSync, setErrorSync] = useState('');
+
+
+
+  useEffect(() => {
+    const sincronizar = async () => {
+      obtenerUltimaFechaSync(db).then(setUltimaSync);
+      await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
+      
+    };
+    sincronizar();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    const checkErrores = async () => {
+      const errores = await fetchErroresSincronizacion(db);
+      if (errores.length > 0) {
+        console.warn('⚠️ Error de sincronización:', errores[0].errorMensaje);
+      }
+    };
+    checkErrores();
+  }, []);
 
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Box>
-          <Text style={styles.title}>Ultima actualización</Text>
+          <Text style={styles.title}>Última actualización</Text>
           <Text color={theme.primary} style={styles.Fecha}>
-            Ult.Act 25/10/25 10:30 A.M.
+            {ultimaSync ? new Date(ultimaSync).toLocaleString() : 'N/D'}
           </Text>
         </Box>
         <MaterialIcons
@@ -33,6 +161,11 @@ export default function HomeScreen() {
           size={34}
           style={styles.refresh}
           color={theme.primary}
+          onPress={async () => {
+            await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f'); //al obtener los datos del usuario, sustituir este codigo en duro.
+            const ultima = await obtenerUltimaFechaSync(db);
+            setUltimaSync(ultima);
+          }}
         />
       </Card>
       <Card style={styles.asignaciones}>
