@@ -7,7 +7,7 @@ import { StyledProvider } from '@gluestack-style/react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { SQLiteProvider } from 'expo-sqlite';
 import { createDbIfNeeded } from './database/database';
-import { AuthProvider } from '@/src/hooks/AuthProvider';
+import { AuthProvider } from '@/src/context/AuthProvider';
 
 export default function App() {
   return (
@@ -15,8 +15,8 @@ export default function App() {
       <SafeAreaProvider style={{ flex: 1 }}>
         <StyledProvider config={config}>
           <GluestackUIProvider config={config}>
+            <StatusBar style="auto" />
             <AuthProvider>
-              <StatusBar style="auto" />
               <RootNavigator />
             </AuthProvider>
           </GluestackUIProvider>

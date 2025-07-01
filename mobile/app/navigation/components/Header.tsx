@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Image, Pressable } from 'react-native';
 import { Box, Text, View, VStack } from '@gluestack-ui/themed';
 import { MaterialIcons } from '@expo/vector-icons';
 import useNetworkStatus from '@/hooks/useNetworkStatus';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@/src/context/AuthProvider';
 import { config as themeConfig } from '@/gluestack-style.config';
 
 const Header = () => {

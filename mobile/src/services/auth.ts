@@ -35,9 +35,10 @@ export async function login() {
       redirectUri,
       usePKCE: true,
     });
+    console.log(authRequest, 'authRequest');
 
     const result = await authRequest.promptAsync(discovery);
-
+    console.log(result, 'result');
     if (result.type !== 'success') {
       console.warn('Inicio de sesión cancelado o fallido');
       return null;
@@ -57,6 +58,8 @@ export async function login() {
       }).toString(),
     });
 
+    console.log(tokenResponse, 'tokenResponse');
+
     const tokenData = await tokenResponse.json();
 
     if (!tokenResponse.ok) {
@@ -66,6 +69,7 @@ export async function login() {
 
     await SecureStore.setItemAsync('access_token', tokenData.access_token);
 
+    console.log(tokenData, 'tokenData');
     return tokenData;
   } catch (err) {
     console.error('Login error:', err);

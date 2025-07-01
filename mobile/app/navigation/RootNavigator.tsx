@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from '@/src/hooks/AuthProvider';
+import { useAuth } from '@/src/context/AuthProvider';
 import LoginScreen from '../screens/LoginScreen';
 import GetFormScreen from '../screens/GetFormScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -39,7 +39,8 @@ const UnauthenticatedStack = () => (
 
 const RootNavigator = () => {
   const { isAuthenticated, loading } = useAuth();
-
+  console.log('[RootNavigator] Estado:', { isAuthenticated, loading });
+  // Mostrar pantalla de carga mientras se verifica el token
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

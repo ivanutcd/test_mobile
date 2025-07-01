@@ -11,7 +11,8 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@/src/context/AuthProvider';
+
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputField } from '@/components/ui/input';
@@ -60,7 +61,7 @@ const LoginScreen: React.FC = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      await login(); // No navegues desde aquí, RootNavigator manejará el cambio
+      // await login();
     } catch (error) {
       Alert.alert('Error', 'No se pudo iniciar sesión');
       console.error('Login error:', error);
