@@ -11,7 +11,7 @@ import {
   Link,
   LinkText,
 } from '@gluestack-ui/themed';
-import { useAuth } from '@hooks/useAuth';
+
 import { Image, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
@@ -146,6 +146,7 @@ export default function HomeScreen() {
     };
     checkErrores();
   }, []);
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
