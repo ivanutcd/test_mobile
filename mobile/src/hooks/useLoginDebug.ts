@@ -1,4 +1,4 @@
-// src/hooks/useLoginDebug.ts
+
 
 import * as AuthSession from 'expo-auth-session';
 import { useEffect } from 'react';
@@ -45,9 +45,23 @@ export function useLoginDebug() {
           body: `grant_type=authorization_code&code=${code}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code_verifier=${authRequest.codeVerifier}`,
         });
 
+
+        const response = await fetch(`https://dev-sso.eneeutcd.hn/api/users/profile`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${code}`,
+          },
+        });
+
+        console.log('👤 Datos del usuario:', response);
+        const userData = await response.json();
+        console.log('👤 Datos del usuario:', userData);
+
         const tokenData = await tokenResponse.json();
 
         if (!tokenResponse.ok) {
+
+
           console.error('❌ Error al obtener token:', tokenData);
         } else {
           console.log('✅ Token recibido:', tokenData);
@@ -60,4 +74,4 @@ export function useLoginDebug() {
     runDebugLogin();
   }, []);
 }
-//react-native-app-auth
+

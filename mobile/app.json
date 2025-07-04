@@ -8,7 +8,6 @@
     "scheme": "utcd-forms",
     "icon": "./assets/splash-icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon-icon.png",
       "resizeMode": "contain",
