@@ -1,4 +1,3 @@
-// src/context/AuthProvider.tsx
 import React, {
   createContext,
   useContext,
@@ -13,8 +12,8 @@ import { insertarLogEvento } from '../utils/dbLogger';
 import { useSQLiteContext } from 'expo-sqlite';
 
 interface AuthContextProps {
-  isAuthenticated: boolean;
   accessToken: string | null;
+  isAuthenticated: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
@@ -23,38 +22,48 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  console.log('AuthProvider montado--------------------------------');
   const db = useSQLiteContext();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadToken = async () => {
-      const token = await SecureStore.getItemAsync('access_token');
-      setAccessToken(token || null);
-      setIsAuthenticated(!!token);
-      setLoading(false);
+    const checkToken = async () => {
+      try {
+        const token = await SecureStore.getItemAsync('access_token');
+        setAccessToken(token);
+        setIsAuthenticated(!!token);
+      } catch (error) {
+        console.error('Error loading token:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-    loadToken();
+    checkToken();
   }, []);
 
   const login = useCallback(async () => {
+    setLoading(true);
     const result = await loginService();
     if (result?.access_token) {
       await SecureStore.setItemAsync('access_token', result.access_token);
       setAccessToken(result.access_token);
       setIsAuthenticated(true);
+      console.log('Login exitoso: isAuthenticated = true');
       await insertarLogEvento(
         db,
         result.id,
         'Login',
-        'Inicio exitoso',
+        'Inicio de sesión exitoso',
         'El usuario accedió correctamente',
       );
     }
+    setLoading(false);
   }, [db]);
 
   const logout = useCallback(async () => {
+    setLoading(true);
     await logoutAndRedirectToSSOLogin();
     await SecureStore.deleteItemAsync('access_token');
     setAccessToken(null);
@@ -66,11 +75,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       'Cierre de sesión',
       'El usuario cerró sesión',
     );
+    setLoading(false);
   }, [db]);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, accessToken, login, logout, loading }}
+      value={{ accessToken, isAuthenticated, login, logout, loading }}
     >
       {children}
     </AuthContext.Provider>
@@ -79,6 +89,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };

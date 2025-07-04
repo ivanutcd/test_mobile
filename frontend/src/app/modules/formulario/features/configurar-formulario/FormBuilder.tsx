@@ -419,7 +419,8 @@ export default function FormBuilder({
             formFields: updatedItems,
           }));
         }}
-        renderItem={(index: number) => {
+        renderItem={(item: FormField, index: number) => {
+          console.log(item);
           return renderedFields[index] as React.ReactElement;
         }}
       />

@@ -1,32 +1,33 @@
-// import React from 'react';
-// import {
-//   Text,
-//   Image,
-//   StyleSheet,
-//   SafeAreaView,
-//   View,
-//   Alert,
-//   ActivityIndicator,
-// } from 'react-native';
-// import { useForm, Controller } from 'react-hook-form';
-// import { yupResolver } from '@hookform/resolvers/yup';
-// import * as Yup from 'yup';
-// import { useAuth } from '@hooks/useAuth';
-// import { Box } from '@/components/ui/box';
-// import { Button, ButtonText } from '@/components/ui/button';
-// import { Input, InputField } from '@/components/ui/input';
-// import {
-//   Checkbox,
-//   CheckboxIcon,
-//   CheckboxIndicator,
-//   CheckboxLabel,
-// } from '@/components/ui/checkbox';
-// import {
-//   FormControl,
-//   FormControlLabel,
-//   FormControlLabelText,
-// } from '@/components/ui/form-control';
-// import { CheckIcon } from '@gluestack-ui/themed';
+import React from 'react';
+import {
+  Text,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import { useAuth } from '@/src/context/AuthProvider';
+
+import { Box } from '@/components/ui/box';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Input, InputField } from '@/components/ui/input';
+import {
+  Checkbox,
+  CheckboxIcon,
+  CheckboxIndicator,
+  CheckboxLabel,
+} from '@/components/ui/checkbox';
+import {
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+} from '@/components/ui/form-control';
+import { CheckIcon } from '@gluestack-ui/themed';
 
 // const loginSchema = Yup.object().shape({
 //   email: Yup.string().email('Correo inválido').required('Correo requerido'),
@@ -58,14 +59,14 @@
 
 //   const { login } = useAuth();
 
-//   const onSubmit = async (data: LoginFormValues) => {
-//     try {
-//       await login(); // No navegues desde aquí, RootNavigator manejará el cambio
-//     } catch (error) {
-//       Alert.alert('Error', 'No se pudo iniciar sesión');
-//       console.error('Login error:', error);
-//     }
-//   };
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      await login(); // No navegues desde aquí, RootNavigator manejará el cambio
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo iniciar sesión');
+      console.error('Login error:', error);
+    }
+  };
 
 //   return (
 //     <SafeAreaView style={styles.container}>

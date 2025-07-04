@@ -31,10 +31,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const checkToken = async () => {
       try {
         const token = await SecureStore.getItemAsync('access_token');
+        console.log(token, 'token--------------------------------');
         setAccessToken(token);
-        setIsAuthenticated(!!token);
+        setIsAuthenticated(true);
       } catch (error) {
         console.error('Error loading token:', error);
+        setIsAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -44,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = useCallback(async () => {
     const result = await loginService();
+    console.log(result, 'result--------------------------------');
     if (result?.access_token) {
       await SecureStore.setItemAsync('access_token', result.access_token);
       setAccessToken(result.access_token);
@@ -59,10 +62,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [db]);
 
   const logout = useCallback(async () => {
-    await logoutAndRedirectToSSOLogin();
-    await SecureStore.deleteItemAsync('access_token');
     setAccessToken(null);
     setIsAuthenticated(false);
+    console.log('logout--------------------------------');
     await insertarLogEvento(
       db,
       '',
@@ -70,6 +72,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       'Cierre de sesión',
       'El usuario cerró sesión',
     );
+    await logoutAndRedirectToSSOLogin();
+    await SecureStore.deleteItemAsync('access_token');
   }, [db]);
 
   return (
