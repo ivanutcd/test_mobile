@@ -19,10 +19,18 @@
       "bundleIdentifier": "com.utcd-forms.mobile",
       "buildNumber": "1.0.0",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show you the nearest forms."
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show you the nearest forms.",
+        "NSPhotoLibraryUsageDescription": "Permite acceder a tus fotos para subir imágenes.",
+        "NSCameraUsageDescription": "Permite usar la cámara para tomar fotos.",
+        "NSMicrophoneUsageDescription": "Permite grabar audio junto con videos."
       }
     },
     "android": {
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
@@ -36,11 +44,12 @@
         "projectId": "f6ff5fb7-c3ae-4d64-b59e-7e3b0094a71c"
       }
     },
-
     "experiments": {
       "typedRoutes": true
     },
     "plugins": [
+      "expo-image-picker",
+      "expo-document-picker",
       [
         "expo-sqlite",
         {
