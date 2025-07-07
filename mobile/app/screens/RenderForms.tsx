@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, ScrollView as RNScrollView } from 'react-native';
+import { Alert, StyleSheet, View, ScrollView as RNScrollView, TouchableOpacity } from 'react-native';
 import {
   Text,
   Input,
@@ -20,15 +20,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import FileUpload from '@/components/FileUpload';
+import Feather from 'react-native-vector-icons/Feather';
 
 export type FieldType = 'text' |
-                      'number' |
-                    'textarea' | 
-                        'date' |
-                    'checkbox' | 
-                       'radio' | 
-                        'image'| 
-                        'file';
+  'number' |
+  'textarea' |
+  'date' |
+  'checkbox' |
+  'radio' |
+  'image' |
+  'file';
 
 export interface FormField {
   id: string;
@@ -199,61 +201,116 @@ const DynamicForm = ({ formData }: Props) => {
         );
 
       case 'image':
+        const selectedFilesImg = value ? value.split(',') : [];
         return (
           <View key={field.id} style={styles.fieldContainer}>
-            <Pressable
-              style={styles.uploadButton}
-              onPress={async () => {
-                const result = await ImagePicker.launchImageLibraryAsync({
-                  mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                  quality: 0.7,
-                  base64: false,
-                });
-
-                if (!result.canceled) {
-                  const uri = result.assets[0].uri;
-                  handleChange(field.id, uri);
-                }
+            <FileUpload
+              label={field.inputLabel}
+              type="image/*"
+              multiple={true}
+              onChange={(files: any) => {
+                const uris = files.map((f: any) => f.uri).join(',');
+                handleChange(field.id, uris);
               }}
-            >
-              <Text style={styles.uploadButtonText}>
-                {value ? 'Cambiar imagen' : 'Seleccionar imagen'}
-              </Text>
-            </Pressable>
-            {value ? (
-              <Image
-                source={{ uri: value }}
-                style={{ width: 100, height: 100, marginTop: 10, borderRadius: 8 }}
-              />
-            ) : null}
+            />
+            {selectedFilesImg.length > 0 && (
+              <View style={{ marginTop: 8, flexDirection: 'row', flexWrap: 'wrap' }}>
+                {selectedFilesImg.map((uri, index) => (
+                  <View key={index} style={{ marginRight: 8, marginBottom: 8, position: 'relative' }}>
+                    <Image
+                      source={{ uri }}
+                      style={{ width: 100, height: 100, borderRadius: 4 }}
+                      resizeMode="cover"
+                    />
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        top: 4,
+                        right: 4,
+                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                        borderRadius: 12,
+                        padding: 4,
+                      }}
+                      onPress={() => {
+                        const newFiles = [...selectedFilesImg];
+                        newFiles.splice(index, 1);
+                        handleChange(field.id, newFiles.join(','));
+                      }}
+                    >
+                      <Feather name="x" size={16} color="#ff4444" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 10, color: '#333', marginTop: 4, maxWidth: 100 }}>
+                      {uri.split('/').pop()}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         );
 
       case 'file':
+        const selectedFiles = value ? value.split(',') : [];
         return (
           <View key={field.id} style={styles.fieldContainer}>
-            <Pressable
-              style={styles.uploadButton}
-              onPress={async () => {
-                const result = await DocumentPicker.getDocumentAsync({
-                  type: '*/*',
-                  copyToCacheDirectory: true,
-                });
-
-                if (result.assets && result.assets[0]) {
-                  handleChange(field.id, result.assets[0].uri);
-                }
+            <FileUpload
+              label={field.inputLabel}
+              type="application/pdf"
+              multiple={true}
+              onChange={(files: any) => {
+                const uris = files.map((f: any) => f.uri).join(',');
+                handleChange(field.id, uris);
               }}
-            >
-              <Text style={styles.uploadButtonText}>
-                {value ? 'Cambiar archivo' : 'Seleccionar archivo'}
-              </Text>
-            </Pressable>
-            {value ? (
-              <Text style={{ marginTop: 8, fontSize: 12, color: '#333' }}>
-                Archivo seleccionado: {value.split('/').pop()}
-              </Text>
-            ) : null}
+            />
+            {selectedFiles.length > 0 && (
+              <View style={{ marginTop: 8 }}>
+                {selectedFiles.map((uri, index) => {
+                  const fileName = uri.split('/').pop();
+                  const fileExtension = fileName?.split('.').pop()?.toLowerCase();
+
+                  let iconName = 'file';
+                  if (fileExtension === 'pdf') iconName = 'file-text';
+                  if (['doc', 'docx'].includes(fileExtension ?? '')) iconName = 'file-text';
+                  if (['xls', 'xlsx'].includes(fileExtension ?? '')) iconName = 'file-text';
+                  if (['ppt', 'pptx'].includes(fileExtension ?? '')) iconName = 'file-text';
+
+                  return (
+                    <View key={index} style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 8,
+                      backgroundColor: '#f5f5f5',
+                      padding: 8,
+                      borderRadius: 4,
+                      position: 'relative'
+                    }}>
+                      <Feather name={iconName} size={24} color="#555" style={{ marginRight: 8 }} />
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ fontSize: 12, color: '#333' }}>
+                          {fileName}
+                        </Text>
+                        <Text style={{ fontSize: 10, color: '#777' }}>
+                          {fileExtension?.toUpperCase()} File
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={{
+                          padding: 4,
+                          marginLeft: 8,
+                        }}
+                        onPress={() => {
+                          const newFiles = [...selectedFiles];
+                          newFiles.splice(index, 1);
+                          handleChange(field.id, newFiles.join(','));
+                        }}
+                      >
+                        <Feather name="trash-2" size={18} color="#ff4444" />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
           </View>
         );
 
@@ -402,16 +459,16 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   uploadButton: {
-  backgroundColor: '#5FD0DF',
-  paddingVertical: 10,
-  paddingHorizontal: 16,
-  borderRadius: 6,
-  alignItems: 'center',
-},
-uploadButtonText: {
-  color: 'white',
-  fontWeight: '500',
-},
+    backgroundColor: '#5FD0DF',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  uploadButtonText: {
+    color: 'white',
+    fontWeight: '500',
+  },
 
 });
 

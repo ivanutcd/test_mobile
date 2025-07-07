@@ -24,7 +24,7 @@ import MainCard from '@common/ui-component/cards/main-card';
 import { reservedWords } from 'Utils/validacionesFormulario';
 import SortableListComponent from '@components/sortList/sortList';
 import { generateErrorMessages } from './validations.tsx';
-
+import { useCatalogoItems } from '../../hooks/useCatalogoItems.ts';
 interface FormData {
   nombreTecnico: string;
   unidad: string;
@@ -58,6 +58,13 @@ export default function FormBuilder({
   const [touchedFields, setTouchedFields] = useState<
     Record<string, Partial<Record<keyof FormField, boolean>>>
   >({});
+
+  const catalogoKeys = dataForm.formFields
+    .filter(f => f.catalogoKey)
+    .map(f => f.catalogoKey!);
+
+  const { data: catalogoItems } = useCatalogoItems(...catalogoKeys);
+
   // Obtener estructura del formulario desde la API
   useEffect(() => {
     const obtenerEstructura = async () => {
@@ -171,6 +178,20 @@ export default function FormBuilder({
     };
 
     await guardarComposDinamicosFormulario(payload as any).then(() => {
+      const selectsInvalidos = dataForm.formFields.filter(field => {
+        if (field.type !== 'select') return false;
+        const opciones = field.catalogoKey
+          ? catalogoItems?.[field.catalogoKey] || []
+          : field.options || [];
+        return opciones.length === 0;
+      });
+
+      if (selectsInvalidos.length > 0) {
+        const nombres = selectsInvalidos.map(f => `"${f.inputLabel}"`).join(', ');
+        error(`El catálogo seleccionado no contiene datos: ${nombres}.`);
+        return;
+      }
+
       const hayErrores = dataForm.formFields.some(field => {
         const isNombreTecnicoEmpty = field.nombreTecnico === '';
         const isNombreTecnicoDuplicated =
@@ -233,15 +254,14 @@ export default function FormBuilder({
   const renderedFields = useMemo(() => {
     return dataForm.formFields.map((field, index) => (
       <Box
-        className={`card-container ${
-          dataForm.formFields.filter(
-            f => f.nombreTecnico === field.nombreTecnico,
-          ).length > 1 ||
-          field.nombreTecnico.length > 50 ||
-          /[!@#$%^&*(),.?":{}|<>]/g.test(field.nombreTecnico)
+        className={`card-container ${dataForm.formFields.filter(
+          f => f.nombreTecnico === field.nombreTecnico,
+        ).length > 1 ||
+            field.nombreTecnico.length > 50 ||
+            /[!@#$%^&*(),.?":{}|<>]/g.test(field.nombreTecnico)
             ? 'error-wrapper'
             : ''
-        }`}
+          }`}
         key={index}
       >
         <Box className="card">
