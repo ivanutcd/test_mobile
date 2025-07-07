@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = useCallback(async () => {
     setLoading(true);
+    console.log('Login--------------------------------');
     const result = await loginService();
     if (result?.access_token) {
       await SecureStore.setItemAsync('access_token', result.access_token);
