@@ -2,7 +2,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { jwtDecode } from 'jwt-decode';
-import { useUserStore, User } from '../store/useUserStore';
+import { useUserStore} from '../store/useUserStore';
 
 
 
@@ -24,6 +24,8 @@ const redirectUri =
     : AuthSession.makeRedirectUri({
         native: REDIRECT_URI_MOBILE,
       });
+
+
 
 const discovery = {
   authorizationEndpoint: `${AUTH_SERVER}/connect/authorize`,
@@ -54,7 +56,8 @@ interface DecodedToken {
 }
 
 export async function login() {
-  const setUser = useUserStore((state) => state.setUser);
+  console.log('login--------Service------------------------');
+
 
   try {
     const authRequest = new AuthSession.AuthRequest({
@@ -105,7 +108,7 @@ export async function login() {
         refresh_token: tokenData.refresh_token,
         id_token: tokenData.id_token,
       }
-      setUser(user);
+      useUserStore.getState().setUser(user);
     }
 
     if (!tokenResponse.ok) {
