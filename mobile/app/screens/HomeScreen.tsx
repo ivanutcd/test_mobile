@@ -12,19 +12,21 @@ import {
   LinkText,
 } from '@gluestack-ui/themed';
 
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, Animated, Easing, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/src/context/AuthProvider';
 import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+
 type FormularioExistente = {
   versionFormulario: string;
 };
+
 const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
   try {
     const response = await fetch(
-      `http://10.0.2.2:5090/api/v1/formulario/publicados?IdUsuario=${userId}` //sustituir por la base de la url de produccion
-
+      `http://10.0.2.2:5090/api/v1/formulario/publicados?IdUsuario=${userId}`,
     );
     const { data: formularios } = await response.json();
     for (const f of formularios) {
@@ -36,7 +38,7 @@ const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
 
       const existente = await db.getFirstAsync<FormularioExistente>(
         'SELECT versionFormulario FROM formularios WHERE id = ?',
-        [f.id]
+        [f.id],
       );
 
       if (!existente) {
@@ -53,7 +55,7 @@ const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
             f.versionFormulario,
             estructura?.movilidadAsociada || '',
             estructura?.unidad || '',
-          ]
+          ],
         );
       } else if (existente?.versionFormulario !== f.versionFormulario) {
         await db.runAsync(
@@ -69,37 +71,36 @@ const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
             estructura?.movilidadAsociada || '',
             estructura?.unidad || '',
             f.id,
-          ]
+          ],
         );
       }
     }
-    // Guardar fecha de sincronización exitosa
     await db.runAsync(
       `INSERT OR REPLACE INTO configuraciones (clave, valor) VALUES (?, datetime('now'))`,
-      ['ultima_sincronizacion_formularios']
+      ['ultima_sincronizacion_formularios'],
     );
 
     await db.runAsync(
       `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
-      ['formularios', 1, null]
+      ['formularios', 1, null],
     );
 
     console.log('Sincronización completada');
   } catch (err) {
     let mensajeError = 'Error desconocido';
-  if (err instanceof Error) {
-    mensajeError = err.message;
+    if (err instanceof Error) {
+      mensajeError = err.message;
+    }
+
+    console.error('Error en sincronización:', mensajeError);
+
+    await db.runAsync(
+      `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
+      ['formularios', 0, mensajeError],
+    );
   }
-
-  console.error('Error en sincronización:', mensajeError);
-
-  // Registrar error
-  await db.runAsync(
-    `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
-    ['formularios', 0, mensajeError]
-  );
-}
 };
+
 type SincronizacionError = {
   id: number;
   tipo: string;
@@ -107,32 +108,34 @@ type SincronizacionError = {
   exito: number;
   errorMensaje: string;
 };
-const fetchErroresSincronizacion = async (db: SQLiteDatabase): Promise<SincronizacionError[]> => {
+
+const fetchErroresSincronizacion = async (
+  db: SQLiteDatabase,
+): Promise<SincronizacionError[]> => {
   return await db.getAllAsync(
-    `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`
+    `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`,
   );
 };
 
 const obtenerUltimaFechaSync = async (db: SQLiteDatabase): Promise<string> => {
   const res = await db.getFirstAsync<{ valor: string }>(
-    `SELECT valor FROM configuraciones WHERE clave = 'ultima_sincronizacion_formularios'`
+    `SELECT valor FROM configuraciones WHERE clave = 'ultima_sincronizacion_formularios'`,
   );
   return res?.valor || '';
 };
+
 export default function HomeScreen() {
   const theme = themeConfig.themes.light.colors;
-   const db = useSQLiteContext();
-  const { isAuthenticated} = useAuth(); 
+  const db = useSQLiteContext();
+  const { isAuthenticated } = useAuth();
   const [ultimaSync, setUltimaSync] = useState('');
-  const [errorSync, setErrorSync] = useState('');
-
-
+  const [isSyncing, setIsSyncing] = useState(false);
+  const spinAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const sincronizar = async () => {
       obtenerUltimaFechaSync(db).then(setUltimaSync);
       await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
-      
     };
     sincronizar();
   }, [isAuthenticated]);
@@ -147,26 +150,61 @@ export default function HomeScreen() {
     checkErrores();
   }, []);
 
+  useEffect(() => {
+    if (isSyncing) {
+      spinAnim.setValue(0);
+      Animated.timing(spinAnim, {
+        toValue: 1,
+        duration: 3000, // 3 segundos
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => {
+        spinAnim.setValue(0);     // Vuelve a posición inicial
+        setIsSyncing(false);      // Finaliza el estado de sync
+      });
+    }
+  }, [isSyncing]);
+
+  const spin = spinAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '-360deg'],
+  });
+
+  const onSyncPress = async () => {
+    setIsSyncing(true);
+    await sincronizarFormularios(
+      db,
+      '749a01ce-344d-48a9-9aaa-298b76f17c4f',
+    );
+    const ultima = await obtenerUltimaFechaSync(db);
+    setUltimaSync(ultima);
+  };
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
-        <Box>
+        <Box style={{ opacity: isSyncing ? 0.5 : 1 }}>
           <Text style={styles.title}>Última actualización</Text>
-          <Text color={theme.primary} style={styles.Fecha}>
+          <Text color={theme.primary} style={styles.Fecha} >
             {ultimaSync ? new Date(ultimaSync).toLocaleString() : 'N/D'}
           </Text>
         </Box>
-        <MaterialIcons
-          name="sync"
-          size={34}
-          style={styles.refresh}
-          color={theme.primary}
-          onPress={async () => {
-            await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f'); //al obtener los datos del usuario, sustituir este codigo en duro.
-            const ultima = await obtenerUltimaFechaSync(db);
-            setUltimaSync(ultima);
+        <Animated.View
+          style={{
+            transform: [{ rotate: spin }],
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 34,
+            height: 34,
           }}
-        />
+        >
+          <MaterialIcons
+            name="sync"
+            size={34}
+            color={theme.primary}
+            onPress={onSyncPress}
+          />
+        </Animated.View>
       </Card>
       <Card style={styles.asignaciones}>
         <HStack
@@ -194,7 +232,7 @@ export default function HomeScreen() {
       </Card>
       <Box>
         <Box className="flex-row justify-between align-center items-center">
-          <Text style={styles.title}>Formularios en progreso</Text>
+          <Text style={styles.title}>Formularios en progreso </Text>
           <Link>
             <LinkText style={styles.verMas}>Ver más</LinkText>
           </Link>
@@ -238,10 +276,6 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     height: 100,
   },
-  logo: {
-    width: 139,
-    height: 28.74,
-  },
   refresh: {
     position: 'absolute',
     right: 10,
@@ -255,7 +289,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
-
     justifyContent: 'center',
     borderWidth: 0.2,
     borderColor: '#5FD0DF',
@@ -274,7 +307,13 @@ const styles = StyleSheet.create({
   verMas: {
     fontSize: 12,
     color: '#5FD0DF',
-
     textDecorationLine: 'underline',
   },
+  animatedStyle: {
+
+    transform: [{ rotate: '360deg' }],
+  },
 });
+
+
+
