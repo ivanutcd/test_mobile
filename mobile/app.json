@@ -47,7 +47,6 @@
       "typedRoutes": true
     },
     "plugins": [
-      "expo-image-picker",
       "expo-document-picker",
       [
         "expo-sqlite",

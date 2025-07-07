@@ -62,7 +62,7 @@ const mockFormData: FormData = {
             type: 'checkbox',
             label: 'Hobbies',
             inputLabel: 'Hobbies',
-            position: 5,
+            position: 8,
             options: [
                 { label: 'Leer', value: 'leer' },
                 { label: 'Jugar', value: 'jugar' },
@@ -81,9 +81,8 @@ const mockFormData: FormData = {
             type: 'file',
             inputLabel: 'Documento adjunto',
             label: 'Documento adjunto',
-            position: 8,
+            position: 5,
         }
-
     ],
 };
 const TestScreen = () => {

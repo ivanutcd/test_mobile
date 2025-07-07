@@ -17,9 +17,7 @@ import {
   Pressable
 } from '@gluestack-ui/themed';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
 import FileUpload from '@/components/FileUpload';
 import Feather from 'react-native-vector-icons/Feather';
 
