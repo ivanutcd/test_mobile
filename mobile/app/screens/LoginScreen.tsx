@@ -61,7 +61,7 @@ const LoginScreen: React.FC = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      // await login();
+      await login(); // No navegues desde aquí, RootNavigator manejará el cambio
     } catch (error) {
       Alert.alert('Error', 'No se pudo iniciar sesión');
       console.error('Login error:', error);
@@ -220,3 +220,20 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import HomeScreen from './HomeScreen';
+// import TestScreen from './TestRender';
+ 
+ 
+// const Stack = createNativeStackNavigator();
+ 
+// export default function AppNavigator() {
+//   return (
+//     <Stack.Navigator initialRouteName="Home">
+//       <Stack.Screen name="Home" component={TestScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+ 
