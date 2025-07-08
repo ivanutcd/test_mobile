@@ -7,8 +7,8 @@ import GetFormScreen from '../screens/GetFormScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ItemModal from '../modal';
 import Header from './components/Header';
+import Profile from '../screens/Profile';
 import { ActivityIndicator, View } from 'react-native';
-
 const Stack = createNativeStackNavigator();
 
 const AuthenticatedStack = () => (
@@ -16,17 +16,22 @@ const AuthenticatedStack = () => (
     <Stack.Screen
       name="Home"
       component={HomeScreen}
-      options={{ header: () => <Header /> }}
+      options={{ header: () => <Header btnBack={false} title="Inicio" /> }}
     />
     <Stack.Screen
       name="GetForm"
       component={GetFormScreen}
-      options={{ header: () => <Header /> }}
+      options={{ header: () => <Header btnBack={true} title="Formulario" /> }}
     />
     <Stack.Screen
       name="modal"
       component={ItemModal}
-      options={{ presentation: 'modal', header: () => <Header /> }}
+      options={{ presentation: 'modal', header: () => <Header btnBack={false} title="Formulario" /> }}
+    />
+    <Stack.Screen
+      name="Profile"
+      component={Profile}
+      options={{  header: () => <Header btnBack={true} title="Perfil Usuario" />  }}
     />
   </Stack.Navigator>
 );

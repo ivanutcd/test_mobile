@@ -3,31 +3,66 @@ import { SafeAreaView, StyleSheet, Image, Pressable } from 'react-native';
 import { Box, Text, View, VStack } from '@gluestack-ui/themed';
 import { MaterialIcons } from '@expo/vector-icons';
 import useNetworkStatus from '@/hooks/useNetworkStatus';
-import { useAuth } from '@/src/context/AuthProvider';
 import { config as themeConfig } from '@/gluestack-style.config';
+import { useNavigation } from '@react-navigation/native';
 
-const Header = () => {
-  const { logout } = useAuth();
+const Header = ({ btnBack, title }: { btnBack: boolean, title: string }) => {
+
+  const navigation = useNavigation();
+
+
   const theme = themeConfig.themes.light.colors;
   const networkStatus = useNetworkStatus();
+  const goToProfile = () => {
 
+    navigation.navigate('Profile' as never);
+    console.log('goToProfile');
+  };
   return (
     <View style={styles.header}>
       <SafeAreaView>
         <VStack>
           <Box style={styles.headerBox}>
-            <MaterialIcons
-              name="account-circle"
-              size={32}
-              color={theme.primary}
-            />
-            <Image
-              source={require('@/assets/images/logoEnee.png')}
-              style={styles.logo}
-            />
-            <Pressable onPress={logout}>
-              <MaterialIcons name="logout" size={24} color={theme.primary} />
-            </Pressable>
+            {btnBack && (
+              <Pressable onPress={() => navigation.goBack()} style={{
+                position: 'absolute',
+                left: 10,
+                bottom: 0,
+              }}>
+                <MaterialIcons
+                  name="chevron-left"
+                  size={32}
+                  color={'#000'}
+                />
+              </Pressable>
+            )}
+            {!btnBack && (
+              <Pressable onPress={goToProfile} style={{
+                position: 'absolute',
+                left: 10,
+                bottom: 0,
+              }}>
+                <MaterialIcons
+                  name="account-circle"
+                  size={32}
+                  color={theme.primary}
+                />
+              </Pressable>
+            )}
+            {btnBack && (
+              <Box style={styles.titleBox}>
+                <Text style={styles.title}>{title}</Text>
+              </Box>
+            )}
+
+            {!btnBack && (
+              <Image
+                source={require('@/assets/images/logoEnee.png')}
+                style={styles.logo}
+              />
+            )
+
+            }
           </Box>
           <Box
             style={[
@@ -60,16 +95,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   logo: {
-    width: 139,
-    height: 28.74,
-    marginTop: 5,
+    position: 'absolute',
+    width: 138,
+    height: 28,
+    // left: '52%',
+    // transform: 'translate(-50%, -50%)',
+
+    zIndex: 1000,
   },
   headerBox: {
     height: 60,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: 10,
+    position: 'relative',
     gap: 10,
   },
   networkBox: {
@@ -79,6 +119,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 30,
     marginTop: 4,
+  },
+  titleBox: {
+    position: 'absolute',
+    left: '16%',
+    bottom: 4,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
   },
 });
 

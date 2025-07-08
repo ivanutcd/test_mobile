@@ -1,19 +1,21 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  
 } from 'react-native';
+
 
 import { Ionicons } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useNavigation } from '@react-navigation/native';
 
 export default function GetFormScreen() {
-  const [data, setData] = React.useState<
+  const [data, setData] = useState<
     {
       id: string;
       nombreTecnico: string;
@@ -30,7 +32,7 @@ export default function GetFormScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadData(); // Fetch data when the screen is focused
+      loadData(); // Carga los datos cuando la pantalla está enfocada
     }, []),
   );
 
