@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import React, { useState, FunctionComponent } from 'react';
+import { StyleSheet, ViewStyle, TextStyle, Pressable } from 'react-native';
 import { Box, View, Card, Heading, Text, VStack, HStack, Link, LinkText } from '@gluestack-ui/themed';
 import { Button, ButtonText } from "@/components/ui/button";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
@@ -7,6 +7,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useUserStore } from '@/src/store/useUserStore';
 import { useAuth } from '@/src/context/AuthProvider';
+
 import { config as themeConfig } from '@/gluestack-style.config';
 
 interface ProfileOptionProps {
@@ -32,14 +33,15 @@ interface Styles {
   logoutText: TextStyle;
 }
 
-const Profile = () => {
+const Profile: FunctionComponent = () => {
     const { user } = useUserStore();
     const { logout } = useAuth();
-    const [showAlertDialog, setShowAlertDialog] = React.useState(false);
+    const [showAlertDialog, setShowAlertDialog] = useState(false);
 
     const handleClose = () => setShowAlertDialog(false);
 
     const handleLogout = async () => {
+        console.log('Cerrando sesión');
         await logout();
     }
 
@@ -54,34 +56,35 @@ const Profile = () => {
             </Box>
             <VStack space="md" reversed={false}>
                 <ProfileOption icon="lock" color="#616161" text="Cambiar contraseña" />
-                <ProfileOption icon="logout" color="red" text="Cerrar sesión" onPress={() => setShowAlertDialog(true)} />
+                <Pressable onPress={() => setShowAlertDialog(true)}>
+                    <ProfileOption icon="logout" color="red" text="Cerrar sesión"  />
+                </Pressable>
             </VStack>
             <LogoutDialog isOpen={showAlertDialog} onClose={handleClose} onLogout={handleLogout} />
         </View>
     )
 }
 
-const ProfileOption: React.FC<ProfileOptionProps> = ({ icon = 'lock', color = '#616161', text = 'Cambiar contraseña', onPress = () => {} }) => (
-    <Box className="h-12 w-full flex-row items-center  gap-2 justify-start align-center" onPress={onPress}>
+const ProfileOption: FunctionComponent<ProfileOptionProps> = ({ icon = 'lock', color = '#616161', text = 'Cambiar contraseña', onPress = () => {} }) => (
+    <Box className="h-12 w-full flex-row items-center  gap-2 justify-start align-center" >
         <MaterialIcons name={icon as any} size={24} color={color} />
         <Text style={{ ...styles.logoutText, color }}>{text}</Text>
         <MaterialIcons name="chevron-right" style={{ marginLeft: 'auto' }} size={24} color={color} />
     </Box>
 );
 
-const LogoutDialog: React.FC<LogoutDialogProps> = ({ isOpen = false, onClose = () => {}, onLogout = () => {} }) => (
+const LogoutDialog: FunctionComponent<LogoutDialogProps> = ({ isOpen = false, onClose = () => {}, onLogout = () => {} }) => (
     <AlertDialog isOpen={isOpen} onClose={onClose} size="md">
-        <AlertDialogBackdrop />
-        <AlertDialogContent>
+        <AlertDialogBackdrop  />
+        <AlertDialogContent style={{ borderRadius: 20, padding: 16 }}>
             <AlertDialogHeader>
-                <Heading className="text-typography-950 font-semibold" size="md">
-                    Are you sure you want to delete this post?
+                <Heading  style={{ fontSize: 20, fontWeight: 'bold' }}>
+                ¿Deseas cerrar sesión?
                 </Heading>
             </AlertDialogHeader>
-            <AlertDialogBody className="mt-3 mb-4">
-                <Text size="sm">
-                    Deleting the post will remove it permanently and cannot be undone.
-                    Please confirm if you want to proceed.
+            <AlertDialogBody className="">
+                <Text size="lg">
+                Perderás el acceso hasta volver a iniciar sesión.
                 </Text>
             </AlertDialogBody>
             <AlertDialogFooter className="">
