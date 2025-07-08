@@ -17,6 +17,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/src/context/AuthProvider';
+import { useUserStore } from '@/src/store/useUserStore';
 import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
 
 type FormularioExistente = {
@@ -131,7 +132,7 @@ export default function HomeScreen() {
   const [ultimaSync, setUltimaSync] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
   const spinAnim = useRef(new Animated.Value(0)).current;
-
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     const sincronizar = async () => {
       obtenerUltimaFechaSync(db).then(setUltimaSync);
@@ -189,6 +190,7 @@ export default function HomeScreen() {
             {ultimaSync ? new Date(ultimaSync).toLocaleString() : 'N/D'}
           </Text>
         </Box>
+       
         <Animated.View
           style={{
             transform: [{ rotate: spin }],
@@ -239,6 +241,7 @@ export default function HomeScreen() {
         </Box>
         <Card style={styles.asignaciones} className="mt-4"></Card>
       </Box>
+      <Text>Usuario: {user?.name}</Text>
     </View>
   );
 }
