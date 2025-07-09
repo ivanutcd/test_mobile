@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View, ScrollView as RNScrollView, TouchableOpacity } from 'react-native';
 import {
   Text,
@@ -20,6 +20,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Image } from 'react-native';
 import FileUpload from '@/components/FileUpload';
 import Feather from 'react-native-vector-icons/Feather';
+import { useFormularioAutoSave } from '@/src/features/formularios/useFormulario';
+import { useSQLiteContext } from 'expo-sqlite';
 
 export type FieldType = 'text' |
   'number' |
@@ -60,6 +62,25 @@ interface Props {
 const DynamicForm = ({ formData }: Props) => {
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [showDatePicker, setShowDatePicker] = useState<string | null>(null);
+  const db = useSQLiteContext();
+
+  useEffect(() => {
+    const cargarDatosGuardados = async () => {
+      try {
+        const respuestas = await db.getAllAsync("SELECT * FROM respuestas WHERE formularioId = ? AND enviada = 0", [formData.nombreTecnico]);
+
+        if (respuestas.length > 0) {
+          const ultima: any = respuestas[respuestas.length - 1];
+          const contenido = JSON.parse(ultima.contenido);
+          setFormValues(contenido);
+        }
+      } catch (error) {
+        console.error("❌ Error al cargar datos guardados:", error);
+      }
+    };
+
+    cargarDatosGuardados();
+  }, [formData.nombreTecnico]);
 
   const handleChange = (id: string, value: string) => {
     setFormValues((prev) => ({ ...prev, [id]: value }));
@@ -139,7 +160,6 @@ const DynamicForm = ({ formData }: Props) => {
 
       case 'checkbox':
         const selectedValues = value ? value.split(',') : [];
-        console.log(`✔️ ${field.id}:`, selectedValues); // DEBUG
 
         return (
           <View key={field.id} style={styles.fieldContainer}>
@@ -282,28 +302,6 @@ const DynamicForm = ({ formData }: Props) => {
                       borderRadius: 4,
                       position: 'relative'
                     }}>
-                      <Feather name={iconName} size={24} color="#555" style={{ marginRight: 8 }} />
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 12, color: '#333' }}>
-                          {fileName}
-                        </Text>
-                        <Text style={{ fontSize: 10, color: '#777' }}>
-                          {fileExtension?.toUpperCase()} File
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          padding: 4,
-                          marginLeft: 8,
-                        }}
-                        onPress={() => {
-                          const newFiles = [...selectedFiles];
-                          newFiles.splice(index, 1);
-                          handleChange(field.id, newFiles.join(','));
-                        }}
-                      >
-                        <Feather name="trash-2" size={18} color="#ff4444" />
-                      </TouchableOpacity>
                     </View>
                   );
                 })}
@@ -322,9 +320,27 @@ const DynamicForm = ({ formData }: Props) => {
     }
   };
 
-  const handleGuardar = () => {
-    console.log('📝 Formulario guardado:', formValues);
-    Alert.alert('Guardado', JSON.stringify(formValues, null, 2));
+  const respuesta = {
+    id: "prueba1",
+    formularioId: formData.nombreTecnico,
+    contenido: formValues,
+    fecha: new Date().toISOString()
+  };
+
+  const { guardarDefinitivo } = useFormularioAutoSave(db, respuesta);
+
+
+  const handleGuardar = async () => {
+    const fueGuardado = await guardarDefinitivo();
+
+    if (fueGuardado) {
+      Alert.alert('Guardado exitoso');
+    } else {
+      Alert.alert('Este formulario ya fue guardado con el mismo contenido');
+    }
+
+    const respuesta = await db.getAllAsync("SELECT * FROM respuestas");
+    console.log('Formularios:', respuesta);
   };
 
   return (
