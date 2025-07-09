@@ -9,6 +9,8 @@ import ItemModal from '../modal';
 import Header from './components/Header';
 import Profile from '../screens/Profile';
 import { ActivityIndicator, View } from 'react-native';
+import AsignacionesScreen from '../screens/AsignacionesScreen';
+import FormRenderScreen from '../screens/FormRenderScreen';
 const Stack = createNativeStackNavigator();
 
 const AuthenticatedStack = () => (
@@ -32,6 +34,16 @@ const AuthenticatedStack = () => (
       name="Profile"
       component={Profile}
       options={{  header: () => <Header btnBack={true} title="Perfil Usuario" />  }}
+    />
+    <Stack.Screen
+      name="Asignaciones"
+      component={AsignacionesScreen}
+      options={{  header: () => <Header btnBack={true} title="Clientes Asignados" />  }}
+    />
+    <Stack.Screen
+      name="FormRenderScreen"
+      component={FormRenderScreen}
+      options={{  header: () => <Header btnBack={true} title="Formulario de Asignacion" />  }}
     />
   </Stack.Navigator>
 );

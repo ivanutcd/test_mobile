@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
-import DynamicForm from './RenderForms';
-import type { FieldType, FormData } from './RenderForms';
+import RenderForms from './components/RenderForms';
+import type { FieldType, FormData } from './components/RenderForms';
 
 const mockFormData: FormData = {
     nombreTecnico: 'Formulario de prueba',
@@ -85,12 +85,12 @@ const mockFormData: FormData = {
         }
     ],
 };
-const TestScreen = () => {
+const FormRenderScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <DynamicForm formData={mockFormData} />
+            <RenderForms formData={mockFormData} />
         </SafeAreaView>
     );
 };
 
-export default TestScreen;
+export default FormRenderScreen;

@@ -1,18 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box, View, Card, Text, HStack, Link } from '@gluestack-ui/themed';
-import { Image, StyleSheet, Animated, Easing } from 'react-native';
+import { Image, StyleSheet, Animated, Easing, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
 import { useAuth } from '@/src/context/AuthProvider';
 import { useUserStore } from '@/src/store/useUserStore';
+import { Pressable } from 'react-native';
 
 import {  useSQLiteContext } from 'expo-sqlite';
+import { useNavigation } from '@react-navigation/native';
 
 import { syncForms, getLastSyncDate, fetchSyncErrors } from '../functions/HomeScreenFunctions';
 import { syncAsignacionesDiarias } from '../functions/getAsignacionesDiarias';
+import CardItemFormularios from './components/cardItemFormularios';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const theme = themeConfig.themes.light.colors;
   const db = useSQLiteContext();
   const { isAuthenticated } = useAuth();
@@ -70,6 +74,13 @@ export default function HomeScreen() {
     setUltimaSync(ultima);
   };
 
+  const onAsignacionesPress = () => {
+    navigation.navigate('Asignaciones' as never);
+  };
+  const onGetFormPress = () => {
+    navigation.navigate('FormRenderScreen' as never);
+  };
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
@@ -98,6 +109,7 @@ export default function HomeScreen() {
           />
         </Animated.View>
       </Card>
+      <Pressable onPress={onAsignacionesPress}>
       <Card style={styles.asignaciones}>
         <HStack
           style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}
@@ -121,6 +133,7 @@ export default function HomeScreen() {
           </Box>
         </HStack>
       </Card>
+      </Pressable>
       <Box>
         <Box className="flex-row justify-between align-center items-center">
           <Text style={styles.title}>Formularios en progreso </Text>
@@ -128,9 +141,39 @@ export default function HomeScreen() {
             <Text style={styles.verMas}>Ver más</Text>
           </Link>
         </Box>
-        <Card style={styles.asignaciones} className="mt-4"></Card>
+        <Card style={styles.formularios} className="mt-4">
+         <FlatList
+            data={[
+              
+              {id: '1',
+              nombreTecnico: 'Formulario de prueba',
+              descripcion: 'Rellene los siguientes campos',
+              movilidadAsociada: 'cobro_prejuridico'  ,
+              estado: 'En proceso',
+              fechaCreacion: '2025-01-01',
+              fechaActualizacion: '2025-01-01',
+              fechaVencimiento: '2025-01-01', 
+          
+
+            }
+            ,
+            {id: '2',
+            nombreTecnico: 'Formulario de prueba 2',
+            descripcion: 'Rellene los siguientes campos',
+            movilidadAsociada: 'cobro_prejuridico'  ,
+            estado: 'Completado',
+            fechaCreacion: '2025-01-01',
+            fechaActualizacion: '2025-01-01',
+            fechaVencimiento: '2025-01-01', 
+          
+
+            }
+          ]}
+            renderItem={({item}) =>  <Pressable onPress={onGetFormPress}><CardItemFormularios item={item} /></Pressable  >}
+          />
+        </Card>
       </Box>
-      <Text>Usuario: {user?.name}</Text>
+   
     </View>
   );
 }
@@ -167,6 +210,16 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#E0E0E0',
     height: 100,
+  },
+  formularios: {
+    height: 400,
+    minHeight: 100,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    borderWidth: 0.5,
+    borderColor: '#E0E0E0',
+ 
   },
   refresh: {
     position: 'absolute',

@@ -14,7 +14,7 @@ interface ProfileOptionProps {
   icon: string;
   color: string;
   text: string;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 interface LogoutDialogProps {
@@ -54,23 +54,23 @@ const Profile: FunctionComponent = () => {
                 <Text style={styles.name}>{user?.name} </Text>
                 <Text style={styles.email}>{user?.email} </Text>
             </Box>
-            <VStack space="md" reversed={false}>
-                <ProfileOption icon="lock" color="#616161" text="Cambiar contraseña" />
-                <Pressable onPress={() => setShowAlertDialog(true)}>
-                    <ProfileOption icon="logout" color="red" text="Cerrar sesión"  />
-                </Pressable>
+            <VStack >
+                <ProfileOption icon="lock" color="#616161" text="Cambiar contraseña" onPress={() => {}} />
+                <ProfileOption icon="logout" color="red" text="Cerrar sesión" onPress={() => setShowAlertDialog(true)} />
             </VStack>
             <LogoutDialog isOpen={showAlertDialog} onClose={handleClose} onLogout={handleLogout} />
         </View>
     )
 }
 
-const ProfileOption: FunctionComponent<ProfileOptionProps> = ({ icon = 'lock', color = '#616161', text = 'Cambiar contraseña', onPress = () => {} }) => (
-    <Box className="h-12 w-full flex-row items-center  gap-2 justify-start align-center" >
-        <MaterialIcons name={icon as any} size={24} color={color} />
-        <Text style={{ ...styles.logoutText, color }}>{text}</Text>
-        <MaterialIcons name="chevron-right" style={{ marginLeft: 'auto' }} size={24} color={color} />
-    </Box>
+const ProfileOption: FunctionComponent<ProfileOptionProps> = ({ icon = 'lock', color = '#616161', text = 'Cambiar contraseña', onPress }) => (
+    <Pressable onPress={onPress}>
+        <Box className="h-12 w-full flex-row items-center  gap-2 justify-start align-center" >
+            <MaterialIcons name={icon as any} size={24} color={color} />
+            <Text style={{ ...styles.logoutText, color }}>{text}</Text>
+            <MaterialIcons name="chevron-right" style={{ marginLeft: 'auto' }} size={24} color={color} />
+        </Box>
+    </Pressable>
 );
 
 const LogoutDialog: FunctionComponent<LogoutDialogProps> = ({ isOpen = false, onClose = () => {}, onLogout = () => {} }) => (
@@ -83,7 +83,7 @@ const LogoutDialog: FunctionComponent<LogoutDialogProps> = ({ isOpen = false, on
                 </Heading>
             </AlertDialogHeader>
             <AlertDialogBody className="">
-                <Text size="lg">
+                <Text style={{ fontSize: 14, color: '#616161', marginBottom: 16 }}>
                 Perderás el acceso hasta volver a iniciar sesión.
                 </Text>
             </AlertDialogBody>

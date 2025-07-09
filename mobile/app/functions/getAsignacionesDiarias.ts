@@ -62,10 +62,4 @@ export const syncAsignacionesDiarias = async (db: SQLiteDatabase, userId: string
     throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
   }
 
-
-
-
-
-  
-  
 };

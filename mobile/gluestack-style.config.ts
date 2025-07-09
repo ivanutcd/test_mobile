@@ -13,6 +13,10 @@ export const config = {
       colors: {
         primary: '#5FD0DF',
         background: '#FFFFFF',
+        success: '#28a745',
+        error: '#dc3545',
+        warning: '#ffc107',
+        info: '#007bff',
       },
       borderRadius: 10,
     },

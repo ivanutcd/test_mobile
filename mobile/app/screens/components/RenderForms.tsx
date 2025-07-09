@@ -19,7 +19,8 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Image } from 'react-native';
 import FileUpload from '@/components/FileUpload';
-import Feather from 'react-native-vector-icons/Feather';
+import { MaterialIcons } from '@expo/vector-icons';
+// import Feather from 'react-native-vector-icons/Feather';
 import { useFormularioAutoSave } from '@/src/features/formularios/useFormulario';
 import { useSQLiteContext } from 'expo-sqlite';
 
@@ -59,7 +60,7 @@ interface Props {
   formData: FormData;
 }
 
-const DynamicForm = ({ formData }: Props) => {
+const RenderForms = ({ formData }: Props) => {
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [showDatePicker, setShowDatePicker] = useState<string | null>(null);
   const db = useSQLiteContext();
@@ -255,7 +256,7 @@ const DynamicForm = ({ formData }: Props) => {
                         handleChange(field.id, newFiles.join(','));
                       }}
                     >
-                      <Feather name="x" size={16} color="#ff4444" />
+                      <MaterialIcons name="delete" size={16} color="#ff4444" />
                     </TouchableOpacity>
                     <Text style={{ fontSize: 10, color: '#333', marginTop: 4, maxWidth: 100 }}>
                       {uri.split('/').pop()}
@@ -286,11 +287,12 @@ const DynamicForm = ({ formData }: Props) => {
                   const fileName = uri.split('/').pop();
                   const fileExtension = fileName?.split('.').pop()?.toLowerCase();
 
-                  let iconName = 'file';
-                  if (fileExtension === 'pdf') iconName = 'file-text';
-                  if (['doc', 'docx'].includes(fileExtension ?? '')) iconName = 'file-text';
-                  if (['xls', 'xlsx'].includes(fileExtension ?? '')) iconName = 'file-text';
-                  if (['ppt', 'pptx'].includes(fileExtension ?? '')) iconName = 'file-text';
+                  let iconName = 'insert-drive-file';
+                  
+                  if (fileExtension === 'pdf') iconName = 'picture-as-pdf';
+                  if (['doc', 'docx'].includes(fileExtension ?? '')) iconName = 'description';
+                  if (['xls', 'xlsx'].includes(fileExtension ?? '')) iconName = 'grid-on';
+                  if (['ppt', 'pptx'].includes(fileExtension ?? '')) iconName = 'slideshow';
 
                   return (
                     <View key={index} style={{
@@ -302,6 +304,8 @@ const DynamicForm = ({ formData }: Props) => {
                       borderRadius: 4,
                       position: 'relative'
                     }}>
+                      <MaterialIcons name={iconName as any} size={24} color="#333" />
+                      <Text style={{ marginLeft: 8 }}>{fileName}</Text>
                     </View>
                   );
                 })}
@@ -374,9 +378,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,
+ 
   },
   formContainer: {
-    paddingBottom: 20,
+    paddingBottom: 100,
   },
   title: {
     fontSize: 20,
@@ -460,7 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5FD0DF',
     paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: 6,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 16,
   },
@@ -486,4 +491,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default DynamicForm;
+export default RenderForms;
