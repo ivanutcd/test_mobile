@@ -1,154 +1,51 @@
-import {
-  Box,
-  Button,
-  ButtonText,
-  View,
-  Card,
-  Heading,
-  Text,
-  VStack,
-  HStack,
-  Link,
-  LinkText,
-} from '@gluestack-ui/themed';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Image, StyleSheet, Animated, Easing, } from 'react-native';
+import { Box, View, Card, Text, HStack, Link } from '@gluestack-ui/themed';
+import { Image, StyleSheet, Animated, Easing, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { config as themeConfig } from '../../gluestack-style.config';
-import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/src/context/AuthProvider';
-import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+import { useUserStore } from '@/src/store/useUserStore';
+import { Pressable } from 'react-native';
 
-type FormularioExistente = {
-  versionFormulario: string;
-};
+import {  useSQLiteContext } from 'expo-sqlite';
+import { useNavigation } from '@react-navigation/native';
 
-const sincronizarFormularios = async (db: SQLiteDatabase, userId: string) => {
-  try {
-    const response = await fetch(
-      `http://10.0.2.2:5090/api/v1/formulario/publicados?IdUsuario=${userId}`,
-    );
-    const { data: formularios } = await response.json();
-    for (const f of formularios) {
-      const estructura = f.estructuraFormulario
-        ? JSON.parse(f.estructuraFormulario)
-        : null;
-
-      const formFields = estructura?.formFields || [];
-
-      const existente = await db.getFirstAsync<FormularioExistente>(
-        'SELECT versionFormulario FROM formularios WHERE id = ?',
-        [f.id],
-      );
-
-      if (!existente) {
-        await db.runAsync(
-          `INSERT INTO formularios 
-            (id, nombreTecnico, descripcion, formFields, estado, versionFormulario, movilidadAsociada, unidad, fechaActualizacion) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
-          [
-            f.id,
-            estructura?.nombreTecnico || '',
-            estructura?.descripcion || '',
-            JSON.stringify(formFields),
-            'publicado',
-            f.versionFormulario,
-            estructura?.movilidadAsociada || '',
-            estructura?.unidad || '',
-          ],
-        );
-      } else if (existente?.versionFormulario !== f.versionFormulario) {
-        await db.runAsync(
-          `UPDATE formularios 
-            SET nombreTecnico = ?, descripcion = ?, formFields = ?, estado = ?, versionFormulario = ?, movilidadAsociada = ?, unidad = ?, fechaActualizacion = datetime('now') 
-            WHERE id = ?`,
-          [
-            estructura?.nombreTecnico || '',
-            estructura?.descripcion || '',
-            JSON.stringify(formFields),
-            'publicado',
-            f.versionFormulario,
-            estructura?.movilidadAsociada || '',
-            estructura?.unidad || '',
-            f.id,
-          ],
-        );
-      }
-    }
-    await db.runAsync(
-      `INSERT OR REPLACE INTO configuraciones (clave, valor) VALUES (?, datetime('now'))`,
-      ['ultima_sincronizacion_formularios'],
-    );
-
-    await db.runAsync(
-      `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
-      ['formularios', 1, null],
-    );
-
-    console.log('Sincronización completada');
-  } catch (err) {
-    let mensajeError = 'Error desconocido';
-    if (err instanceof Error) {
-      mensajeError = err.message;
-    }
-
-    console.error('Error en sincronización:', mensajeError);
-
-    await db.runAsync(
-      `INSERT INTO sincronizaciones (tipo, fecha, exito, errorMensaje) VALUES (?, datetime('now'), ?, ?)`,
-      ['formularios', 0, mensajeError],
-    );
-  }
-};
-
-type SincronizacionError = {
-  id: number;
-  tipo: string;
-  fecha: string;
-  exito: number;
-  errorMensaje: string;
-};
-
-const fetchErroresSincronizacion = async (
-  db: SQLiteDatabase,
-): Promise<SincronizacionError[]> => {
-  return await db.getAllAsync(
-    `SELECT * FROM sincronizaciones WHERE tipo = 'formularios' AND exito = 0 ORDER BY fecha DESC LIMIT 1`,
-  );
-};
-
-const obtenerUltimaFechaSync = async (db: SQLiteDatabase): Promise<string> => {
-  const res = await db.getFirstAsync<{ valor: string }>(
-    `SELECT valor FROM configuraciones WHERE clave = 'ultima_sincronizacion_formularios'`,
-  );
-  return res?.valor || '';
-};
+import { syncForms, getLastSyncDate, fetchSyncErrors } from '../functions/HomeScreenFunctions';
+import { syncAsignacionesDiarias } from '../functions/getAsignacionesDiarias';
+import CardItemFormularios from './components/cardItemFormularios';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const theme = themeConfig.themes.light.colors;
   const db = useSQLiteContext();
   const { isAuthenticated } = useAuth();
   const [ultimaSync, setUltimaSync] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
   const spinAnim = useRef(new Animated.Value(0)).current;
+  const user = useUserStore((state) => state.user);
+
+  const sincronizar = useCallback(async () => {
+    console.log('Sincronizando formularios y asignaciones diarias');
+    getLastSyncDate(db).then(async ()=>{
+      await setUltimaSync(await getLastSyncDate(db));
+      await syncForms(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
+      await syncAsignacionesDiarias(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
+    });
+
+  }, [db, user]);
+
+  const checkErrores = useCallback(async () => {
+    const errores = await fetchSyncErrors(db);
+    if (errores.length > 0) {
+      console.warn('⚠️  Error en sincronización home screen:', errores[0].errorMensaje  );
+    }
+  }, [db]);
 
   useEffect(() => {
-    const sincronizar = async () => {
-      obtenerUltimaFechaSync(db).then(setUltimaSync);
-      await sincronizarFormularios(db, '749a01ce-344d-48a9-9aaa-298b76f17c4f');
-    };
     sincronizar();
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    const checkErrores = async () => {
-      const errores = await fetchErroresSincronizacion(db);
-      if (errores.length > 0) {
-        console.warn('⚠️ Error de sincronización:', errores[0].errorMensaje);
-      }
-    };
     checkErrores();
-  }, []);
+  }, [isAuthenticated, sincronizar, checkErrores]);
 
   useEffect(() => {
     if (isSyncing) {
@@ -172,12 +69,16 @@ export default function HomeScreen() {
 
   const onSyncPress = async () => {
     setIsSyncing(true);
-    await sincronizarFormularios(
-      db,
-      '749a01ce-344d-48a9-9aaa-298b76f17c4f',
-    );
-    const ultima = await obtenerUltimaFechaSync(db);
+    await sincronizar();
+    const ultima = await getLastSyncDate(db);
     setUltimaSync(ultima);
+  };
+
+  const onAsignacionesPress = () => {
+    navigation.navigate('Asignaciones' as never);
+  };
+  const onGetFormPress = () => {
+    navigation.navigate('FormRenderScreen' as never);
   };
 
   return (
@@ -186,9 +87,11 @@ export default function HomeScreen() {
         <Box style={{ opacity: isSyncing ? 0.5 : 1 }}>
           <Text style={styles.title}>Última actualización</Text>
           <Text color={theme.primary} style={styles.Fecha} >
+            {ultimaSync}
             {ultimaSync ? new Date(ultimaSync).toLocaleString() : 'N/D'}
           </Text>
         </Box>
+       
         <Animated.View
           style={{
             transform: [{ rotate: spin }],
@@ -206,6 +109,7 @@ export default function HomeScreen() {
           />
         </Animated.View>
       </Card>
+      <Pressable onPress={onAsignacionesPress}>
       <Card style={styles.asignaciones}>
         <HStack
           style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}
@@ -216,8 +120,7 @@ export default function HomeScreen() {
           <Box className="flex-1 w-full">
             <Text style={styles.title}>Asignaciones</Text>
             <Text fontWeight="light" color="#525252">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quos.
+           Aqui se mostraran las asignaciones diarias de los formularios 
             </Text>
           </Box>
           <Box className="w-10 justify-center items-center h-full">
@@ -230,15 +133,47 @@ export default function HomeScreen() {
           </Box>
         </HStack>
       </Card>
+      </Pressable>
       <Box>
         <Box className="flex-row justify-between align-center items-center">
           <Text style={styles.title}>Formularios en progreso </Text>
           <Link>
-            <LinkText style={styles.verMas}>Ver más</LinkText>
+            <Text style={styles.verMas}>Ver más</Text>
           </Link>
         </Box>
-        <Card style={styles.asignaciones} className="mt-4"></Card>
+        <Card style={styles.formularios} className="mt-4">
+         <FlatList
+            data={[
+              
+              {id: '1',
+              nombreTecnico: 'Formulario de prueba',
+              descripcion: 'Rellene los siguientes campos',
+              movilidadAsociada: 'cobro_prejuridico'  ,
+              estado: 'En proceso',
+              fechaCreacion: '2025-01-01',
+              fechaActualizacion: '2025-01-01',
+              fechaVencimiento: '2025-01-01', 
+          
+
+            }
+            ,
+            {id: '2',
+            nombreTecnico: 'Formulario de prueba 2',
+            descripcion: 'Rellene los siguientes campos',
+            movilidadAsociada: 'cobro_prejuridico'  ,
+            estado: 'Completado',
+            fechaCreacion: '2025-01-01',
+            fechaActualizacion: '2025-01-01',
+            fechaVencimiento: '2025-01-01', 
+          
+
+            }
+          ]}
+            renderItem={({item}) =>  <Pressable onPress={onGetFormPress}><CardItemFormularios item={item} /></Pressable  >}
+          />
+        </Card>
       </Box>
+   
     </View>
   );
 }
@@ -276,6 +211,16 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     height: 100,
   },
+  formularios: {
+    height: 400,
+    minHeight: 100,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    borderWidth: 0.5,
+    borderColor: '#E0E0E0',
+ 
+  },
   refresh: {
     position: 'absolute',
     right: 10,
@@ -310,10 +255,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   animatedStyle: {
-
     transform: [{ rotate: '360deg' }],
   },
+  
+
 });
-
-
-

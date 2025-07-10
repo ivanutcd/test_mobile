@@ -9,3 +9,5 @@ window._env_ = {
   CLIENT_SCOPE: 'openid roles email server_scope api_scope',
   IDLE_TIMEOUT: 60,
 };
+
+
