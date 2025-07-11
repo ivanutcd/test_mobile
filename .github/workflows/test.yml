@@ -36,7 +36,7 @@ jobs:
 
   cleaning:
     runs-on: UTCD-RUNNER-LINUX
-    needs: [testing-backend, testing-frontend, testing-mobile]
+    needs: [testing-mobile]
     steps:
       - name: Limpiar imagenes no utilizadas
         run: |
