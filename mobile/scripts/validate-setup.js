@@ -39,6 +39,15 @@ try {
     console.log(`✅ EAS CLI is installed: ${easVersion}`);
 } catch (error) {
     console.log('⚠️  EAS CLI not found, will install during workflow');
+    // Intentar instalar EAS CLI localmente
+    try {
+        console.log('📦 Installing EAS CLI locally...');
+        execSync('npm install -g @expo/eas-cli', { stdio: 'pipe' });
+        const easVersion = execSync('eas --version', { encoding: 'utf8' }).trim();
+        console.log(`✅ EAS CLI installed successfully: ${easVersion}`);
+    } catch (installError) {
+        console.log('⚠️  Could not install EAS CLI, will be installed in workflow');
+    }
 }
 
 // Verificar dependencias básicas
