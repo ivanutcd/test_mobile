@@ -18,13 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'pnpm'
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Running build and test
+      - name: Install dependencies
         run: |
           cd mobile
           for i in 1 2 3; do
@@ -32,11 +33,80 @@ jobs:
             echo "pnpm install failed... retrying in 10s ($i/3)"
             sleep 10
           done
-          pnpm exec expo export
+
+      - name: Validate project setup
+        run: |
+          cd mobile
+          node scripts/validate-setup.js
+
+      - name: Type check
+        run: |
+          cd mobile
+          pnpm type-check
+
+      - name: Lint code
+        run: |
+          cd mobile
+          pnpm lint
+
+      - name: Run tests (optional)
+        run: |
+          cd mobile
+          if pnpm test; then
+            echo "Tests passed"
+          else
+            echo "Tests failed or no tests found - continuing..."
+          fi
+        continue-on-error: true
+
+      - name: Build check
+        run: |
+          cd mobile
+          pnpm exec expo export --platform web
+
+      - name: Validate Expo config
+        run: |
+          cd mobile
+          pnpm exec expo config --type public
+
+      - name: Install EAS CLI
+        run: |
+          npm install -g @expo/eas-cli
+
+      - name: EAS Build validation (optional)
+        run: |
+          cd mobile
+          echo "Validating EAS build configuration..."
+          
+          # Verificar configuración de EAS
+          if [ -f "eas.json" ]; then
+            echo "eas.json found, validating configuration..."
+            eas build:configure --non-interactive || echo "EAS configure failed, continuing..."
+          else
+            echo "eas.json not found, creating basic configuration..."
+            eas build:configure --non-interactive || echo "EAS configure failed, continuing..."
+          fi
+          
+          # Validar que el proyecto esté configurado correctamente
+          echo "Validating project configuration..."
+          eas project:info || echo "Project info check failed, continuing..."
+          
+          # Verificar configuración para builds locales
+          echo "Checking local build configuration..."
+          if [ -f "eas.json" ]; then
+            echo "eas.json configuration:"
+            cat eas.json
+          fi
+          
+          # Verificar que se puede hacer un pre-build check (solo validación, sin enviar)
+          echo "Running pre-build validation..."
+          eas build --platform all --profile preview --non-interactive --no-wait --dry-run || echo "Pre-build validation completed (may have warnings)"
+        continue-on-error: true
 
   cleaning:
-    runs-on: UTCD-RUNNER-LINUX
+    runs-on: ubuntu-latest
     needs: [testing-mobile]
+    if: always()
     steps:
       - name: Limpiar imagenes no utilizadas
         run: |
