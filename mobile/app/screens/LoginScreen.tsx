@@ -40,7 +40,7 @@ const loginSchema = Yup.object().shape({
 type LoginFormValues = {
   email: string;
   password: string;
-  rememberPassword: boolean;
+  rememberPassword?: boolean;
 };
 
 const LoginScreen: React.FC = () => {
@@ -133,7 +133,7 @@ const LoginScreen: React.FC = () => {
               control={control}
               name="rememberPassword"
               render={({ field: { onChange, value } }) => (
-                <Checkbox isChecked={value} onCheckedChange={onChange}>
+                <Checkbox value={value} onChange={onChange}>
                   <CheckboxIndicator>
                     <CheckboxIcon as={CheckIcon} />
                   </CheckboxIndicator>

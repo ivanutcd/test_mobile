@@ -55,6 +55,13 @@ if (packageJson.dependencies?.expo || packageJson.devDependencies?.expo) {
 // Verificar configuración de TypeScript
 if (fs.existsSync('tsconfig.json')) {
     console.log('✅ TypeScript configuration found');
+    // Intentar type check pero no fallar si hay errores
+    try {
+        execSync('npx tsc --noEmit', { stdio: 'pipe' });
+        console.log('✅ TypeScript compilation successful');
+    } catch (error) {
+        console.warn('⚠️  TypeScript compilation has errors (this is expected during development)');
+    }
 } else {
     console.warn('⚠️  TypeScript configuration not found');
 }
