@@ -18,16 +18,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
+      - name: Verify pnpm installation
+        run: |
+          pnpm --version
+          which pnpm
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: |
           cd mobile
+          echo "Installing dependencies with pnpm..."
+          pnpm --version
           for i in 1 2 3; do
             pnpm install && break
             echo "pnpm install failed... retrying in 10s ($i/3)"
