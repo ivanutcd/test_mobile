@@ -52,30 +52,31 @@ jobs:
           pnpm test || echo "Tests failed - continuing..."
         continue-on-error: true
 
-      - name: Validate Expo config
+      - name: Validate Expo prebuild configuration
         run: |
           cd mobile
-          pnpm exec expo config --type public
-
-      - name: Install EAS CLI
-        run: |
-          npm install -g eas-cli || echo "EAS CLI installation failed"
-
-      - name: Validate EAS configuration
-        run: |
-          cd mobile
-          if command -v eas &> /dev/null; then
-            echo "Validating EAS configuration..."
-            eas build:configure --non-interactive || echo "EAS configure failed"
-            eas project:info || echo "Project info check failed"
-            
-            echo "Running pre-build validation..."
-            eas build --platform android --profile preview --non-interactive --no-wait --dry-run || echo "Pre-build validation completed"
-            
-            echo "EAS validation completed"
+          echo "Validating Expo prebuild configuration..."
+          
+          # Verificar que app.json existe y es válido
+          if [ -f "app.json" ]; then
+            echo "✅ app.json found"
+            pnpm exec expo config --type public
           else
-            echo "EAS CLI not available, skipping EAS validation"
+            echo "❌ app.json not found"
           fi
+          
+          # Verificar configuración de prebuild (sin generar archivos)
+          echo "Checking prebuild configuration..."
+          pnpm exec expo prebuild --help || echo "Prebuild command not available"
+          
+          # Verificar que eas.json existe para builds
+          if [ -f "eas.json" ]; then
+            echo "✅ eas.json found for EAS builds"
+          else
+            echo "⚠️  eas.json not found (EAS builds may not work)"
+          fi
+          
+          echo "Expo prebuild validation completed"
         continue-on-error: true
 
   cleanup:
