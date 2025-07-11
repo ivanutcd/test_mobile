@@ -42,7 +42,7 @@ try {
     // Intentar instalar EAS CLI localmente
     try {
         console.log('📦 Installing EAS CLI locally...');
-        execSync('npm install -g @expo/eas-cli', { stdio: 'pipe' });
+        execSync('npm install -g eas-cli', { stdio: 'pipe' });
         const easVersion = execSync('eas --version', { encoding: 'utf8' }).trim();
         console.log(`✅ EAS CLI installed successfully: ${easVersion}`);
     } catch (installError) {
