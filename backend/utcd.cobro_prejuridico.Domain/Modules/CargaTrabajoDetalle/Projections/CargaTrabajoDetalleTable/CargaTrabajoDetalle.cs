@@ -10,13 +10,12 @@ namespace utcd.cobro_prejuridico.Domain.Modules.CargaTrabajoDetalle.Projections.
 {
     public class CargaTrabajoDetalle : EntityAuditable<Guid>, IEntity<Guid>
     {
-
-        public Guid IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
         public DateTime FechaAsignacion { get; set; }
         public string Movilidad { get; set; }
         public string Clave { get; set; }
-        public string Detalle { get; set; } 
-        public string EstadoCaptura { get; set; } 
+        public string Detalle { get; set; }
+        public string EstadoCaptura { get; set; }
         public string EstadoSincronizacion { get; set; }
         public string? ClientFormId { get; set; }
 

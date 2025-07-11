@@ -14,7 +14,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.FormularioRegistro.AggregateRoot
     {
         public override Guid Id { get; set; }
         public string ClientFormId { get; set; } = string.Empty;
-        public Guid IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
         public DateTime FechaInicio { get; set; }
         public string VersionFormulario { get; set; } = string.Empty;
         public string Data { get; set; } = string.Empty;
@@ -26,7 +26,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.FormularioRegistro.AggregateRoot
         public FormularioRegistroRoot(
             Guid id,
             string clientFormId,
-            Guid idUsuario,
+            string idUsuario,
             DateTime fechaInicio,
             string versionFormulario,
             string data,
@@ -59,6 +59,5 @@ namespace utcd.cobro_prejuridico.Domain.Modules.FormularioRegistro.AggregateRoot
             FormularioId = @event.FormularioId;
             Version++;
         }
-
     }
 }
