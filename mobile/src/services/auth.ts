@@ -33,7 +33,7 @@ const discovery = {
   revocationEndpoint: `${AUTH_SERVER}/connect/logout`,
 };
 
-const scopes = SCOPES.split(' ');
+const scopes = SCOPES?.split(' ');
 const clientId = CLIENT_ID;
 
 interface DecodedToken {
