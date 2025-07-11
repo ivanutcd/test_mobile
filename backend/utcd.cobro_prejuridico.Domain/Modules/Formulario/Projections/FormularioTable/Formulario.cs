@@ -11,14 +11,11 @@ public class Formulario : EntityAuditable<Guid>, IEntity<Guid>
     public string Estado { get; set; }
     public string VersionFormulario { get; set; }
     public string? EstructuraFormulario { get; set; }
-    public Guid? IdUsuario { get; set; }
+    public string? IdUsuario { get; set; }
     public bool? EsEditable { get; set; }
 
-#region Fereign key
+    #region Fereign key
     public Guid? FormularioBaseId { get; set; }
     public Formulario? FormularioBase { get; set; }
     #endregion
-
-
 }
-

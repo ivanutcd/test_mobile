@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Enee.Core.Migrations.Utlis;
 using Enee.IoC.Architecture;
 using FluentMigrator;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
 
 namespace utcd.cobro_prejuridico.Data.Migrations.CargaTrabajo
@@ -19,15 +13,24 @@ namespace utcd.cobro_prejuridico.Data.Migrations.CargaTrabajo
 
         public override void Up()
         {
-            Create.Table(TableName)
+            Create
+                .Table(TableName)
                 .InSchema(schema)
                 .WithIdColumn()
                 .NotNullable()
                 .NotNullable()
-                .WithColumn("IdUsuarioCarga").AsGuid().NotNullable()
-                .WithColumn("FechaCarga").AsDateTime().NotNullable()
-                .WithColumn("FechaAsignacion").AsDateTime().NotNullable()
-                .WithColumn("Movilidad").AsString(100).NotNullable()
+                .WithColumn("IdUsuarioCarga")
+                .AsGuid()
+                .NotNullable()
+                .WithColumn("FechaCarga")
+                .AsDateTime()
+                .NotNullable()
+                .WithColumn("FechaAsignacion")
+                .AsDateTime()
+                .NotNullable()
+                .WithColumn("Movilidad")
+                .AsString(100)
+                .NotNullable()
                 .WithAuditableFields();
         }
 

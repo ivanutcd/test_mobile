@@ -13,7 +13,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.FormularioRegistro.Feature.Crear
         public string ClientFormId { get; set; }
         public Guid FormId { get; set; }
         public string VersionFormulario { get; set; }
-        public Guid IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
         public DateTime FechaInicio { get; set; }
         public string Datos { get; set; }
     }

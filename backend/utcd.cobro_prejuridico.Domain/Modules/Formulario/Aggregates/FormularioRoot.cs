@@ -19,9 +19,8 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         public string VersionFormulario { get; set; }
         public string? EstructuraFormulario { get; set; }
         public Guid? FormularioBaseId { get; set; }
-        public Guid? IdUsuario { get; set; }
-        public bool? EsEditable  { get; set; }
-
+        public string? IdUsuario { get; set; }
+        public bool? EsEditable { get; set; }
 
         public FormularioRoot() { }
 
@@ -78,7 +77,15 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
         )
         {
             FormularioEditarEvent editar =
-                new(Id, nombreTecnico, descripcion, movilidadAsociada, estado,versionFormulario, esEditable);
+                new(
+                    Id,
+                    nombreTecnico,
+                    descripcion,
+                    movilidadAsociada,
+                    estado,
+                    versionFormulario,
+                    esEditable
+                );
 
             Apply(NewChange(editar));
         }
@@ -114,6 +121,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Estado = @event.Estado;
             Version++;
         }
+
         public void ObsoletoFormilarioEstado(string estado)
         {
             Apply(NewChange(new FormularioObsoletoEvent(this.Id, estado)));
@@ -125,9 +133,16 @@ namespace utcd.cobro_prejuridico.Domain.Modules.Formulario.Aggregates
             Version++;
         }
 
-        public void GuardarEstructuraFormulario( string estructuraFormulario)
+        public void GuardarEstructuraFormulario(string estructuraFormulario)
         {
-            Apply(NewChange(new CamposDinamicosEstructuraFormularioGuardarEvent(this.Id, estructuraFormulario)));
+            Apply(
+                NewChange(
+                    new CamposDinamicosEstructuraFormularioGuardarEvent(
+                        this.Id,
+                        estructuraFormulario
+                    )
+                )
+            );
         }
 
         private void Apply(CamposDinamicosEstructuraFormularioGuardarEvent @event)

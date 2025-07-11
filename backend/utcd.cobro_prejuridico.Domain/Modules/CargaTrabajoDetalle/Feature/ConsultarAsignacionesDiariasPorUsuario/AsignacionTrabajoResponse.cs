@@ -8,7 +8,7 @@ namespace utcd.cobro_prejuridico.Domain.Modules.CargaTrabajoDetalle.Feature.Cons
 {
     public class AsignacionTrabajoResponse
     {
-        public Guid IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
         public DateTime FechaAsignacion { get; set; }
         public string Movilidad { get; set; }
         public string Clave { get; set; }

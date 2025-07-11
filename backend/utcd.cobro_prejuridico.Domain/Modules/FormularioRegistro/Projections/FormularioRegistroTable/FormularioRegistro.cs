@@ -5,11 +5,10 @@ namespace utcd.cobro_prejuridico.Domain.Modules.FormularioRegistro.Projections.F
 {
     public class FormularioRegistro : EntityAuditable<Guid>, IEntity<Guid>
     {
-
         public string ClientFormId { get; set; }
-        public Guid IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
         public DateTime FechaInicio { get; set; }
-        public string VersionFormulario { get; set; } 
+        public string VersionFormulario { get; set; }
         public string Data { get; set; }
 
         #region Foreign Key Navigation
