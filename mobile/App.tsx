@@ -16,13 +16,11 @@ export default function App() {
     <SQLiteProvider databaseName="utcd-forms.db" onInit={createDbIfNeeded}>
       <SafeAreaProvider style={{ flex: 1 }}>
         <StyledProvider config={config}>
-          <GluestackUIProvider config={config}>
-            <ToastProvider >
+          <GluestackUIProvider>
             <StatusBar style="auto" />
             <AuthProvider>
               <RootNavigator />
             </AuthProvider>
-            </ToastProvider>
           </GluestackUIProvider>
         </StyledProvider>
       </SafeAreaProvider>
