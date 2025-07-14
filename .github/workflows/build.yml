@@ -61,6 +61,7 @@ jobs:
         working-directory: mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          NODE_ENV: production
         run: |
           eas build --platform android --profile preview --local --non-interactive --output=./app-release.apk
 
@@ -94,3 +95,6 @@ jobs:
             echo "APK not found: $APK_FILE"
             exit 1
           fi
+      - name: Clean old APKs
+        working-directory: mobile
+        run: rm -f *.apk
