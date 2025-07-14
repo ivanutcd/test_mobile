@@ -36,6 +36,10 @@ jobs:
         working-directory: mobile
         run: npm install -g pnpm
 
+      - name: Crear archivo .env
+        working-directory: mobile
+        run: echo "${{ vars.APP_MOBILE }}" > .env
+
       - name: Install dependencies
         working-directory: mobile
         run: |
