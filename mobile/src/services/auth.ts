@@ -68,7 +68,12 @@ export async function login() {
     });
     console.log(authRequest, 'authRequest');
 
-    const result = await authRequest.promptAsync(discovery);
+    const result = await authRequest.promptAsync(
+      discovery,
+      Platform.OS === 'android'
+        ? ({ useProxy: true } as any)
+        : undefined
+    );
     console.log(result, 'result');
     if (result.type !== 'success') {
       console.warn('Inicio de sesión cancelado o fallido');
